@@ -59,12 +59,13 @@ namespace ChessAPI.Services
                 ");
             boardStringBuilder.AppendLine(_tableStart);
 
-            // file starts from 7 (h) to 0 (a)
-            for (int file = board.files - 1; file >= 0; file--)
+            // todo reseverse board start 
+            // rank starts from 1 at the bottom and goes up to 8
+            for (int rank = board.ranks; rank >=1 ; rank--)
             {
                 boardStringBuilder.AppendLine(_tableRowStart);
-                // rank starts from 1 at the bottom and goes up to 8
-                for (int rank = 1; rank < board.ranks + 1; rank++)
+                // file starts from 7 (h) to 0 (a)
+                for (int file = 0; file < board.files; file++)
                 {
                     var key = Tuple.Create(rank, file);
                     if (!boardDictionary.ContainsKey(key))
