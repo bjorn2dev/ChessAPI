@@ -1,4 +1,5 @@
-﻿using ChessAPI.Interfaces;
+﻿using ChessAPI.Controllers;
+using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
@@ -13,23 +14,7 @@ namespace ChessAPI.Services
         const string _tableRowStart = "<tr>";
         const string _tableEnd = "</table>";
         const string _tableRowEnd = "</tr>";
-
-        public BoardService()
-        {
-
-        }
-
-        public string GetInitialBoard()
-        {
-            var board = new Board();
-            var boardDictionary = new Dictionary<Tuple<int, int>, Tile>();
-
-            // using temporary string builder to show board through controller
-            // TODO change this!
-            var boardStringBuilder = new StringBuilder();
-            // add extra styling to show proper chess board
-            // TODO change this!
-            boardStringBuilder.AppendLine(@"<style>
+        const string _tableCss = @"<style>
                 .chessboard {
                     border-collapse: collapse;
                     width: 400px;
@@ -56,16 +41,27 @@ namespace ChessAPI.Services
                     color: black;
                 }
                 </style>
-                ");
-            boardStringBuilder.AppendLine(_tableStart);
+                ";
 
-            // todo reseverse board start 
+        private StringBuilder _boardStringBuilder = new StringBuilder();
+        private Board _board;
+
+
+        public BoardService()
+        {
+            _boardStringBuilder = new StringBuilder();
+            _board = new Board();
+        }
+
+        private Dictionary<Tuple<int, int>, Tile> SetupBoard()
+        {
+            var boardDictionary = new Dictionary<Tuple<int, int>, Tile>();
             // rank starts from 1 at the bottom and goes up to 8
-            for (int rank = board.ranks; rank >=1 ; rank--)
+            for (int rank = _board.ranks; rank >= 1; rank--)
             {
-                boardStringBuilder.AppendLine(_tableRowStart);
+                _boardStringBuilder.AppendLine(_tableRowStart);
                 // file starts from 7 (h) to 0 (a)
-                for (int file = 0; file < board.files; file++)
+                for (int file = 0; file < _board.files; file++)
                 {
                     var key = Tuple.Create(rank, file);
                     if (!boardDictionary.ContainsKey(key))
@@ -75,17 +71,27 @@ namespace ChessAPI.Services
                         tile.fileNumber = file;
                         tile.color = (rank + file) % 2 == 0; // if the sum of rank + file = even. color = white
 
-                        boardStringBuilder.AppendLine(tile.html);
+                        _boardStringBuilder.AppendLine(tile.html);
 
                         //add tile to the created tuple key position in the dictionary
                         boardDictionary[key] = tile;
                     }
                 }
-                boardStringBuilder.AppendLine(_tableRowEnd);
+                _boardStringBuilder.AppendLine(_tableRowEnd);
             }
-            boardStringBuilder.AppendLine(_tableEnd);
+            return boardDictionary;
+        }
 
-            return boardStringBuilder.ToString();
+        public string GetInitialBoard()
+        {
+            _boardStringBuilder.AppendLine(_tableCss);
+            _boardStringBuilder.AppendLine(_tableStart);
+
+            this.SetupBoard();
+                
+            _boardStringBuilder.AppendLine(_tableEnd);
+
+            return _boardStringBuilder.ToString();
         }
     }
 }
