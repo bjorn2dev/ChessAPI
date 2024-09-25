@@ -7,7 +7,7 @@ namespace ChessAPI.Models.Pieces
         public Bishop()
         {
             this.name = "bishop";
-            this.html = $"<p style=\"background-color:{(this.color == PieceColor.White ? "black" : "white")}black;color:background-color:{(this.color == PieceColor.White ? "white" : "black")};padding:20px;\">B</p>";
+            this.html = $"<p style=\"background-color:{(this.color == PieceColor.White ? "black" : "white")};color:background-color:{(this.color == PieceColor.White ? "white" : "black")};padding:20px;\">B</p>";
         }
     }
 }
