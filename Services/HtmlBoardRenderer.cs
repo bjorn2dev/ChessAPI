@@ -32,12 +32,10 @@ namespace ChessAPI.Services
 
                 .dark-square {
                     background-color: #769656; /* Donker groen */
-                    color: white;
                 }
 
                 .light-square {
                     background-color: #eeeed2; /* Licht beige */
-                    color: black;
                 }
                 </style>
                 ";

@@ -21,8 +21,36 @@ namespace ChessAPI.Models
         /// <summary>
         /// 
         /// </summary>
-        public string html => $"<td class=\"{(color ? "light-square" : "dark-square")}\">{tileAnnotation} {piece.html}</td>";
+        // public string html => $"<td class=\"{(color ? "light-square" : "dark-square")}\">{tileAnnotation} {piece.html}</td>";
 
+        private string _html;
+        private bool _hasPiece;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool hasPiece
+        {
+            get => _hasPiece;
+            set
+            {
+                _hasPiece = value;
+                RegenerateHtml(); // Regenerate the HTML when hasPiece changes
+            }
+        }
+
+        public string html
+        {
+            get => _html; // Return the pre-generated HTML
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        private void RegenerateHtml()
+        {
+            var pieceHtml = hasPiece ? $" {piece.html}" : "";
+            _html = $"<td class=\"{(color ? "light-square" : "dark-square")}\">{tileAnnotation}{pieceHtml}</td>";
+        }
+       
         /// <summary>
         /// The vertical columns of squares, called files, are labeled a through h from White's left (the queenside) to right (the kingside)
         /// </summary>

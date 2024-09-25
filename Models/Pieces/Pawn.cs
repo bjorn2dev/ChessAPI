@@ -4,10 +4,15 @@ namespace ChessAPI.Models.Pieces
 {
     public class Pawn : Piece
     {
-      public Pawn()
+        public Pawn()
         {
             this.name = "pawn";
-            this.html = $"<p style=\"background-color:{(this.color == PieceColor.White ? "black" : "white")};color:background-color:{(this.color == PieceColor.White ? "white" : "black")};padding:20px;\">P</p>";
+            this.html = "";
+        }
+        public override void HasColor()
+        {
+            this.html = $"<p style=\"background-color:{(this.color == PieceColor.White ? "white" : "black")};color:{(this.color == PieceColor.White ? "black" : "white")};padding:20px;\">P</p>";
         }
     }
 }
+

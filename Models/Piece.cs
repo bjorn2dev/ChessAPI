@@ -17,6 +17,7 @@ namespace ChessAPI.Models
         private readonly string[] _bishopBlackStart = ["C8", "F8"];
         private readonly string[] _knightBlackStart = ["B8", "G8"];
         private readonly string[] _pawnBlackStart = ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7"];
+
         public PieceColor color;
 
         public bool hasColor;
@@ -60,6 +61,12 @@ namespace ChessAPI.Models
                 this.color = PieceColor.Black;
             }
             hasColor = true;
+            HasColor();
+        }
+
+        public virtual void HasColor()
+        {
+
         }
 
     }

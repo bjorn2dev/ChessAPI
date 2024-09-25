@@ -51,19 +51,30 @@ namespace ChessAPI.Services
                             
                            
                         if (_queenWhiteStart.Contains(tile.tileAnnotation) || _queenBlackStart.Contains(tile.tileAnnotation))
+                        {
                             tile.piece = new Queen();
+                        }
                         if (_rookWhiteStart.Contains(tile.tileAnnotation) || _rookBlackStart.Contains(tile.tileAnnotation))
+                        {
                             tile.piece = new Rook();
+                        }
                         if (_bishopWhiteStart.Contains(tile.tileAnnotation) || _bishopBlackStart.Contains(tile.tileAnnotation))
+                        {
                             tile.piece = new Bishop();
+                        }
                         if (_knightWhiteStart.Contains(tile.tileAnnotation) || _knightBlackStart.Contains(tile.tileAnnotation))
+                        {
                             tile.piece = new Knight();
+                        }
                         if (_pawnWhiteStart.Contains(tile.tileAnnotation) || _pawnBlackStart.Contains(tile.tileAnnotation))
+                        {
                             tile.piece = new Pawn();
+                        }
 
                         if (tile.piece != null)
                         {
-                           // tile.piece.boardLocation = tile.tileAnnotation;
+                            tile.piece.boardLocation = tile.tileAnnotation;
+                            tile.hasPiece = true;
                         }
                     }
                     boardDictionary[key] = tile;
