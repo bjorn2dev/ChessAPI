@@ -50,8 +50,6 @@ namespace ChessAPI.Services
                             tile.piece = new Knight();
                         if (_pawnStart.Contains(tile.tileAnnotation))
                             tile.piece = new Pawn();
-
-
                     }
                     boardDictionary[key] = tile;
                 }

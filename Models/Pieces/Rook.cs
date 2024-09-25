@@ -5,8 +5,7 @@
         public Rook()
         {
             this.name = "rook";
-            this.html = "R";
+            this.html = "<p>R</p>";
         }
-    {
     }
 }
