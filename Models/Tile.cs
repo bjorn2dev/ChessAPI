@@ -19,13 +19,24 @@ namespace ChessAPI.Models
         /// </summary>
         public int rank;
 
-        private string _html;
+        /// <summary>
+        /// 
+        /// </summary>
         public string html => $"<td class=\"{(color ? "light-square" : "dark-square")}\">{tileAnnotation}</td>";
+
+
         /// <summary>
         /// The vertical columns of squares, called files, are labeled a through h from White's left (the queenside) to right (the kingside)
         /// </summary>
         private string file { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         private int _fileNumber;
+        /// <summary>
+        /// 
+        /// </summary>
         public int fileNumber {
             get => _fileNumber;
             set

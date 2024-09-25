@@ -1,17 +1,17 @@
 ﻿using ChessAPI.Models;
-using ChessAPI.Services;
 
 namespace ChessAPI.Interfaces
 {
     /// <summary>
     /// 
     /// </summary>
-    public interface IBoardService
+    public interface IBoardGenerator
     {
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-       string GetInitialBoard();
+        Dictionary<Tuple<int, int>, Tile> GenerateBoard();
     }
 }

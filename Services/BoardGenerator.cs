@@ -1,0 +1,38 @@
+﻿using ChessAPI.Interfaces;
+using ChessAPI.Models;
+
+namespace ChessAPI.Services
+{
+    /// <summary>
+    /// BoardGenerator class (responsible for generating the board's structure)
+    /// </summary>
+    public class BoardGenerator : IBoardGenerator
+    {
+        private readonly Board _board;
+
+        public BoardGenerator()
+        {
+            _board = new Board();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<Tuple<int, int>, Tile> GenerateBoard()
+        {
+            var boardDictionary = new Dictionary<Tuple<int, int>, Tile>();
+            // rank starts from 1 at the bottom and goes up to 8
+            for (int rank = _board.ranks; rank >= 1; rank--)
+            {
+                for (int file = 0; file < _board.files; file++)
+                {
+                    var key = Tuple.Create(rank, file);
+                    var tile = new Tile { rank = rank, fileNumber = file, color = (rank + file) % 2 == 0 };
+                    boardDictionary[key] = tile;
+                }
+            }
+            return boardDictionary;
+        }
+    }
+}
