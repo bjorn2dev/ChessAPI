@@ -8,7 +8,6 @@ namespace ChessAPI.Models
     /// </summary>
     public class Tile
     {
-
         /// <summary>
         /// the color of the tile
         /// </summary>

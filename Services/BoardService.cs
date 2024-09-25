@@ -1,10 +1,4 @@
-﻿using ChessAPI.Controllers;
-using ChessAPI.Interfaces;
-using ChessAPI.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
-using System.Text;
-using static ChessAPI.Models.Enums.Color;
+﻿using ChessAPI.Interfaces;
 
 namespace ChessAPI.Services
 {

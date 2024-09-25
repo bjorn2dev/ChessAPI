@@ -7,6 +7,11 @@
             Black,
             White
         }
-            
+        public enum PieceColor
+        {
+            Black,
+            White
+        }
+
     }
 }
