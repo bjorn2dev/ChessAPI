@@ -2,15 +2,8 @@
 {
     public class Piece
     {
-        private readonly int _typeId;
-        private readonly string _name;
-
-        public int TypeId { get { return _typeId; } }
-
-        private void AssignPiece()
-        {
-
-        }
+        public string name { get; set; } = string.Empty;
+        public string html { get; set; } = string.Empty;
 
     }
 }

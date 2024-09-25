@@ -22,8 +22,7 @@ namespace ChessAPI.Models
         /// <summary>
         /// 
         /// </summary>
-        public string html => $"<td class=\"{(color ? "light-square" : "dark-square")}\">{tileAnnotation}</td>";
-
+        public string html => $"<td class=\"{(color ? "light-square" : "dark-square")}\">{tileAnnotation} {piece.html}</td>";
 
         /// <summary>
         /// The vertical columns of squares, called files, are labeled a through h from White's left (the queenside) to right (the kingside)
@@ -34,14 +33,17 @@ namespace ChessAPI.Models
         /// 
         /// </summary>
         private int _fileNumber;
+
         /// <summary>
         /// 
         /// </summary>
-        public int fileNumber {
+        public int fileNumber
+        {
             get => _fileNumber;
             set
             {
-                if (string.IsNullOrWhiteSpace(file)) {
+                if (string.IsNullOrWhiteSpace(file))
+                {
                     switch (value)
                     {
                         case 0:
@@ -49,7 +51,7 @@ namespace ChessAPI.Models
                             break;
                         case 1:
                             file = "b";
-                        break;
+                            break;
                         case 2:
                             file = "c";
                             break;
@@ -68,7 +70,7 @@ namespace ChessAPI.Models
                         case 7:
                             file = "h";
                             break;
-                       
+
                         default:
                             break;
                     }
@@ -78,7 +80,11 @@ namespace ChessAPI.Models
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string tileAnnotation => $"{file.ToUpper()}{rank}";
+        public Piece piece { get; set; } = new Piece();
 
     }
 }
