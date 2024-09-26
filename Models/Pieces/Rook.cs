@@ -7,7 +7,6 @@ namespace ChessAPI.Models.Pieces
         public Rook()
         {
             this.name = "rook";
-            this.html = "";
         }
 
         public override void HasColor()

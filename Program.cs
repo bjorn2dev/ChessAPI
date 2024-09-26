@@ -1,6 +1,8 @@
 
 using ChessAPI.Interfaces;
+using ChessAPI.Models.Pieces;
 using ChessAPI.Services;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace ChessAPI
@@ -12,6 +14,7 @@ namespace ChessAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.Configure<StartingLocation>(builder.Configuration.GetSection("StartingLocation"));
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
             builder.Services.AddSingleton<IBoardService, BoardService>();

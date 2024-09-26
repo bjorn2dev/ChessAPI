@@ -1,22 +1,15 @@
-﻿using System.Drawing;
+﻿using ChessAPI.Models.Pieces;
+using System.Drawing;
 using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Models
 {
     public class Piece
     {
-        private const string _kingWhiteStart = "E1";
-        private const string _kingBlackStart = "E8";
-        private const string _queenWhiteStart = "D1";
-        private readonly string[] _rookWhiteStart = ["A1", "A8"];
-        private readonly string[] _bishopWhiteStart = ["C1", "F1"];
-        private readonly string[] _knightWhiteStart = ["B1", "G1"];
-        private readonly string[] _pawnWhiteStart = ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"];
-        private const string _queenBlackStart = "D8";
-        private readonly string[] _rookBlackStart = ["A8", "H8"];
-        private readonly string[] _bishopBlackStart = ["C8", "F8"];
-        private readonly string[] _knightBlackStart = ["B8", "G8"];
-        private readonly string[] _pawnBlackStart = ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7"];
+        protected StartingLocation _startingLocation;
+        public Piece(StartingLocation startingLocation = null) {
+            _startingLocation = startingLocation;
+        }
 
         public PieceColor color;
 
@@ -41,25 +34,26 @@ namespace ChessAPI.Models
         public void SetInitialColor()
         {
             if (!String.IsNullOrEmpty(this.boardLocation) && (
-                this.boardLocation == _kingWhiteStart ||
-                this.boardLocation == _queenWhiteStart ||
-                _rookWhiteStart.Contains(this.boardLocation) ||
-                _bishopWhiteStart.Contains(this.boardLocation) ||
-                _knightWhiteStart.Contains(this.boardLocation) ||
-                _pawnWhiteStart.Contains(this.boardLocation)))
+                this.boardLocation == _startingLocation.KingWhiteStart ||
+                this.boardLocation == _startingLocation.QueenWhiteStart ||
+                _startingLocation.BishopWhiteStart.Contains(this.boardLocation) ||
+                _startingLocation.KnightWhiteStart.Contains(this.boardLocation) ||
+                _startingLocation.RookWhiteStart.Contains(this.boardLocation) ||
+                _startingLocation.PawnWhiteStart.Contains(this.boardLocation)))
             {
                 this.color = PieceColor.White;
             }
             if (!String.IsNullOrEmpty(this.boardLocation) && (
-                this.boardLocation == _kingBlackStart ||
-                this.boardLocation == _queenBlackStart ||
-                _rookBlackStart.Contains(this.boardLocation) ||
-                _bishopBlackStart.Contains(this.boardLocation) ||
-                _knightBlackStart.Contains(this.boardLocation) ||
-                _pawnBlackStart.Contains(this.boardLocation)))
+                this.boardLocation == _startingLocation.KingBlackStart ||
+                this.boardLocation == _startingLocation.QueenBlackStart ||
+                _startingLocation.BishopBlackStart.Contains(this.boardLocation) ||
+                _startingLocation.KnightBlackStart.Contains(this.boardLocation) ||
+                _startingLocation.RookBlackStart.Contains(this.boardLocation) ||
+                _startingLocation.PawnBlackStart.Contains(this.boardLocation)))
             {
                 this.color = PieceColor.Black;
             }
+            // todo check
             hasColor = true;
             HasColor();
         }
