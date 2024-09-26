@@ -8,7 +8,7 @@ namespace ChessAPI.Models
         private const string _kingWhiteStart = "E1";
         private const string _kingBlackStart = "E8";
         private const string _queenWhiteStart = "D1";
-        private readonly string[] _rookWhiteStart = ["A1", "A8"];
+        private readonly string[] _rookWhiteStart = ["A1", "H1"];
         private readonly string[] _bishopWhiteStart = ["C1", "F1"];
         private readonly string[] _knightWhiteStart = ["B1", "G1"];
         private readonly string[] _pawnWhiteStart = ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"];

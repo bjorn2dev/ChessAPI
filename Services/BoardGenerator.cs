@@ -12,7 +12,7 @@ namespace ChessAPI.Services
         private readonly Board _board;
         private readonly string[] _kingWhiteStart = ["E1"];
         private readonly string[] _queenWhiteStart = [ "D1"];
-        private readonly string[] _rookWhiteStart = [ "A1", "A8"];
+        private readonly string[] _rookWhiteStart = [ "A1", "H1"];
         private readonly string[] _bishopWhiteStart = [ "C1", "F1"];
         private readonly string[] _knightWhiteStart = [ "B1", "G1"];
         private readonly string[] _pawnWhiteStart = ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"];
@@ -48,8 +48,6 @@ namespace ChessAPI.Services
                         {
                             tile.piece = new King();
                         }
-                            
-                           
                         if (_queenWhiteStart.Contains(tile.tileAnnotation) || _queenBlackStart.Contains(tile.tileAnnotation))
                         {
                             tile.piece = new Queen();
