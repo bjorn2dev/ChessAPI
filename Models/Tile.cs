@@ -8,8 +8,8 @@ namespace ChessAPI.Models
     /// </summary>
     public class Tile
     {
-        public Piece piece { get; set; }
-        public bool color { get; set; }  // Represents the color of the tile
+        public Piece? piece { get; set; }
+        public bool color { get; set; }  // Represents the color of the tile TODO change this to use color model
 
         public string html { get; set; }    
         public int rank { get; set; }    // The row of the tile
