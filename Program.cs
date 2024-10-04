@@ -1,4 +1,5 @@
 
+using ChessAPI.Helpers;
 using ChessAPI.Interfaces;
 using ChessAPI.Services;
 using System;
@@ -13,6 +14,9 @@ namespace ChessAPI
 
             // Add services to the container.
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
+            builder.Services.AddSingleton<IPieceHtmlRenderer, PieceHtmlRenderer>();  // Register PieceHtmlRenderer
+            builder.Services.AddSingleton<ITileRenderer, TileHtmlRenderer>();
+            builder.Services.AddSingleton<IStartingPositionProvider, StartingPositionService>();  
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
             builder.Services.AddSingleton<IBoardService, BoardService>();
             builder.Services.AddControllersWithViews();

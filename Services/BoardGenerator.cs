@@ -1,6 +1,7 @@
 ﻿using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Models.Pieces;
+using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Services
 {
@@ -10,22 +11,15 @@ namespace ChessAPI.Services
     public class BoardGenerator : IBoardGenerator
     {
         private readonly Board _board;
-        private readonly string[] _kingWhiteStart = ["E1"];
-        private readonly string[] _queenWhiteStart = [ "D1"];
-        private readonly string[] _rookWhiteStart = [ "A1", "H1"];
-        private readonly string[] _bishopWhiteStart = [ "C1", "F1"];
-        private readonly string[] _knightWhiteStart = [ "B1", "G1"];
-        private readonly string[] _pawnWhiteStart = ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"];
-        private readonly string[] _kingBlackStart = ["E8"];
-        private readonly string[] _queenBlackStart = ["D8", "D1"];
-        private readonly string[] _rookBlackStart = ["A8", "H8"];
-        private readonly string[] _bishopBlackStart = ["C8", "F8"];
-        private readonly string[] _knightBlackStart = ["B8", "G8"];
-        private readonly string[] _pawnBlackStart = ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7"];
+        private readonly IStartingPositionProvider _startingPositionProvider;
+        private readonly ITileRenderer _tileRenderer;
 
-        public BoardGenerator()
+
+        public BoardGenerator(IStartingPositionProvider startingPositionProvider, ITileRenderer tileRenderer)
         {
             _board = new Board();
+            _startingPositionProvider = startingPositionProvider;
+            _tileRenderer = tileRenderer;
         }
 
         /// <summary>
@@ -44,37 +38,24 @@ namespace ChessAPI.Services
                     var tile = new Tile { rank = rank, fileNumber = file, color = (rank + file) % 2 == 0 };
                     if (!string.IsNullOrEmpty(tile.tileAnnotation))
                     {
-                        if (_kingWhiteStart.Contains(tile.tileAnnotation) || _kingBlackStart.Contains(tile.tileAnnotation)) 
-                        {
-                            tile.piece = new King();
-                        }
-                        if (_queenWhiteStart.Contains(tile.tileAnnotation) || _queenBlackStart.Contains(tile.tileAnnotation))
-                        {
-                            tile.piece = new Queen();
-                        }
-                        if (_rookWhiteStart.Contains(tile.tileAnnotation) || _rookBlackStart.Contains(tile.tileAnnotation))
-                        {
-                            tile.piece = new Rook();
-                        }
-                        if (_bishopWhiteStart.Contains(tile.tileAnnotation) || _bishopBlackStart.Contains(tile.tileAnnotation))
-                        {
-                            tile.piece = new Bishop();
-                        }
-                        if (_knightWhiteStart.Contains(tile.tileAnnotation) || _knightBlackStart.Contains(tile.tileAnnotation))
-                        {
-                            tile.piece = new Knight();
-                        }
-                        if (_pawnWhiteStart.Contains(tile.tileAnnotation) || _pawnBlackStart.Contains(tile.tileAnnotation))
-                        {
-                            tile.piece = new Pawn();
-                        }
+                        // Determine the type of piece (king, queen, rook, etc.)
+                        var pieceType = _startingPositionProvider.GetPieceTypeForLocation(tile.tileAnnotation);
 
-                        if (tile.piece != null)
+                        if (pieceType != null)
                         {
+                            // Instantiate the piece dynamically using reflection
+                            tile.piece = (Piece)Activator.CreateInstance(pieceType);
+
+                            // Check if the starting position is for a white or black piece
+                            tile.piece.color = _startingPositionProvider.IsWhiteStartingPosition(tile.tileAnnotation)
+                            ? PieceColor.White
+                            : PieceColor.Black;
+
                             tile.piece.boardLocation = tile.tileAnnotation;
-                            tile.hasPiece = true;
+                           
                         }
                     }
+                    tile.html = _tileRenderer.Render(tile);
                     boardDictionary[key] = tile;
                 }
             }

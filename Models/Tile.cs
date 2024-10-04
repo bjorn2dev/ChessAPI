@@ -8,62 +8,14 @@ namespace ChessAPI.Models
     /// </summary>
     public class Tile
     {
-        /// <summary>
-        /// the color of the tile
-        /// </summary>
-        public bool color { get; set; }
+        public Piece piece { get; set; }
+        public bool color { get; set; }  // Represents the color of the tile
 
-        /// <summary>
-        /// The horizontal rows of squares, called ranks, are numbered 1 to 8 starting from White's side of the board
-        /// </summary>
-        public int rank;
+        public string html { get; set; }    
+        public int rank { get; set; }    // The row of the tile
+        public string file { get; private set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        // public string html => $"<td class=\"{(color ? "light-square" : "dark-square")}\">{tileAnnotation} {piece.html}</td>";
-
-        private string _html;
-        private bool _hasPiece;
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool hasPiece
-        {
-            get => _hasPiece;
-            set
-            {
-                _hasPiece = value;
-                RegenerateHtml(); // Regenerate the HTML when hasPiece changes
-            }
-        }
-
-        public string html
-        {
-            get => _html; // Return the pre-generated HTML
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        private void RegenerateHtml()
-        {
-            var pieceHtml = hasPiece ? $" {piece.html}" : "";
-            _html = $"<td class=\"{(color ? "light-square" : "dark-square")}\">{tileAnnotation}{pieceHtml}</td>";
-        }
-       
-        /// <summary>
-        /// The vertical columns of squares, called files, are labeled a through h from White's left (the queenside) to right (the kingside)
-        /// </summary>
-        private string file { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         private int _fileNumber;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public int fileNumber
         {
             get => _fileNumber;
@@ -71,47 +23,33 @@ namespace ChessAPI.Models
             {
                 if (string.IsNullOrWhiteSpace(file))
                 {
-                    switch (value)
-                    {
-                        case 0:
-                            file = "a";
-                            break;
-                        case 1:
-                            file = "b";
-                            break;
-                        case 2:
-                            file = "c";
-                            break;
-                        case 3:
-                            file = "d";
-                            break;
-                        case 4:
-                            file = "e";
-                            break;
-                        case 5:
-                            file = "f";
-                            break;
-                        case 6:
-                            file = "g";
-                            break;
-                        case 7:
-                            file = "h";
-                            break;
-
-                        default:
-                            break;
-                    }
+                    file = ConvertFileNumberToLetter(value);
                     _fileNumber = value;
                 }
-                else { throw new InvalidOperationException("MyProperty can't be changed once set"); }
+                else
+                {
+                    throw new InvalidOperationException("fileNumber can't be changed once set");
+                }
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string tileAnnotation => $"{file.ToUpper()}{rank}";
-        public Piece piece { get; set; } = new Piece();
+
+        private string ConvertFileNumberToLetter(int fileNumber)
+        {
+            return fileNumber switch
+            {
+                0 => "a",
+                1 => "b",
+                2 => "c",
+                3 => "d",
+                4 => "e",
+                5 => "f",
+                6 => "g",
+                7 => "h",
+                _ => throw new ArgumentOutOfRangeException("Invalid file number")
+            };
+        }
 
     }
 }

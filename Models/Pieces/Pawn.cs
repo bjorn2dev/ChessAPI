@@ -7,11 +7,11 @@ namespace ChessAPI.Models.Pieces
         public Pawn()
         {
             this.name = "pawn";
-            this.html = "";
         }
-        public override void HasColor()
+
+        public override string RenderHtml(Piece piece)
         {
-            this.html = $"<p style=\"background-color:{(this.color == PieceColor.White ? "white" : "black")};color:{(this.color == PieceColor.White ? "black" : "white")};padding:20px;\">P</p>";
+            return $"<p style=\"background-color:{(this.color == PieceColor.White ? "white" : "black")};color:{(this.color == PieceColor.White ? "black" : "white")};padding:20px;\">P</p>";
         }
     }
 }

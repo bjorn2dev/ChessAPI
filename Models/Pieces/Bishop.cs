@@ -1,4 +1,5 @@
-﻿using static ChessAPI.Models.Enums.Color;
+﻿using ChessAPI.Interfaces;
+using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Models.Pieces
 {
@@ -7,11 +8,10 @@ namespace ChessAPI.Models.Pieces
         public Bishop()
         {
             this.name = "bishop";
-            this.html = "";
         }
-        public override void HasColor()
+        public override string RenderHtml(Piece piece)
         {
-            this.html = $"<p style=\"background-color:{(this.color == PieceColor.White ? "white" : "black")};color:{(this.color == PieceColor.White ? "black" : "white")};padding:20px;\">B</p>";
+            return $"<p style=\"background-color:{(this.color == PieceColor.White ? "white" : "black")};color:{(this.color == PieceColor.White ? "black" : "white")};padding:20px;\">B</p>";
         }
     }
 }
