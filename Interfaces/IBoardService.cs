@@ -12,6 +12,10 @@ namespace ChessAPI.Interfaces
         /// 
         /// </summary>
         /// <returns></returns>
-       string GetInitialBoard();
+       string GetBoard();
+
+        string GetBoardDictionary();
+
+        void MovePiece(string from, string to);
     }
 }

@@ -20,8 +20,24 @@ namespace ChessAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var htmlContent = _boardService.GetInitialBoard();
+            var htmlContent = _boardService.GetBoard();
             return Content(htmlContent, "text/html");
         }
+
+
+        [HttpGet("GetBoardDictionary")]
+        public string GetBoardDictionary()
+        {
+            return _boardService.GetBoardDictionary();
+        }
+
+
+        [HttpPut("{from}/{to}")]
+        public IActionResult MovePiece(string from, string to)
+        {
+            _boardService.MovePiece(from, to);
+            return NoContent();
+        }
+
     }
 }

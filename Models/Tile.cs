@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using ChessAPI.Helpers;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace ChessAPI.Models
@@ -23,7 +24,7 @@ namespace ChessAPI.Models
             {
                 if (string.IsNullOrWhiteSpace(file))
                 {
-                    file = ConvertFileNumberToLetter(value);
+                    file = TileHelper.ConvertFileNumberToLetter(value);
                     _fileNumber = value;
                 }
                 else
@@ -34,22 +35,5 @@ namespace ChessAPI.Models
         }
 
         public string tileAnnotation => $"{file.ToUpper()}{rank}";
-
-        private string ConvertFileNumberToLetter(int fileNumber)
-        {
-            return fileNumber switch
-            {
-                0 => "a",
-                1 => "b",
-                2 => "c",
-                3 => "d",
-                4 => "e",
-                5 => "f",
-                6 => "g",
-                7 => "h",
-                _ => throw new ArgumentOutOfRangeException("Invalid file number")
-            };
-        }
-
     }
 }

@@ -12,6 +12,7 @@ namespace ChessAPI.Interfaces
         /// 
         /// </summary>
         /// <returns></returns>
-        Dictionary<Tuple<int, int>, Tile> GenerateBoard();
+        void SetupBoard(Dictionary<Tuple<int, int>, Tile> board);
+        void AddInitialPieces(Dictionary<Tuple<int, int>, Tile> board);
     }
 }
