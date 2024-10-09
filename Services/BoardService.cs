@@ -14,15 +14,11 @@ namespace ChessAPI.Services
 
         private readonly IBoardGenerator _boardGenerator;
         private readonly IBoardRenderer _boardRenderer;
-        private readonly ITileRenderer _tileRenderer;
-        private readonly IPieceMovingService _pieceMovingService;
 
-        public BoardService(IBoardGenerator boardGenerator, IBoardRenderer boardRenderer, ITileRenderer tileRenderer, IPieceMovingService pieceMovingService)
+        public BoardService(IBoardGenerator boardGenerator, IBoardRenderer boardRenderer)
         {
             _boardGenerator = boardGenerator;
             _boardRenderer = boardRenderer;
-            _tileRenderer = tileRenderer;
-            _pieceMovingService = pieceMovingService;
         }
 
         public string GetBoard()

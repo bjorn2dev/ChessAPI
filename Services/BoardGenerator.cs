@@ -20,6 +20,8 @@ namespace ChessAPI.Services
             Board = new Board();
             _startingPositionProvider = startingPositionProvider;
             _tileRenderer = tileRenderer;
+
+            // TODO change this??
             this.SetupBoard();
             this.AddInitialPieces();
 
@@ -59,7 +61,6 @@ namespace ChessAPI.Services
                         : PieceColor.Black;
 
                         tile.piece.boardLocation = tile.tileAnnotation;
-
                     }
                 }
                 tile.html = _tileRenderer.Render(tile);
