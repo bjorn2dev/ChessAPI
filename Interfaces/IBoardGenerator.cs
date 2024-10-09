@@ -7,12 +7,13 @@ namespace ChessAPI.Interfaces
     /// </summary>
     public interface IBoardGenerator
     {
+        Board Board { get; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        void SetupBoard(Dictionary<Tuple<int, int>, Tile> board);
-        void AddInitialPieces(Dictionary<Tuple<int, int>, Tile> board);
+        void SetupBoard();
+        void AddInitialPieces();
     }
 }

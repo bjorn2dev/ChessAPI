@@ -14,10 +14,11 @@ namespace ChessAPI
 
             // Add services to the container.
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
-            builder.Services.AddSingleton<IPieceHtmlRenderer, PieceHtmlRenderer>();  // Register PieceHtmlRenderer
+            builder.Services.AddSingleton<IPieceHtmlRenderer, PieceHtmlRenderer>();
             builder.Services.AddSingleton<ITileRenderer, TileHtmlRenderer>();
             builder.Services.AddSingleton<IStartingPositionProvider, StartingPositionService>();  
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
+            builder.Services.AddSingleton<IPieceMovingService, PieceMovingService>();
             builder.Services.AddSingleton<IBoardService, BoardService>();
             builder.Services.AddControllersWithViews();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

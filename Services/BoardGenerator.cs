@@ -10,35 +10,38 @@ namespace ChessAPI.Services
     /// </summary>
     public class BoardGenerator : IBoardGenerator
     {
-        private readonly Board _board;
         private readonly IStartingPositionProvider _startingPositionProvider;
         private readonly ITileRenderer _tileRenderer;
 
+        public Board Board { get; private set; }
+
         public BoardGenerator(IStartingPositionProvider startingPositionProvider, ITileRenderer tileRenderer)
         {
-            _board = new Board();
+            Board = new Board();
             _startingPositionProvider = startingPositionProvider;
             _tileRenderer = tileRenderer;
+            this.SetupBoard();
+            this.AddInitialPieces();
 
         }
-        public void SetupBoard(Dictionary<Tuple<int, int>, Tile> board)
+        public void SetupBoard()
         {
             // rank starts from 1 at the bottom and goes up to 8
-            for (int rank = _board.ranks; rank >= 1; rank--)
+            for (int rank = Board.ranks; rank >= 1; rank--)
             {
-                for (int file = 0; file < _board.files; file++)
+                for (int file = 0; file < Board.files; file++)
                 {
                     var key = Tuple.Create(rank, file);
                     var tile = new Tile { rank = rank, fileNumber = file, color = (rank + file) % 2 == 0 };
 
-                    board[key] = tile;
+                    Board.playingFieldDictionary[key] = tile;
                 }
             }
         }
 
-        public void AddInitialPieces(Dictionary<Tuple<int, int>, Tile> board)
+        public void AddInitialPieces()
         {
-            foreach (var tile in board.Values)
+            foreach (var tile in Board.playingFieldDictionary.Values)
             {
                 if (!string.IsNullOrEmpty(tile.tileAnnotation))
                 {

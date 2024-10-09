@@ -10,10 +10,12 @@ namespace ChessAPI.Controllers
     {
         private readonly ILogger<BoardController> _logger;
         private readonly IBoardService _boardService;
+        private readonly IPieceMovingService _pieceMovingService;
 
-        public BoardController(ILogger<BoardController> logger, IBoardService boardService)
+        public BoardController(ILogger<BoardController> logger, IBoardService boardService, IPieceMovingService pieceMovingService)
         {
             _boardService = boardService;
+            _pieceMovingService = pieceMovingService;
             _logger = logger;
         }
 
@@ -35,7 +37,7 @@ namespace ChessAPI.Controllers
         [HttpPut("{from}/{to}")]
         public IActionResult MovePiece(string from, string to)
         {
-            _boardService.MovePiece(from, to);
+            _pieceMovingService.MovePiece(from, to);
             return NoContent();
         }
 
