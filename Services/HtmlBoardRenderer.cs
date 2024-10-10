@@ -44,7 +44,7 @@ namespace ChessAPI.Services
         /// </summary>
         /// <param name="board"></param>
         /// <returns></returns>
-        public string RenderBoard(Dictionary<Tuple<int, int>, Tile> board)
+        public string RenderBoard(SortedList<Tuple<int, int>, Tile> board)
         {
             var boardStringBuilder = new StringBuilder();
             boardStringBuilder.AppendLine(_tableCss);

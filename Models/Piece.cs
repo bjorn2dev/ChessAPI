@@ -11,5 +11,9 @@ namespace ChessAPI.Models
         public string boardLocation { get; set; }
 
         public string name = string.Empty;
+
+        public string movePattern = string.Empty;
+
+        public int moveRadius = 0;
     }
 }
