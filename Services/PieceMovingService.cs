@@ -8,10 +8,12 @@ namespace ChessAPI.Services
     {
         private readonly ITileRenderer _tileRenderer;
         private readonly IBoardGenerator _boardGenerator;
-        public PieceMovingService(ITileRenderer tileRenderer, IBoardGenerator boardGenerator)
+        private readonly IPieceMoveValidator _pieceMoveValidator;
+        public PieceMovingService(ITileRenderer tileRenderer, IBoardGenerator boardGenerator, IPieceMoveValidator pieceMoveValidator)
         {
             _tileRenderer = tileRenderer;
             _boardGenerator = boardGenerator;
+            _pieceMoveValidator = pieceMoveValidator;
         }
         public void MovePiece(string from, string to)
         {
@@ -29,7 +31,7 @@ namespace ChessAPI.Services
                     fromTile = _boardGenerator.Board.playingFieldDictionary[location];
                 }
             }
-
+            var isValid = false;
             var toFileLetter = to.Substring(0, 1);
             var toFile = TileHelper.ConvertLetterToFileNumber(toFileLetter);
             var toRank = Int32.Parse(to.Substring(1, 1));
@@ -41,10 +43,20 @@ namespace ChessAPI.Services
                 if (location.Item1 == toRank && location.Item2 == toFile && fromTile != null)
                 {
                     toTile = _boardGenerator.Board.playingFieldDictionary[location];
+
+                   isValid = _pieceMoveValidator.ValidateMove(fromTile,toTile);
+                    if (!isValid) { 
+                        break;
+                    }
+
                     toTile.piece = fromTile.piece;
                     toTile.html = _tileRenderer.Render(toTile);
                     _boardGenerator.Board.playingFieldDictionary[location] = toTile;
                 }
+            }
+            if (!isValid)
+            {
+                return;
             }
 
             foreach (var location in _boardGenerator.Board.playingFieldDictionary.Keys)
