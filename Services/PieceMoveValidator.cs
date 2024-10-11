@@ -17,7 +17,6 @@ namespace ChessAPI.Services
         {
             var isValid = false;
             var fromPiece = from.piece;
-            var toPiece = to.piece;
             
             var board = _boardGenerator.Board.playingFieldDictionary;
 
@@ -29,18 +28,24 @@ namespace ChessAPI.Services
             var toIndex = board.IndexOfKey(toLocation.Key);
 
             var pattern = "";
+            var moveRadiusPawn = 8;
             // To find the difference between two numbers, take the larger one and subtract the smaller one 
             var difference = 0;
+
 
             if (fromPiece is Pawn)
             {
                 // (d2 = 51) - (d3 = 43) = 8
-                
                 difference = (fromPiece.color == Models.Enums.Color.PieceColor.White ? toIndex - fromIndex : fromIndex - toIndex);
-                // 1 square  = 8 positions up or down the field counting left from right.
+                // 1 square up the board = 8 positions up or down the chess board field counting left from right.
                 // if the difference is higher than 8 its an illegal move
-                isValid = difference == 8;
+                isValid = difference == fromPiece.moveRadius && to.piece == null;
             }
+
+
+
+
+
             return isValid;
         }
     }

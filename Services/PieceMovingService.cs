@@ -17,59 +17,29 @@ namespace ChessAPI.Services
         }
         public void MovePiece(string from, string to)
         {
+            var board = _boardGenerator.Board.playingFieldDictionary;
+
+            // move getting tile from / to location through function and validate move before instead of during
             var fromFileLetter = from.Substring(0, 1);
             var fromFile = TileHelper.ConvertLetterToFileNumber(fromFileLetter);
             var fromRank = Int32.Parse(from.Substring(1, 1));
+            var fromTileEntry = board.FirstOrDefault((t)=> t.Key.Item1 == fromRank && t.Key.Item2 == fromFile);
 
-            Tile fromTile = null;
-
-            foreach (var location in _boardGenerator.Board.playingFieldDictionary.Keys)
-            {
-                // find item by rank + file combination. this because the board generates from rank to file.
-                if (location.Item1 == fromRank && location.Item2 == fromFile)
-                {
-                    fromTile = _boardGenerator.Board.playingFieldDictionary[location];
-                }
-            }
-            var isValid = false;
             var toFileLetter = to.Substring(0, 1);
             var toFile = TileHelper.ConvertLetterToFileNumber(toFileLetter);
             var toRank = Int32.Parse(to.Substring(1, 1));
+            var toTileEntry = board.FirstOrDefault((t) => t.Key.Item1 == toRank && t.Key.Item2 == toFile);
 
-            Tile toTile = null;
+            // return if move isn't valid
+            if (!_pieceMoveValidator.ValidateMove(fromTileEntry.Value, toTileEntry.Value)) return;
 
-            foreach (var location in _boardGenerator.Board.playingFieldDictionary.Keys)
-            {
-                if (location.Item1 == toRank && location.Item2 == toFile && fromTile != null)
-                {
-                    toTile = _boardGenerator.Board.playingFieldDictionary[location];
+            //move piece to other tile
+            toTileEntry.Value.piece = fromTileEntry.Value.piece;
+            toTileEntry.Value.html = _tileRenderer.Render(toTileEntry.Value);
 
-                   isValid = _pieceMoveValidator.ValidateMove(fromTile,toTile);
-                    if (!isValid) { 
-                        break;
-                    }
-
-                    toTile.piece = fromTile.piece;
-                    toTile.html = _tileRenderer.Render(toTile);
-                    _boardGenerator.Board.playingFieldDictionary[location] = toTile;
-                }
-            }
-            if (!isValid)
-            {
-                return;
-            }
-
-            foreach (var location in _boardGenerator.Board.playingFieldDictionary.Keys)
-            {
-                // find item by rank + file combination. this because the board generates from rank to file.
-                if (location.Item1 == fromRank && location.Item2 == fromFile)
-                {
-                    fromTile = _boardGenerator.Board.playingFieldDictionary[location];
-                    fromTile.piece = null;
-                    fromTile.html = _tileRenderer.Render(fromTile);
-                    _boardGenerator.Board.playingFieldDictionary[location] = fromTile;
-                }
-            }
+            //clean from tile
+            fromTileEntry.Value.piece = null;
+            fromTileEntry.Value.html = _tileRenderer.Render(fromTileEntry.Value);
         }
     }
 }

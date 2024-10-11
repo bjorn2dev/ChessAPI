@@ -8,7 +8,7 @@ namespace ChessAPI.Models.Pieces
         {
             this.name = "P";
             this.movePattern = "^";
-            this.moveRadius = 1;
+            this.moveRadius = 8;
         }
     }
 }
