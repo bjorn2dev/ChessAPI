@@ -52,7 +52,7 @@ namespace ChessAPI.Services
                 var differenceX = fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
                 // king has multiple ways to move, but can always only move one square, so we make a new int array with the difference found.
                 //difference moet hier niet als differencebetween tiles 8 zijn als koning achteruit gaat, dit moet -8 zijn. dan -8 huidige positie die checken.
-                isValid = CheckTileRange([differenceX], kingRange.Contains(differenceX), fromIndex, toIndex, difference, fromPiece.color);
+                isValid = CheckTileRange([differenceX], kingRange.Contains(differenceX), fromIndex, toIndex, fromIndex - toIndex, fromPiece.color);
             }
 
             // + 
