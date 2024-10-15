@@ -12,8 +12,8 @@ namespace ChessAPI.Helpers
         }
         public string Render(Tile tile)
         {
-            var pieceHtml = tile.piece != null ? _pieceHtmlRenderer.RenderHtml(tile.piece) : "";
-            return $"<td class=\"{(tile.color ? "light-square" : "dark-square")}\">{tile.tileAnnotation}{pieceHtml}</td>";
+            var tileHtml = tile.piece != null ? _pieceHtmlRenderer.RenderHtml(tile.piece) : tile.tileAnnotation;
+            return $"<td data-rank=\"{tile.rank}\" data-file=\"{tile.file}\" data-tile-annotation=\"{tile.tileAnnotation}\" class=\"{(tile.color ? "light-square" : "dark-square")}\">{tileHtml}</td>";
         }
     }
 }

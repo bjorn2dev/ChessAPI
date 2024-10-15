@@ -1,6 +1,7 @@
 ﻿using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Models.Pieces;
+using System;
 using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Services
@@ -38,16 +39,19 @@ namespace ChessAPI.Services
             // 1 square up the board = 8 positions up or down the chess board field counting left from right.
             if (fromPiece is Pawn)
             {
-                // if the difference is higher than 8 its an illegal 
-                isValid = difference == fromPiece.moveRadius;
+                // if the difference is higher than 8 its an illegal move
+                isValid = CheckTileRange([difference], difference == fromPiece.moveRadius, fromIndex, toIndex, difference) ;
             }
 
             // *
-            // king can move in any way for 1 block
+            // king can move in any way for 1 square
             int[] kingRange = [1, 7, 8, 9];
             if (fromPiece is King)
             {
                 isValid = kingRange.Contains(difference);
+
+                // king has multiple ways to move, but can always only move one square, so we make a new int array with the difference found.
+                isValid = CheckTileRange([difference], isValid, fromIndex, toIndex, difference);
             }
 
             // + 
@@ -57,6 +61,8 @@ namespace ChessAPI.Services
                 // check with module if the rook has moved up 1 or more squares up or down 
                 // or when moving left to right the rank (A3 -> H3) should be the same.
                 isValid = (difference % 8 == 0 ? true : to.rank == from.rank);
+
+                isValid = CheckTileRange([difference], isValid, fromIndex, toIndex, difference);
             }
 
             // /
@@ -66,31 +72,8 @@ namespace ChessAPI.Services
             {
                 isValid = bishopRange.Any(b => difference % b == 0);
 
-                if (isValid)
-                {
-                    var lastTileCheckedIndex = fromIndex;
-                    for (int i = 0; i < bishopRange.Length; i++)
-                    {
-                        var rangeHolder = bishopRange[i];
-                        if (difference % rangeHolder == 0)
-                        {
-                            var isUp = difference > 0;
-                            while (lastTileCheckedIndex != toIndex && (lastTileCheckedIndex - rangeHolder > 0))
-                            {
-                                lastTileCheckedIndex = isUp ? lastTileCheckedIndex + bishopRange[i] : lastTileCheckedIndex - bishopRange[i];
-                                var tileCheck = board.GetValueAtIndex(lastTileCheckedIndex);
-                                if (tileCheck.piece != null)
-                                {
-                                    isValid = false;
-                                    break;
-                                }
-
-                            }
-
-                        }
-                    }
-
-                }
+                isValid = CheckTileRange(bishopRange, isValid, fromIndex, toIndex, difference);
+                
             }
 
             // *
@@ -98,6 +81,8 @@ namespace ChessAPI.Services
             if (fromPiece is Queen)
             {
                 isValid = queenRange.Any(q => difference % q == 0);
+
+                isValid = CheckTileRange(queenRange, isValid, fromIndex, toIndex, difference);
             }
 
             // L
@@ -105,9 +90,40 @@ namespace ChessAPI.Services
             if (fromPiece is Knight)
             {
                 isValid = knightRange.Contains(difference);
+                isValid = CheckTileRange([difference], isValid, fromIndex, toIndex, difference);
             }
 
             return isValid && to.piece == null;
+        }
+
+        private bool CheckTileRange(int[] range, bool previousValid, int fromIndex, int toIndex, int difference)
+        {
+            if (!previousValid) return previousValid;
+
+            var board = _boardGenerator.Board.playingFieldDictionary;
+            var lastTileCheckedIndex = fromIndex;
+            for (int i = 0; i < range.Length; i++)
+            {
+                var rangeHolder = range[i];
+                if (difference % rangeHolder == 0)
+                {
+                    var isUp = difference > 0;
+                    while (lastTileCheckedIndex != toIndex && (lastTileCheckedIndex - rangeHolder > 0))
+                    {
+                        lastTileCheckedIndex = isUp ? lastTileCheckedIndex + range[i] : lastTileCheckedIndex - range[i];
+                        var tileCheck = board.GetValueAtIndex(lastTileCheckedIndex);
+                        if (tileCheck.piece != null)
+                        {
+                            previousValid = false;
+                            break;
+                        }
+
+                    }
+
+                }
+            }
+
+            return previousValid;
         }
     }
 }

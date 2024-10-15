@@ -19,9 +19,6 @@ namespace ChessAPI.Services
         {
             var board = _boardGenerator.Board.playingFieldDictionary;
 
-            // TODO
-            // move getting tile from / to location through function and validate move before instead of during
-
             var fromFileLetter = from.Substring(0, 1);
             var fromFile = TileHelper.ConvertLetterToFileNumber(fromFileLetter);
             var fromRank = Int32.Parse(from.Substring(1, 1));
