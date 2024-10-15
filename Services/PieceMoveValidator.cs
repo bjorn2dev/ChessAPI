@@ -33,25 +33,26 @@ namespace ChessAPI.Services
             // (d2 = 51th position in sortedlist) - (d3 = 43th position in list) = 8 steps = 1 step upward or -8 downward
 
             // To find the difference between two numbers, take the larger one and subtract the smaller one 
-            var difference = (fromPiece.color == PieceColor.White ? toIndex - fromIndex : fromIndex - toIndex);
+            var difference = fromIndex - toIndex;
 
             // ^
             // 1 square up the board = 8 positions up or down the chess board field counting left from right.
             if (fromPiece is Pawn)
             {
+                difference = fromPiece.color == PieceColor.White ?  toIndex - fromIndex : fromIndex - toIndex;
                 // if the difference is higher than 8 its an illegal move
-                isValid = CheckTileRange([difference], difference == fromPiece.moveRadius, fromIndex, toIndex, difference) ;
+                isValid = CheckTileRange([difference], difference == fromPiece.moveRadius, fromIndex, toIndex, difference, fromPiece.color);
             }
 
             // *
             // king can move in any way for 1 square
-            int[] kingRange = [1, 7, 8, 9];
             if (fromPiece is King)
             {
-                isValid = kingRange.Contains(difference);
-
+                int[] kingRange = [-1, -7, -8, -9, 1, 7, 8, 9];
+                var differenceX = fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
                 // king has multiple ways to move, but can always only move one square, so we make a new int array with the difference found.
-                isValid = CheckTileRange([difference], isValid, fromIndex, toIndex, difference);
+                //difference moet hier niet als differencebetween tiles 8 zijn als koning achteruit gaat, dit moet -8 zijn. dan -8 huidige positie die checken.
+                isValid = CheckTileRange([differenceX], kingRange.Contains(differenceX), fromIndex, toIndex, difference, fromPiece.color);
             }
 
             // + 
@@ -60,29 +61,22 @@ namespace ChessAPI.Services
             {
                 // check with module if the rook has moved up 1 or more squares up or down 
                 // or when moving left to right the rank (A3 -> H3) should be the same.
-                isValid = (difference % 8 == 0 ? true : to.rank == from.rank);
-
-                isValid = CheckTileRange([difference], isValid, fromIndex, toIndex, difference);
+                isValid = CheckTileRange([difference], (difference % 8 == 0 ? true : to.rank == from.rank), fromIndex, toIndex, difference, fromPiece.color);
             }
 
             // /
             // bishop can move diagonally 
-            int[] bishopRange = [7, 9];
             if (fromPiece is Bishop)
             {
-                isValid = bishopRange.Any(b => difference % b == 0);
-
-                isValid = CheckTileRange(bishopRange, isValid, fromIndex, toIndex, difference);
-                
+                int[] bishopRange = [7, 9];
+                isValid = CheckTileRange(bishopRange, bishopRange.Any(b => difference % b == 0), fromIndex, toIndex, difference, fromPiece.color);
             }
 
             // *
-            int[] queenRange = [1, 7, 8, 9];
             if (fromPiece is Queen)
             {
-                isValid = queenRange.Any(q => difference % q == 0);
-
-                isValid = CheckTileRange(queenRange, isValid, fromIndex, toIndex, difference);
+                int[] queenRange = [1, 7, 8, 9];
+                isValid = CheckTileRange(queenRange, queenRange.Any(q => difference % q == 0), fromIndex, toIndex, difference, fromPiece.color);
             }
 
             // L
@@ -90,13 +84,13 @@ namespace ChessAPI.Services
             if (fromPiece is Knight)
             {
                 isValid = knightRange.Contains(difference);
-                isValid = CheckTileRange([difference], isValid, fromIndex, toIndex, difference);
+                isValid = CheckTileRange([difference], isValid, fromIndex, toIndex, difference, fromPiece.color);
             }
 
             return isValid && to.piece == null;
         }
 
-        private bool CheckTileRange(int[] range, bool previousValid, int fromIndex, int toIndex, int difference)
+        private bool CheckTileRange(int[] range, bool previousValid, int fromIndex, int toIndex, int differenceBetweenTiles, PieceColor playerColor)
         {
             if (!previousValid) return previousValid;
 
@@ -104,22 +98,31 @@ namespace ChessAPI.Services
             var lastTileCheckedIndex = fromIndex;
             for (int i = 0; i < range.Length; i++)
             {
-                var rangeHolder = range[i];
-                if (difference % rangeHolder == 0)
+                var pieceRangeHolder = range[i];
+                if (differenceBetweenTiles % pieceRangeHolder  == 0)
                 {
-                    var isUp = difference > 0;
-                    while (lastTileCheckedIndex != toIndex && (lastTileCheckedIndex - rangeHolder > 0))
+                    // check if the last checked tile isn't the toIndex.  
+                    // check if the lastTileCheckedIndex - pieceRangeHolder is within the bounds of the board list
+                    while (lastTileCheckedIndex != toIndex && (lastTileCheckedIndex - pieceRangeHolder >= 0))
                     {
-                        lastTileCheckedIndex = isUp ? lastTileCheckedIndex + range[i] : lastTileCheckedIndex - range[i];
+                        // from 52 E7 -> to 51 D7
+                        // from 52 E7 -> to 53 C7
+                        
+                        if (board.GetValueAtIndex(fromIndex).piece is King && lastTileCheckedIndex != toIndex)
+                        {
+                            lastTileCheckedIndex =  range[i] > 0 ? toIndex > fromIndex ? lastTileCheckedIndex + range[i] : lastTileCheckedIndex - range[i] : lastTileCheckedIndex + range[i] * -1;
+                        } else
+                        {
+                            lastTileCheckedIndex = toIndex > fromIndex ? lastTileCheckedIndex + range[i] : lastTileCheckedIndex - range[i];
+                        }
+                        
                         var tileCheck = board.GetValueAtIndex(lastTileCheckedIndex);
                         if (tileCheck.piece != null)
                         {
                             previousValid = false;
                             break;
                         }
-
                     }
-
                 }
             }
 

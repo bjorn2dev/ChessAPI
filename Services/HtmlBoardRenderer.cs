@@ -62,6 +62,7 @@ namespace ChessAPI.Services
                 ";
         const string _pageJs = @"<script>
 document.addEventListener(""DOMContentLoaded"", function() {
+localStorage.clear();
 Array.prototype.slice.call(document.getElementsByTagName(""p"") ).forEach(function(element) {
    element.addEventListener(""click"", function(event) {
         event.stopPropagation();
