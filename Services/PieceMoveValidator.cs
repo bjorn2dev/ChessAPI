@@ -105,16 +105,7 @@ namespace ChessAPI.Services
                     // check if the lastTileCheckedIndex - pieceRangeHolder is within the bounds of the board list
                     while (lastTileCheckedIndex != toIndex && (lastTileCheckedIndex - pieceRangeHolder >= 0))
                     {
-                        // from 52 E7 -> to 51 D7
-                        // from 52 E7 -> to 53 C7
-                        
-                        if (board.GetValueAtIndex(fromIndex).piece is King && lastTileCheckedIndex != toIndex)
-                        {
-                            lastTileCheckedIndex =  range[i] > 0 ? toIndex > fromIndex ? lastTileCheckedIndex + range[i] : lastTileCheckedIndex - range[i] : lastTileCheckedIndex + range[i] * -1;
-                        } else
-                        {
-                            lastTileCheckedIndex = toIndex > fromIndex ? lastTileCheckedIndex + range[i] : lastTileCheckedIndex - range[i];
-                        }
+                        lastTileCheckedIndex = toIndex > fromIndex ? lastTileCheckedIndex + Math.Abs(range[i]) : lastTileCheckedIndex - Math.Abs(range[i]);
                         
                         var tileCheck = board.GetValueAtIndex(lastTileCheckedIndex);
                         if (tileCheck.piece != null)
