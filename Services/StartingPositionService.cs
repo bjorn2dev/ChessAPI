@@ -1,73 +1,64 @@
 ﻿using ChessAPI.Interfaces;
+using ChessAPI.Models;
 using ChessAPI.Models.Pieces;
+using Microsoft.Extensions.Options;
 using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Services
 {
     public class StartingPositionService : IStartingPositionProvider
     {
-        private readonly string _kingWhiteStart = "E1";
-        private readonly string _queenWhiteStart = "D1";
-        private readonly string[] _rookWhiteStart = ["A1", "H1"];
-        private readonly string[] _bishopWhiteStart = ["C1", "F1"];
-        private readonly string[] _knightWhiteStart = ["B1", "G1"];
-        private readonly string[] _pawnWhiteStart = ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"];
-        private readonly string _kingBlackStart = "E8";
-        private readonly string _queenBlackStart = "D8";
-        private readonly string[] _rookBlackStart = ["A8", "H8"];
-        private readonly string[] _bishopBlackStart = ["C8", "F8"];
-        private readonly string[] _knightBlackStart = ["B8", "G8"];
-        private readonly string[] _pawnBlackStart = ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7"];
-        private readonly string _startingLocation = string.Empty;
-        public StartingPositionService()
-        {           
+        private readonly StartingPositionSettings _startingPositionSettings;
+        public StartingPositionService(IOptions<StartingPositionSettings> startingPositionSettings)
+        {
+            _startingPositionSettings = startingPositionSettings.Value;
         }
 
         public bool IsWhiteStartingPosition(string tileLocation)
         {
             return !String.IsNullOrEmpty(tileLocation) && (
-                tileLocation == _kingWhiteStart ||
-                tileLocation == _queenWhiteStart ||
-                _rookWhiteStart.Contains(tileLocation) ||
-                _bishopWhiteStart.Contains(tileLocation) ||
-                _knightWhiteStart.Contains(tileLocation) ||
-                _pawnWhiteStart.Contains(tileLocation));
+                tileLocation == _startingPositionSettings.KingWhiteStart ||
+                tileLocation == _startingPositionSettings.QueenWhiteStart ||
+                _startingPositionSettings.RookWhiteStart.Contains(tileLocation) ||
+                _startingPositionSettings.BishopWhiteStart.Contains(tileLocation) ||
+                _startingPositionSettings.KnightWhiteStart.Contains(tileLocation) ||
+                _startingPositionSettings.PawnWhiteStart.Contains(tileLocation));
         }
 
         public bool IsBlackStartingPosition(string tileLocation)
         {
             return !String.IsNullOrEmpty(tileLocation) && (
-               tileLocation == _kingBlackStart ||
-               tileLocation == _queenBlackStart ||
-               _rookBlackStart.Contains(tileLocation) ||
-               _bishopBlackStart.Contains(tileLocation) ||
-               _knightBlackStart.Contains(tileLocation) ||
-               _pawnBlackStart.Contains(tileLocation));
+               tileLocation == _startingPositionSettings.KingBlackStart ||
+               tileLocation == _startingPositionSettings.QueenBlackStart ||
+               _startingPositionSettings.RookBlackStart.Contains(tileLocation) ||
+               _startingPositionSettings.BishopBlackStart.Contains(tileLocation) ||
+               _startingPositionSettings.KnightBlackStart.Contains(tileLocation) ||
+               _startingPositionSettings.PawnBlackStart.Contains(tileLocation));
         }
 
         public Type GetPieceTypeForLocation(string location)
         {
-            if (_kingWhiteStart == location || _kingBlackStart == location)
+            if (_startingPositionSettings.KingWhiteStart == location || _startingPositionSettings.KingBlackStart == location)
             {
                 return typeof(King);
             }
-            if (_queenWhiteStart == location || _queenBlackStart == location)
+            if (_startingPositionSettings.QueenWhiteStart == location || _startingPositionSettings.QueenBlackStart == location)
             {
                 return typeof(Queen);
             }
-            if (_rookWhiteStart.Contains(location) || _rookBlackStart.Contains(location))
+            if (_startingPositionSettings.RookWhiteStart.Contains(location) || _startingPositionSettings.RookBlackStart.Contains(location))
             {
                 return typeof(Rook);
             }
-            if (_bishopWhiteStart.Contains(location) || _bishopBlackStart.Contains(location))
+            if (_startingPositionSettings.BishopWhiteStart.Contains(location) || _startingPositionSettings.BishopBlackStart.Contains(location))
             {
                 return typeof(Bishop);
             }
-            if (_knightWhiteStart.Contains(location) || _knightBlackStart.Contains(location))
+            if (_startingPositionSettings.KnightWhiteStart.Contains(location) || _startingPositionSettings.KnightBlackStart.Contains(location))
             {
                 return typeof(Knight);
             }
-            if (_pawnWhiteStart.Contains(location) || _pawnBlackStart.Contains(location))
+            if (_startingPositionSettings.PawnWhiteStart.Contains(location) || _startingPositionSettings.PawnBlackStart.Contains(location))
             {
                 return typeof(Pawn);
             }

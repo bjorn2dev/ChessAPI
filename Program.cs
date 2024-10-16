@@ -1,6 +1,7 @@
 
 using ChessAPI.Helpers;
 using ChessAPI.Interfaces;
+using ChessAPI.Models;
 using ChessAPI.Services;
 using System;
 
@@ -11,6 +12,9 @@ namespace ChessAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // add options
+            builder.Services.Configure<StartingPositionSettings>(builder.Configuration.GetSection("StartingPosition"));
 
             // Add services to the container.
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
