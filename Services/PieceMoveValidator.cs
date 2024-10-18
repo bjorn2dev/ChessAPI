@@ -87,7 +87,7 @@ namespace ChessAPI.Services
 
                 // we only need to check the blocks up and down 
                 // we only need to check the blocks exactly next to us until the to position has been reached.
-                queenRange = difference > 9 ?[-7, -8, -9, 7, 8, 9] : _movementType == MovementType.Horizontal ? [1] : [8];
+                queenRange = difference > 9 ? [-7, -8, -9, 7, 8, 9] : _movementType == MovementType.Horizontal ? [1] : [8];
 
                 isValid = CheckTileRange(queenRange,
                     true,
@@ -152,30 +152,35 @@ namespace ChessAPI.Services
                 // check if the difference between tiles is modulo of the range item
                 if (differenceBetweenTiles % pieceRangeHolder == 0)
                 {
-                    // Combine the Rook/Queen horizontal check and regular tile range check
-                    while (lastTileCheckedIndex != toIndex && 
-                        (toIndex > fromIndex ?
-                         (lastTileCheckedIndex + pieceRangeHolder >= 0) :
-                         (lastTileCheckedIndex - pieceRangeHolder >= 0)
-                    ))
-                    {
-                        lastTileCheckedIndex = toIndex > fromIndex
-                        ? lastTileCheckedIndex + Math.Abs(pieceRangeHolder)
-                        : lastTileCheckedIndex - Math.Abs(pieceRangeHolder);
-
-                        var tileCheck = board.GetValueAtIndex(lastTileCheckedIndex);
-
-                        // Check if a piece is blocking the path
-                        if (tileCheck.piece != null)
-                        {
-                            previousValid = false;
-                            break;
-                        }
-                    }
+                    if (!IsPathClear(fromIndex, toIndex, pieceRangeHolder)) return false;
                 }
             }
 
             return previousValid;
+        }
+        private bool IsPathClear(int fromIndex, int toIndex, int step)
+        {
+            var board = _boardGenerator.Board.playingFieldDictionary;
+            int currentIndex = fromIndex;
+
+            while (currentIndex != toIndex &&
+                        (toIndex > fromIndex ?
+                         (currentIndex + step >= 0) :
+                         (currentIndex - step >= 0)
+            ))
+            {
+                currentIndex = toIndex > fromIndex ? currentIndex + Math.Abs(step) : currentIndex - Math.Abs(step);
+
+                var tileCheck = board.GetValueAtIndex(currentIndex);
+
+                if (tileCheck.piece != null)
+                {
+                    // If a piece is found in the way, return false (path is not clear)
+                    return false;
+                }
+            }
+
+            return true;  // Path is clear
         }
     }
 }
