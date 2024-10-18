@@ -38,7 +38,6 @@ namespace ChessAPI.Services
 
             this.SetMovementType(from, to, fromIndex, toIndex, difference);
 
-
             // ^
             // 1 square up the board = 8 positions up or down the chess board field counting left from right.
             if (fromPiece is Pawn)
@@ -62,9 +61,11 @@ namespace ChessAPI.Services
             // rook can move up down left and right to the end of the board. we check the difference for modulo 8, or if the rank is the same
             if (fromPiece is Rook)
             {
+                int[] rookRange = _movementType == MovementType.Horizontal ? [1] : [8];
+
                 // check with module if the rook has moved up 1 or more squares up or down 
                 // or when moving left to right the rank (A3 -> H3) should be the same.
-                isValid = CheckTileRange([difference],
+                isValid = CheckTileRange(rookRange,
                     _movementType == MovementType.Horizontal || _movementType == MovementType.Vertical,
                     fromIndex,
                     toIndex,
@@ -82,16 +83,14 @@ namespace ChessAPI.Services
             // *
             if (fromPiece is Queen)
             {
-                int[] queenRange = [ -1, -7, -8, -9, 1, 7, 8, 9 ]; // Queen moves in all directions
+                int[] queenRange = [-1, -7, -8, -9, 1, 7, 8, 9]; // Queen moves in all directions
 
-                // We can check if the move is horizontal, vertical, or diagonal
-                
-                if(difference > 9 || _movementType == MovementType.Horizontal || _movementType == MovementType.Vertical || _movementType == MovementType.Diagonal)
-                {
-                    queenRange = [-7, -8, -9, 7, 8, 9 ];
-                }
+                // we only need to check the blocks up and down 
+                // we only need to check the blocks exactly next to us until the to position has been reached.
+                queenRange = difference > 9 ?[-7, -8, -9, 7, 8, 9] : _movementType == MovementType.Horizontal ? [1] : [8];
+
                 isValid = CheckTileRange(queenRange,
-                    _movementType == MovementType.Horizontal || _movementType == MovementType.Vertical || _movementType == MovementType.Diagonal, 
+                    true,
                     fromIndex,
                     toIndex,
                     difference);
@@ -121,17 +120,22 @@ namespace ChessAPI.Services
             bool isVertical = difference % 8 == 0;
             bool isHorizontal = from.rank == to.rank;
 
-            if (isDiagonal)
+            if (from.piece is Pawn)
             {
-                _movementType = MovementType.Diagonal;
+                _movementType = MovementType.Other;
+
+            }
+            else if (isHorizontal)
+            {
+                _movementType = MovementType.Horizontal;
             }
             else if (isVertical)
             {
                 _movementType = MovementType.Vertical;
             }
-            else if (isHorizontal)
+            else if (isDiagonal)
             {
-                _movementType = MovementType.Horizontal;
+                _movementType = MovementType.Diagonal;
             }
         }
 
@@ -141,29 +145,23 @@ namespace ChessAPI.Services
 
             var board = _boardGenerator.Board.playingFieldDictionary;
             var lastTileCheckedIndex = fromIndex;
-            var x = JsonConvert.SerializeObject(board);
             for (int i = 0; i < pieceRange.Length; i++)
             {
                 var pieceRangeHolder = pieceRange[i];
-               
 
                 // check if the difference between tiles is modulo of the range item
                 if (differenceBetweenTiles % pieceRangeHolder == 0)
                 {
                     // Combine the Rook/Queen horizontal check and regular tile range check
-                    while (lastTileCheckedIndex != toIndex && (_movementType != MovementType.Horizontal && _movementType != MovementType.Vertical && lastTileCheckedIndex - pieceRangeHolder >= 0))
+                    while (lastTileCheckedIndex != toIndex && 
+                        (toIndex > fromIndex ?
+                         (lastTileCheckedIndex + pieceRangeHolder >= 0) :
+                         (lastTileCheckedIndex - pieceRangeHolder >= 0)
+                    ))
                     {
-                        if ((_movementType != MovementType.Horizontal && _movementType != MovementType.Vertical) || _movementType == MovementType.Other)
-                        {
-                            lastTileCheckedIndex = toIndex > fromIndex
-                            ? lastTileCheckedIndex + Math.Abs(pieceRange[i])
-                            : lastTileCheckedIndex - Math.Abs(pieceRange[i]);
-                        }
-                        else
-                        {
-                            lastTileCheckedIndex = toIndex > fromIndex ? lastTileCheckedIndex + 1 : lastTileCheckedIndex - 1;
-                        }
-                        
+                        lastTileCheckedIndex = toIndex > fromIndex
+                        ? lastTileCheckedIndex + Math.Abs(pieceRangeHolder)
+                        : lastTileCheckedIndex - Math.Abs(pieceRangeHolder);
 
                         var tileCheck = board.GetValueAtIndex(lastTileCheckedIndex);
 
