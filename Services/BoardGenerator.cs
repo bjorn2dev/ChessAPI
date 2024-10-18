@@ -20,12 +20,8 @@ namespace ChessAPI.Services
             Board = new Board();
             _startingPositionProvider = startingPositionProvider;
             _tileRenderer = tileRenderer;
-
-            // TODO change this??
-            this.SetupBoard();
-            this.AddInitialPieces();
-
         }
+
         public void SetupBoard()
         {
             // rank starts from 1 at the bottom and goes up to 8
@@ -43,6 +39,11 @@ namespace ChessAPI.Services
 
         public void AddInitialPieces()
         {
+            if(Board.playingFieldDictionary.Count == 0)
+            {
+                throw new InvalidOperationException("no board");
+            }
+
             foreach (var tile in Board.playingFieldDictionary.Values)
             {
                 if (!string.IsNullOrEmpty(tile.tileAnnotation))
