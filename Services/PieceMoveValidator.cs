@@ -38,6 +38,7 @@ namespace ChessAPI.Services
 
             this.SetMovementType(from, to, fromIndex, toIndex, difference);
 
+
             // ^
             // 1 square up the board = 8 positions up or down the chess board field counting left from right.
             if (fromPiece is Pawn)
@@ -103,7 +104,13 @@ namespace ChessAPI.Services
                 isValid = CheckTileRange([difference], knightRange.Contains(difference), fromIndex, toIndex, difference);
             }
 
-            return isValid && to.piece == null;
+
+            if (_movementType == MovementType.Capture)
+            {
+                isValid = true;
+            }
+
+            return isValid;
         }
 
         private enum MovementType
@@ -111,32 +118,8 @@ namespace ChessAPI.Services
             Other, // todo fix this
             Diagonal,
             Horizontal,
-            Vertical
-        }
-
-        private void SetMovementType(Tile from, Tile to, int fromIndex, int toIndex, int difference)
-        {
-            bool isDiagonal = (Math.Abs(toIndex - fromIndex) % 9 == 0) || (Math.Abs(toIndex - fromIndex) % 7 == 0);
-            bool isVertical = difference % 8 == 0;
-            bool isHorizontal = from.rank == to.rank;
-
-            if (from.piece is Pawn)
-            {
-                _movementType = MovementType.Other;
-
-            }
-            else if (isHorizontal)
-            {
-                _movementType = MovementType.Horizontal;
-            }
-            else if (isVertical)
-            {
-                _movementType = MovementType.Vertical;
-            }
-            else if (isDiagonal)
-            {
-                _movementType = MovementType.Diagonal;
-            }
+            Vertical,
+            Capture
         }
 
         private bool CheckTileRange(int[] pieceRange, bool previousValid, int fromIndex, int toIndex, int differenceBetweenTiles)
@@ -176,6 +159,34 @@ namespace ChessAPI.Services
             }
 
             return previousValid;
+        }
+
+        private void SetMovementType(Tile from, Tile to, int fromIndex, int toIndex, int difference)
+        {
+            bool isDiagonal = (Math.Abs(toIndex - fromIndex) % 9 == 0) || (Math.Abs(toIndex - fromIndex) % 7 == 0);
+            bool isVertical = difference % 8 == 0;
+            bool isHorizontal = from.rank == to.rank;
+
+            if (to.piece != null)
+            {
+                _movementType = MovementType.Capture;
+            }
+            else if (from.piece is Pawn)
+            {
+                _movementType = MovementType.Other;
+            }
+            else if (isHorizontal)
+            {
+                _movementType = MovementType.Horizontal;
+            }
+            else if (isVertical)
+            {
+                _movementType = MovementType.Vertical;
+            }
+            else if (isDiagonal)
+            {
+                _movementType = MovementType.Diagonal;
+            }
         }
     }
 }
