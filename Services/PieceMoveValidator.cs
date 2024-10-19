@@ -113,7 +113,7 @@ namespace ChessAPI.Services
                 isValid = CheckTileRange([difference], knightRange.Contains(difference), fromIndex, toIndex, difference);
             }
 
-            return isValid;
+            return isValid && to.piece == null;
         }
 
         private enum MovementType
