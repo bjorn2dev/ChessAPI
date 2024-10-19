@@ -11,6 +11,7 @@ namespace ChessAPI.Services
     {
         private readonly IBoardGenerator _boardGenerator;
         private MovementType _movementType;
+        private bool _isCapture = false;
         public PieceMoveValidator(IBoardGenerator boardGenerator)
         {
             _boardGenerator = boardGenerator;
@@ -18,7 +19,7 @@ namespace ChessAPI.Services
 
         public bool ValidateMove(Tile from, Tile to)
         {
-            if (from.piece == null) { return false; }
+            if (from.piece == null || (to.piece != null && from.piece.color == to.piece.color) || from.tileAnnotation == to.tileAnnotation) { return false; }
 
             var isValid = false;
             var fromPiece = from.piece;
@@ -38,14 +39,22 @@ namespace ChessAPI.Services
 
             this.SetMovementType(from, to, fromIndex, toIndex, difference);
 
-
             // ^
             // 1 square up the board = 8 positions up or down the chess board field counting left from right.
             if (fromPiece is Pawn)
             {
-                difference = fromPiece.color == PieceColor.White ? toIndex - fromIndex : fromIndex - toIndex;
+                int[] pawnRange;
+                if (_isCapture)
+                {
+                    pawnRange = fromPiece.color == PieceColor.White ? [7, 9] : [-7, -9];
+                } else
+                {
+                    difference = fromPiece.color == PieceColor.White ? toIndex - fromIndex : fromIndex - toIndex;
+                    pawnRange = [difference];
+                }
+                
                 // if the difference is higher than 8 its an illegal move
-                isValid = CheckTileRange([difference], difference == fromPiece.moveRadius, fromIndex, toIndex, difference);
+                isValid = CheckTileRange(pawnRange, !_isCapture && difference == fromPiece.moveRadius || _isCapture && _movementType == MovementType.Diagonal, fromIndex, toIndex, difference);
             }
 
             // *
@@ -88,10 +97,10 @@ namespace ChessAPI.Services
 
                 // we only need to check the blocks up and down 
                 // we only need to check the blocks exactly next to us until the to position has been reached.
-                queenRange = difference > 9 ?[-7, -8, -9, 7, 8, 9] : _movementType == MovementType.Horizontal ? [1] : [8];
+                queenRange = difference > 9 ? [-7, -8, -9, 7, 8, 9] : _movementType == MovementType.Horizontal ? [1] : [8];
 
                 isValid = CheckTileRange(queenRange,
-                    true,
+                    queenRange.Any(q => difference % q == 0),
                     fromIndex,
                     toIndex,
                     difference);
@@ -104,12 +113,6 @@ namespace ChessAPI.Services
                 isValid = CheckTileRange([difference], knightRange.Contains(difference), fromIndex, toIndex, difference);
             }
 
-
-            if (_movementType == MovementType.Capture)
-            {
-                isValid = true;
-            }
-
             return isValid;
         }
 
@@ -118,8 +121,7 @@ namespace ChessAPI.Services
             Other, // todo fix this
             Diagonal,
             Horizontal,
-            Vertical,
-            Capture
+            Vertical
         }
 
         private bool CheckTileRange(int[] pieceRange, bool previousValid, int fromIndex, int toIndex, int differenceBetweenTiles)
@@ -135,30 +137,44 @@ namespace ChessAPI.Services
                 // check if the difference between tiles is modulo of the range item
                 if (differenceBetweenTiles % pieceRangeHolder == 0)
                 {
-                    // Combine the Rook/Queen horizontal check and regular tile range check
-                    while (lastTileCheckedIndex != toIndex && 
-                        (toIndex > fromIndex ?
-                         (lastTileCheckedIndex + pieceRangeHolder >= 0) :
-                         (lastTileCheckedIndex - pieceRangeHolder >= 0)
-                    ))
+                    if (!CheckPath(fromIndex, toIndex, pieceRangeHolder))
                     {
-                        lastTileCheckedIndex = toIndex > fromIndex
-                        ? lastTileCheckedIndex + Math.Abs(pieceRangeHolder)
-                        : lastTileCheckedIndex - Math.Abs(pieceRangeHolder);
-
-                        var tileCheck = board.GetValueAtIndex(lastTileCheckedIndex);
-
-                        // Check if a piece is blocking the path
-                        if (tileCheck.piece != null)
-                        {
-                            previousValid = false;
-                            break;
-                        }
+                        return false;
                     }
                 }
             }
 
             return previousValid;
+        }
+
+        private bool CheckPath(int fromIndex, int toIndex, int step)
+        {
+            var board = _boardGenerator.Board.playingFieldDictionary;
+            int currentIndex = fromIndex;
+            while (currentIndex != toIndex &&
+                        (toIndex > fromIndex ?
+                         (currentIndex + step >= 0) :
+                         (currentIndex - step >= 0)
+                    ))
+            {
+                currentIndex = toIndex > fromIndex ? currentIndex + Math.Abs(step) : currentIndex - Math.Abs(step);
+
+                var tileCheck = board.GetValueAtIndex(currentIndex);
+
+                if (_isCapture && currentIndex == toIndex)
+                {
+                    // continue along, returning true 
+                    continue;
+                }
+
+                if (!_isCapture && tileCheck.piece != null || (_isCapture && tileCheck.piece != null && currentIndex != toIndex))
+                { 
+                    return false;
+                }
+                
+            }
+
+            return true;  // Path is clear
         }
 
         private void SetMovementType(Tile from, Tile to, int fromIndex, int toIndex, int difference)
@@ -169,9 +185,9 @@ namespace ChessAPI.Services
 
             if (to.piece != null)
             {
-                _movementType = MovementType.Capture;
+                _isCapture = true;
             }
-            else if (from.piece is Pawn)
+            if (from.piece is Pawn && !_isCapture)
             {
                 _movementType = MovementType.Other;
             }

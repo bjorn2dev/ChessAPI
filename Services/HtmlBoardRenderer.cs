@@ -62,58 +62,68 @@ namespace ChessAPI.Services
                 ";
         const string _pageJs = @"<script>
 document.addEventListener(""DOMContentLoaded"", function() {
-localStorage.clear();
-Array.prototype.slice.call(document.getElementsByTagName(""p"") ).forEach(function(element) {
-   element.addEventListener(""click"", function(event) {
-        event.stopPropagation();
-        if(localStorage.getItem(""firstClick"") == null) {
-            
+    localStorage.clear();
+
+    // Function to send the XHR request
+    function sendMoveRequest(from, to) {
+        var xhr = new XMLHttpRequest();
+        var url = `/Board/${from}/${to}`;
+        xhr.open(""PUT"", url, true);
+
+        // Set request headers if necessary (e.g., Content-Type)
+        xhr.setRequestHeader(""Content-Type"", ""application/json"");
+
+        xhr.onload = function () {
+            if (xhr.status === 204) {
+                localStorage.removeItem(""firstClick"");
+                console.log(""Move was successful"");
+                location.reload(); 
+            } else {
+                console.log(""Move failed: "" + xhr.status);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.log(""Request failed"");
+        };
+
+        xhr.send(); // Send the request
+    }
+
+    // Add event listeners for all <p> tags
+    Array.prototype.slice.call(document.getElementsByTagName(""p"")).forEach(function(element) {
+        element.addEventListener(""click"", function(event) {
+            event.stopPropagation();
             var parent = event.target.parentElement;
             var tileAnnotation = parent.dataset.tileAnnotation;
 
-	        localStorage.setItem(""firstClick"", tileAnnotation);
-            console.log(""set first click"", tileAnnotation);
-        } 
-   });
-});
-Array.prototype.slice.call(document.getElementsByTagName(""td"")).forEach(function(element) {
-    element.addEventListener(""click"", function(event) {
-        // Check if the <td> doesn't have a <p> and if a first click is stored in localStorage
-        if (event.target.querySelector(""p"") == null && localStorage.getItem(""firstClick"") != null) {
-            var from = localStorage.getItem(""firstClick"");
+            if (localStorage.getItem(""firstClick"") == null) {
+                // Set first click in localStorage
+                localStorage.setItem(""firstClick"", tileAnnotation);
+                console.log(""set first click"", tileAnnotation);
+            } else {
+                // Second click, send the move request
+                var from = localStorage.getItem(""firstClick"");
+                var to = tileAnnotation;
+                sendMoveRequest(from, to); // Trigger the move request
+            }
+        });
+    });
+
+    // Add event listeners for all <td> tags
+    Array.prototype.slice.call(document.getElementsByTagName(""td"")).forEach(function(element) {
+        element.addEventListener(""click"", function(event) {
             var to = event.target.dataset.tileAnnotation;
 
-            // Prepare the PUT request
-            var xhr = new XMLHttpRequest();
-            var url = `/Board/${from}/${to}`;
-            xhr.open(""PUT"", url, true);
-
-            // Set request headers if necessary (e.g., Content-Type, Authorization)
-            xhr.setRequestHeader(""Content-Type"", ""application/json"");
-
-            // Optional: define what to do when the request finishes successfully
-            xhr.onload = function () {
-                if (xhr.status === 204) {
-                    localStorage.removeItem(""firstClick"");
-                    console.log(""Move was successful"");
-                    location.reload(); 
-                } else {
-                    console.log(""Move failed: "" + xhr.status);
-                }
-            };
-
-            // Optional: define what to do in case of an error
-            xhr.onerror = function () {
-                console.log(""Request failed"");
-            };
-
-            // Send the request without a body (since we're only dealing with the URL parameters here)
-            xhr.send();            
-        }
+            if (localStorage.getItem(""firstClick"") != null) {
+                var from = localStorage.getItem(""firstClick"");
+                sendMoveRequest(from, to); // Trigger the move request
+            }
+        });
     });
 });
-});
-</script>";
+</script>
+";
         /// <summary>
         /// 
         /// </summary>
