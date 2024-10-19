@@ -11,7 +11,7 @@ namespace ChessAPI.Services
     {
         private readonly IBoardGenerator _boardGenerator;
         private MovementType _movementType;
-        private bool _isCapture = false;
+        private bool _isCapture;
         public PieceMoveValidator(IBoardGenerator boardGenerator)
         {
             _boardGenerator = boardGenerator;
@@ -179,6 +179,7 @@ namespace ChessAPI.Services
 
         private void SetMovementType(Tile from, Tile to, int fromIndex, int toIndex, int difference)
         {
+            _isCapture = to.piece != null;
             bool isDiagonal = (Math.Abs(toIndex - fromIndex) % 9 == 0) || (Math.Abs(toIndex - fromIndex) % 7 == 0);
             bool isVertical = difference % 8 == 0;
             bool isHorizontal = from.rank == to.rank;
