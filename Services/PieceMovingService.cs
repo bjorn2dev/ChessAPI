@@ -29,6 +29,7 @@ namespace ChessAPI.Services
             var toRank = Int32.Parse(to.Substring(1, 1));
             var toTileEntry = board.FirstOrDefault((t) => t.Key.Item1 == toRank && t.Key.Item2 == toFile);
 
+            // check if move is legal, 
             // return if move isn't valid
             if (!_pieceMoveValidator.ValidateMove(fromTileEntry.Value, toTileEntry.Value)) return;
 
