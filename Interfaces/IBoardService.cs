@@ -8,6 +8,7 @@ namespace ChessAPI.Interfaces
     /// </summary>
     public interface IBoardService
     {
+        void InitializeBoard();
         string GetBoard();
         string GetBoardDictionary();
     }
