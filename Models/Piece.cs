@@ -14,6 +14,6 @@ namespace ChessAPI.Models
 
         public string movePattern = string.Empty;
 
-        public int moveRadius = 0;
+        public bool IsValidMove() { return true; }
     }
 }

@@ -11,15 +11,20 @@ namespace ChessAPI.Services
     {
         private readonly IBoardGenerator _boardGenerator;
         private MovementType _movementType;
+        private readonly ICaptureValidator _captureValidator;
         private bool _isCapture;
-        public PieceMoveValidator(IBoardGenerator boardGenerator)
+        public PieceMoveValidator(IBoardGenerator boardGenerator, ICaptureValidator captureValidator)
         {
             _boardGenerator = boardGenerator;
+            _captureValidator = captureValidator;
         }
 
         public bool ValidateMove(Tile from, Tile to)
         {
-            if (from.piece == null || (to.piece != null && from.piece.color == to.piece.color) || from.tileAnnotation == to.tileAnnotation) { return false; }
+            if(_captureValidator.IsValidCapture(from, to)) 
+            {
+
+            }
 
             var isValid = false;
             var fromPiece = from.piece;
@@ -159,7 +164,7 @@ namespace ChessAPI.Services
             {
                 currentIndex = toIndex > fromIndex ? currentIndex + Math.Abs(step) : currentIndex - Math.Abs(step);
 
-                        var tileCheck = board.GetValueAtIndex(lastTileCheckedIndex);
+                var tileCheck = board.GetValueAtIndex(currentIndex);
 
                 if (_isCapture && currentIndex == toIndex)
                 {
@@ -179,11 +184,6 @@ namespace ChessAPI.Services
 
         private void SetMovementType(Tile from, Tile to, int fromIndex, int toIndex, int difference)
         {
-            _isCapture = to.piece != null;
-            bool isDiagonal = (Math.Abs(toIndex - fromIndex) % 9 == 0) || (Math.Abs(toIndex - fromIndex) % 7 == 0);
-            bool isVertical = difference % 8 == 0;
-            bool isHorizontal = from.rank == to.rank;
-
             if (to.piece != null)
             {
                 _isCapture = true;
@@ -192,15 +192,15 @@ namespace ChessAPI.Services
             {
                 _movementType = MovementType.Other;
             }
-            else if (isHorizontal)
+            else if (from.rank == to.rank)
             {
                 _movementType = MovementType.Horizontal;
             }
-            else if (isVertical)
+            else if (difference % 8 == 0)
             {
                 _movementType = MovementType.Vertical;
             }
-            else if (isDiagonal)
+            else if ((Math.Abs(toIndex - fromIndex) % 9 == 0) || (Math.Abs(toIndex - fromIndex) % 7 == 0))
             {
                 _movementType = MovementType.Diagonal;
             }

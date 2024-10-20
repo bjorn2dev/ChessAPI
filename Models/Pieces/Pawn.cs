@@ -1,4 +1,5 @@
-﻿using static ChessAPI.Models.Enums.Color;
+﻿using System.Security.Cryptography.X509Certificates;
+using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Models.Pieces
 {
@@ -8,7 +9,11 @@ namespace ChessAPI.Models.Pieces
         {
             this.name = "P";
             this.movePattern = "^";
-            this.moveRadius = 8;
+        }
+
+        public override bool IsValidMove()
+        {
+
         }
     }
 }
