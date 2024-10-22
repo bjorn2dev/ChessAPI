@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessAPI", "ChessAPI.csproj", "{2C9675D0-B88B-4CCD-B6F7-1B3A3B8B43A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessAPITests", "..\ChessAPITests\ChessAPITests.csproj", "{71B2DD4F-22D2-4E47-9BFE-A205851D419B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessAPITests", "ChessAPITests\ChessAPITests.csproj", "{71B2DD4F-22D2-4E47-9BFE-A205851D419B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
