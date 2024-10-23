@@ -14,15 +14,13 @@ namespace ChessAPITests.PieceTests
 {
     public class PawnTests
     {
-        private Mock<IPieceMoveValidator> _pieceMoveValidatorMock;
-        private Mock<IPieceHtmlRenderer> _pieceHtmlRendererMock;
+        private IPieceMoveValidator _pieceMoveValidator;
         private IPieceMovingService _pieceMovingService;
         private ITileRenderer _tileRenderer;
         private IStartingPositionProvider _startingPositionProvider;
+        private IPieceHtmlRenderer _pieceHtmlRenderer;
         public PawnTests()
         {
-            _pieceMoveValidatorMock = new Mock<IPieceMoveValidator>();
-            _pieceHtmlRendererMock = new Mock<IPieceHtmlRenderer>();
         }
 
         [Fact]
@@ -46,11 +44,12 @@ namespace ChessAPITests.PieceTests
             };
             IOptions<StartingPositionSettings> options = Options.Create(settings);
             _startingPositionProvider = new StartingPositionService(options);
-            _tileRenderer = new TileHtmlRenderer(_pieceHtmlRendererMock.Object);
+            _pieceHtmlRenderer = new PieceHtmlRenderer();
+            _tileRenderer = new TileHtmlRenderer(_pieceHtmlRenderer);
             var boardGenerator = new BoardGenerator(_startingPositionProvider, _tileRenderer);
 
-
-            _pieceMovingService = new PieceMovingService(_tileRenderer, boardGenerator, _pieceMoveValidatorMock.Object);
+            _pieceMoveValidator = new PieceMoveValidator(boardGenerator);
+            _pieceMovingService = new PieceMovingService(_tileRenderer, boardGenerator, _pieceMoveValidator);
             // Act: Set up the board and add pieces
             boardGenerator.SetupBoard();
 

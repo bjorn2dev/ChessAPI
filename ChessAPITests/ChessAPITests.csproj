@@ -7,12 +7,17 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <BaseOutputPath>bin\ChessAPITests\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="PieceTests\**" />
     <EmbeddedResource Remove="PieceTests\**" />
     <None Remove="PieceTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="PieceTests\PawnTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
