@@ -14,11 +14,13 @@ namespace ChessAPI.Services
 
         private readonly IBoardGenerator _boardGenerator;
         private readonly IBoardRenderer _boardRenderer;
+        private readonly IBoardStateService _boardStateService;
 
-        public BoardService(IBoardGenerator boardGenerator, IBoardRenderer boardRenderer)
+        public BoardService(IBoardGenerator boardGenerator, IBoardRenderer boardRenderer, IBoardStateService boardStateService)
         {
             _boardGenerator = boardGenerator;
             _boardRenderer = boardRenderer;
+            _boardStateService = boardStateService;
         }
         // Method to initialize the board by calling SetupBoard and AddInitialPieces
         public void InitializeBoard()
@@ -29,23 +31,25 @@ namespace ChessAPI.Services
 
         public string GetBoard()
         {
+            var board = _boardStateService.Board;
             // Ensure the board is initialized before returning it
-            if (_boardGenerator.Board.playingFieldDictionary.Count == 0)
+            if (board.playingFieldDictionary.Count == 0)
             {
                 InitializeBoard();  // Initialize the board if it's not already initialized
             }
 
-            return _boardRenderer.RenderBoard(_boardGenerator.Board.playingFieldDictionary);
+            return _boardRenderer.RenderBoard(board.playingFieldDictionary);
         }
 
         public string GetBoardDictionary()
         {
-            if (_boardGenerator.Board.playingFieldDictionary.Count == 0)
+            var board = _boardStateService.Board;
+            if (board.playingFieldDictionary.Count == 0)
             {
                 InitializeBoard(); // Initialize the board if it's not already initialized
             }
 
-            return JsonConvert.SerializeObject(_boardGenerator.Board.playingFieldDictionary);
+            return JsonConvert.SerializeObject(board.playingFieldDictionary);
         }
     }
 }

@@ -7,7 +7,6 @@ namespace ChessAPI.Interfaces
     /// </summary>
     public interface IBoardGenerator
     {
-        Board Board { get; }
 
         /// <summary>
         /// 

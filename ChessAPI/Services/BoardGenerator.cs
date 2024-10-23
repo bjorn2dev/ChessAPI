@@ -12,39 +12,41 @@ namespace ChessAPI.Services
     {
         private readonly IStartingPositionProvider _startingPositionProvider;
         private readonly ITileRenderer _tileRenderer;
+        private readonly IBoardStateService _boardStateService;
+        
 
-        public Board Board { get; private set; }
-
-        public BoardGenerator(IStartingPositionProvider startingPositionProvider, ITileRenderer tileRenderer)
+        public BoardGenerator(IStartingPositionProvider startingPositionProvider, ITileRenderer tileRenderer, IBoardStateService boardStateService)
         {
-            Board = new Board();
             _startingPositionProvider = startingPositionProvider;
             _tileRenderer = tileRenderer;
+            _boardStateService = boardStateService;
         }
 
         public void SetupBoard()
         {
+            var board = _boardStateService.Board;
             // rank starts from 1 at the bottom and goes up to 8
-            for (int rank = Board.ranks; rank >= 1; rank--)
+            for (int rank = board.ranks; rank >= 1; rank--)
             {
-                for (int file = 0; file < Board.files; file++)
+                for (int file = 0; file < board.files; file++)
                 {
                     var key = Tuple.Create(rank, file);
                     var tile = new Tile { rank = rank, fileNumber = file, color = (rank + file) % 2 == 0 };
 
-                    Board.playingFieldDictionary[key] = tile;
+                    board.playingFieldDictionary[key] = tile;
                 }
             }
         }
 
         public void AddInitialPieces()
         {
-            if(Board.playingFieldDictionary.Count == 0)
+            var board = _boardStateService.Board;
+            if (board.playingFieldDictionary.Count == 0)
             {
                 throw new InvalidOperationException("no board");
             }
 
-            foreach (var tile in Board.playingFieldDictionary.Values)
+            foreach (var tile in board.playingFieldDictionary.Values)
             {
                 if (!string.IsNullOrEmpty(tile.tileAnnotation))
                 {

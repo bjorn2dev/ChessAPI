@@ -7,17 +7,17 @@ namespace ChessAPI.Services
     public class PieceMovingService : IPieceMovingService
     {
         private readonly ITileRenderer _tileRenderer;
-        private readonly IBoardGenerator _boardGenerator;
         private readonly IPieceMoveValidator _pieceMoveValidator;
-        public PieceMovingService(ITileRenderer tileRenderer, IBoardGenerator boardGenerator, IPieceMoveValidator pieceMoveValidator)
+        private readonly IBoardStateService _boardStateService;
+        public PieceMovingService(ITileRenderer tileRenderer, IPieceMoveValidator pieceMoveValidator, IBoardStateService boardStateService)
         {
             _tileRenderer = tileRenderer;
-            _boardGenerator = boardGenerator;
             _pieceMoveValidator = pieceMoveValidator;
+            _boardStateService = boardStateService;
         }
         public void MovePiece(string from, string to)
         {
-            var board = _boardGenerator.Board.playingFieldDictionary;
+            var board = _boardStateService.Board.playingFieldDictionary;
 
             var fromFileLetter = from.Substring(0, 1);
             var fromFile = TileHelper.ConvertLetterToFileNumber(fromFileLetter);
@@ -31,15 +31,14 @@ namespace ChessAPI.Services
 
             // check if move is legal, 
             // return if move isn't valid
-            if (!_pieceMoveValidator.ValidateMove(fromTileEntry.Value, toTileEntry.Value)) return;
+            if (_pieceMoveValidator.ValidateMove(fromTileEntry.Value, toTileEntry.Value))
+            {
+                _boardStateService.MovePiece(fromTileEntry.Value, toTileEntry.Value);
+                toTileEntry.Value.html = _tileRenderer.Render(toTileEntry.Value);
+                fromTileEntry.Value.html = _tileRenderer.Render(fromTileEntry.Value);
+            }
 
-            //move piece to other tile
-            toTileEntry.Value.piece = fromTileEntry.Value.piece;
-            toTileEntry.Value.html = _tileRenderer.Render(toTileEntry.Value);
-
-            //clean from tile
-            fromTileEntry.Value.piece = null;
-            fromTileEntry.Value.html = _tileRenderer.Render(fromTileEntry.Value);
+           
         }
     }
 }
