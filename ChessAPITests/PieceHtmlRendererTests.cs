@@ -15,6 +15,7 @@ namespace ChessAPITests
         {
             _pieceHtmlRenderer = new PieceHtmlRenderer();
         }
+
         [Fact]
         public void Test_PieceHtmlRender_Expect_RenderedPiece()
         {
