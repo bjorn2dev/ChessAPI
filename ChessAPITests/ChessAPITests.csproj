@@ -9,7 +9,14 @@
     <IsTestProject>true</IsTestProject>
     <BaseOutputPath>bin\ChessAPITests\</BaseOutputPath>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <None Update="..\ChessAPI\appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>appsettings.json</Link>
+    </None>
+  </ItemGroup>
+  
   <ItemGroup>
     <Compile Remove="PieceTests\**" />
     <EmbeddedResource Remove="PieceTests\**" />

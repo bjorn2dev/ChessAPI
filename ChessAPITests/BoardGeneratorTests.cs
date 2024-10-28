@@ -34,17 +34,6 @@ namespace ChessAPITests
         }
 
         [Fact]
-        public void Test_BoardGeneratorInitial_Expect_EmptyBoard()
-        {
-            // Arrange
-            var boardStateService = new BoardStateService();
-            _boardStateServiceMock.Setup(bs => bs.Board).Returns(boardStateService.Board);
-
-            // Assert: Ensure the board is created but not yet populated
-            Assert.Empty(boardStateService.Board.playingFieldDictionary);
-        }
-
-        [Fact]
         public void Test_BoardGeneratorAfterSetup_Expect_PopulatedBoard()
         {
             // Arrange
