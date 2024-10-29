@@ -19,15 +19,15 @@ namespace ChessAPITests
         public IStartingPositionProvider _startingPositionProvider;
         public IPieceHtmlRenderer _pieceHtmlRenderer;
         public TileHtmlRenderer _tileHtmlRenderer;
-        public CompleteBoardSetup()
+        public CompleteBoardSetup(string configSection = "StartingPosition")
         {
             // Use ConfigurationBuilder to load the appsettings file in the test project’s output directory
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory) // Sets the path to the output directory
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            var settings = configuration.GetSection("StartingPosition").Get<StartingPositionSettings>();
+            var settings = configuration.GetSection(configSection).Get<StartingPositionSettings>();
             IOptions<StartingPositionSettings> options = Options.Create(settings);
             _startingPositionProvider = new StartingPositionService(options);
 
@@ -39,5 +39,7 @@ namespace ChessAPITests
             _boardGenerator.SetupBoard();
             _boardGenerator.AddInitialPieces();
         }
+
+        public Tile GetTile(int rank, int file) => _boardStateService.Board.playingFieldDictionary.First(t => t.Key.Item1 == rank && t.Key.Item2 == file).Value;
     }
 }

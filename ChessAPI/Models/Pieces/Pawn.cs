@@ -1,7 +1,6 @@
 ﻿using ChessAPI.Interfaces;
 using System.Security.Cryptography.X509Certificates;
 using static ChessAPI.Models.Enums.Color;
-using static ChessAPI.Services.PieceMoveValidator;
 
 namespace ChessAPI.Models.Pieces
 {
@@ -39,9 +38,10 @@ namespace ChessAPI.Models.Pieces
             if (to.piece == null)
             {
                 return difference == 8;
-            }
 
-            return true;
+            } 
+
+            return false;
         }
     }
 }

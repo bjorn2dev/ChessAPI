@@ -1,4 +1,6 @@
-﻿namespace ChessAPI.Helpers
+﻿using ChessAPI.Models;
+
+namespace ChessAPI.Helpers
 {
     public class TileHelper
     {
@@ -33,5 +35,6 @@
                 _ => throw new ArgumentOutOfRangeException(nameof(letter), "Invalid file letter")
             };
         }
+
     }
 }

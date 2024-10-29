@@ -2,7 +2,6 @@
 using ChessAPI.Models.Enums;
 using System.Drawing;
 using static ChessAPI.Models.Enums.Color;
-using static ChessAPI.Services.PieceMoveValidator;
 
 namespace ChessAPI.Models
 {

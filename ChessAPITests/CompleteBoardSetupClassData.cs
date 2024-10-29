@@ -6,17 +6,17 @@ namespace ChessAPITests
 {
     public class CompleteBoardSetupClassData : IEnumerable<object[]>
     {
-        private readonly CompleteBoardSetup _completeBoardSetup;
+        private readonly string _configSection;
 
-        public CompleteBoardSetupClassData()
+        public CompleteBoardSetupClassData(string configSection = "StartingPosition")
         {
-            _completeBoardSetup = new CompleteBoardSetup();
+            _configSection = configSection;
         }
 
         public IEnumerator<object[]> GetEnumerator()
         {
             // Provide the fully initialized board setup as test data
-            yield return new object[] { _completeBoardSetup };
+            yield return new object[] { new CompleteBoardSetup(_configSection) };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

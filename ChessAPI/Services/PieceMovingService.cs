@@ -22,7 +22,7 @@ namespace ChessAPI.Services
             var fromFileLetter = from.Substring(0, 1);
             var fromFile = TileHelper.ConvertLetterToFileNumber(fromFileLetter);
             var fromRank = Int32.Parse(from.Substring(1, 1));
-            var fromTileEntry = board.FirstOrDefault((t)=> t.Key.Item1 == fromRank && t.Key.Item2 == fromFile);
+            var fromTileEntry = board.FirstOrDefault((t) => t.Key.Item1 == fromRank && t.Key.Item2 == fromFile);
 
             var toFileLetter = to.Substring(0, 1);
             var toFile = TileHelper.ConvertLetterToFileNumber(toFileLetter);
@@ -38,7 +38,7 @@ namespace ChessAPI.Services
                 fromTileEntry.Value.html = _tileRenderer.Render(fromTileEntry.Value);
             }
 
-           
+
         }
     }
 }

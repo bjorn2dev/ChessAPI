@@ -1,5 +1,4 @@
 ﻿using ChessAPI.Models;
-using static ChessAPI.Services.PieceMoveValidator;
 
 namespace ChessAPI.Helpers
 {
@@ -53,7 +52,7 @@ namespace ChessAPI.Helpers
 
             }
 
-            return true;  // Path is clear
+            return true;  // Path is clear and allows movement or potential capture
         }
 
         public static MovementType GetMovementType(Tile from, Tile to, Board board)
