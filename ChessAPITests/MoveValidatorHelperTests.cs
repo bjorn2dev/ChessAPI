@@ -29,10 +29,9 @@ namespace ChessAPITests
         public void Test_DiagonalMovement_Expect_DiagonalMovementType(CompleteBoardSetup boardSetup)
         {
             // Arrange: Fetch specific tiles for testing diagonal movement
-            // E2
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 2 && c.Key.Item2 == 4).Value;
-            // F3
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 3 && c.Key.Item2 == 5).Value;
+
+            var fromTile = boardSetup.GetTileByNotation("E2");
+            var toTile = boardSetup.GetTileByNotation("F3");
 
             // Act
             var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
@@ -46,10 +45,9 @@ namespace ChessAPITests
         public void Test_HorizontalMovement_Expect_HorizontalMovementType(CompleteBoardSetup boardSetup)
         {
             // Arrange: Fetch specific tiles for testing horizontal movement
-            // E2
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 2 && c.Key.Item2 == 4).Value;
-            // D2
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 2 && c.Key.Item2 == 4).Value;
+
+            var fromTile = boardSetup.GetTileByNotation("E2");
+            var toTile = boardSetup.GetTileByNotation("D2");
 
             // Act
             var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
@@ -63,10 +61,9 @@ namespace ChessAPITests
         public void Test_VerticalMovement_Expect_VerticalMovementType(CompleteBoardSetup boardSetup)
         {
             // Arrange: Fetch specific tiles for testing Vertical movement
-            // E2
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 2 && c.Key.Item2 == 4).Value;
-            // E3
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 3 && c.Key.Item2 == 4).Value;
+
+            var fromTile = boardSetup.GetTileByNotation("E2");
+            var toTile = boardSetup.GetTileByNotation("E3");
 
             // Act
             var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
@@ -80,10 +77,9 @@ namespace ChessAPITests
         public void Test_LShapedMovement_Expect_LShapedMovementType(CompleteBoardSetup boardSetup)
         {
             // Arrange: Fetch specific tiles for testing L shaped movement
-            // B1
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 1 && c.Key.Item2 == 2).Value;
-            // C3
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 3 && c.Key.Item2 == 3).Value;
+
+            var fromTile = boardSetup.GetTileByNotation("B1");
+            var toTile = boardSetup.GetTileByNotation("C3");
 
             // Act
             var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
@@ -97,10 +93,9 @@ namespace ChessAPITests
         public void Test_InvalidMovement_Expect_InvalidMovementType(CompleteBoardSetup boardSetup)
         {
             // Arrange: Fetch specific tiles for testing invalid movement
-            // B1
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 1 && c.Key.Item2 == 1).Value;
-            // C4
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 4 && c.Key.Item2 == 2).Value;
+
+            var fromTile = boardSetup.GetTileByNotation("B1");
+            var toTile = boardSetup.GetTileByNotation("C4");
 
             // Act
             var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
@@ -115,16 +110,15 @@ namespace ChessAPITests
         public void Test_CheckTileRange_Expect_True(CompleteBoardSetup boardSetup)
         {
             // Arrange: Fetch specific tiles for testing invalid movement
-            // C7
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 7 && c.Key.Item2 == 2).Value;
-            // C6
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 2).Value;
+
+            var fromTile = boardSetup.GetTileByNotation("C7");
+            var toTile = boardSetup.GetTileByNotation("C6");
 
             var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromTile, toTile, boardSetup._boardStateService.Board);
+            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the path is clear
             Assert.True(pathClear);
@@ -137,16 +131,14 @@ namespace ChessAPITests
             // this test requires the captureboard starting setup, which has a white pawn on D6 and thus disallowing pawn movement from D6 to D7
 
             // Arrange: Fetch specific tiles for testing invalid movement
-            // D8
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 8 && c.Key.Item2 == 3).Value;
-            // D6
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
+            var fromTile = boardSetup.GetTileByNotation("G7");
+            var toTile = boardSetup.GetTileByNotation("G6");
 
             var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromTile, toTile, boardSetup._boardStateService.Board);
+            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the path is not clear
             Assert.False(pathClear);
@@ -159,15 +151,13 @@ namespace ChessAPITests
             // this test requires the captureboard starting setup, which has a white pawn on D6 and thus disallowing pawn movement from D6 to D7
 
             // Arrange: Fetch specific tiles for testing invalid movement
-            // D7
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 7 && c.Key.Item2 == 3).Value;
-            // D6
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
+            var fromTile = boardSetup.GetTileByNotation("D7");
+            var toTile = boardSetup.GetTileByNotation("D6");
 
             var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             
-            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromTile, toTile, boardSetup._boardStateService.Board);
+            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the path is not clear
             Assert.True(pathClear);
@@ -178,10 +168,8 @@ namespace ChessAPITests
         public void Test_CheckPath_Expect_True(CompleteBoardSetup boardSetup)
         {
             // Arrange: Fetch specific tiles for testing invalid movement
-            // D7
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 7 && c.Key.Item2 == 3).Value;
-            // D6
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
+            var fromTile = boardSetup.GetTileByNotation("D7");
+            var toTile = boardSetup.GetTileByNotation("D6");
 
             var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
@@ -198,12 +186,9 @@ namespace ChessAPITests
         public void Test_CheckPath_Expect_False(CompleteBoardSetup boardSetup)
         {
             // this test requires the captureboard starting setup, which has a white pawn on D6 and thus disallowing pawn movement from D6 to D7
-
             // Arrange: Fetch specific tiles for testing invalid movement
-            // D7
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 7 && c.Key.Item2 == 3).Value;
-            // D6
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
+            var fromTile = boardSetup.GetTileByNotation("G7");
+            var toTile = boardSetup.GetTileByNotation("G6");
 
             var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
@@ -220,10 +205,9 @@ namespace ChessAPITests
         public void Test_CheckPathWithCapture_Expect_True(CompleteBoardSetup boardSetup)
         {
             // Arrange: Fetch specific tiles for testing invalid movement
-            // D7
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 7 && c.Key.Item2 == 3).Value;
-            // D6
-            var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
+
+            var fromTile = boardSetup.GetTileByNotation("D7");
+            var toTile = boardSetup.GetTileByNotation("D6");
 
             var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);

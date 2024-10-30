@@ -47,14 +47,14 @@ namespace ChessAPI.Helpers
                 }
             }
 
-            return true;
+            return pieceRange.Any() ? true : false;
         }
 
         public static bool CheckPath(int fromIndex, int toIndex, int step, Board board, MovementType movementType)
         {
             Tile from = board.playingFieldDictionary.GetValueAtIndex(fromIndex);
             Tile to = board.playingFieldDictionary.GetValueAtIndex(toIndex);
-            movementType = MoveValidatorHelper.CheckIfCapture(from, to) ? MovementType.Capture : movementType;
+            movementType = MoveValidatorHelper.CheckIfCapture(from, to, movementType) ? MovementType.Capture : movementType;
             int currentIndex = fromIndex;
             while (currentIndex != toIndex //&&(toIndex > fromIndex ?(currentIndex + step >= 0) :(currentIndex - step >= 0))
                 )
@@ -120,7 +120,9 @@ namespace ChessAPI.Helpers
             return MovementType.Invalid;
         }
 
-        public static bool CheckIfCapture(Tile from, Tile to) => from.piece != null && to.piece != null && from.piece.color != to.piece.color;
+        public static bool CheckIfCapture(Tile from, Tile to, MovementType originalMovementType) { 
+            return from.piece != null && to.piece != null && from.piece.color != to.piece.color && from.piece.capturePattern.Contains(originalMovementType);
+        } 
         
     }
 }

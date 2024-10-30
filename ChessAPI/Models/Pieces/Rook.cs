@@ -10,6 +10,7 @@ namespace ChessAPI.Models.Pieces
         {
             this.name = "R";
             this.movePattern = [MovementType.Vertical, MovementType.Horizontal];
+            this.capturePattern = this.movePattern;
         }
 
         public override bool IsValidCapture(Tile from, Tile to, Board board)

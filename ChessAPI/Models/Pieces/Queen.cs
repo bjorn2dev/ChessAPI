@@ -9,41 +9,29 @@ namespace ChessAPI.Models.Pieces
         {
             this.name = "Q";
             this.movePattern = [MovementType.Diagonal, MovementType.Horizontal, MovementType.Vertical];
+            this.capturePattern = this.movePattern;
         }
 
         public override bool IsValidCapture(Tile from, Tile to, Board board)
         {
-            int[] queenRange = [1, 7, 8, 9]; // Queen moves in all directions
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
-            // we only need to check the blocks up and down 
-            // we only need to check the blocks exactly next to us until the to position has been reached.
-            queenRange = difference > 9 ? [7, 8, 9] : movementType == MovementType.Horizontal ? [1] : [8];
+            var queenRange = MoveValidatorHelper.GetMovementRange(movementType);
 
-            return
-                queenRange.Any(q => difference % q == 0) ?
-                MoveValidatorHelper.CheckTileRange(queenRange, from, to, board) :
-                false;
+            return this.capturePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(queenRange, from, to, board) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, Board board)
         {
-
-            int[] queenRange = [1, 7, 8, 9]; // Queen moves in all directions
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
-            // we only need to check the blocks up and down 
-            // we only need to check the blocks exactly next to us until the to position has been reached.
-            queenRange = difference > 9 ? [7, 8, 9] : movementType == MovementType.Horizontal ? [1] : [8];
-            
-            return
-                queenRange.Any(q => difference % q == 0) ?
-                MoveValidatorHelper.CheckTileRange(queenRange, from, to, board) :
-                false;
+            var queenRange = MoveValidatorHelper.GetMovementRange(movementType);
+
+            return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(queenRange, from, to, board) : false;
         }
     }
 }

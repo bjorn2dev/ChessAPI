@@ -9,6 +9,7 @@ namespace ChessAPI.Models.Pieces
         {
             this.name = "N";
             this.movePattern = [MovementType.LShaped];
+            this.capturePattern = this.movePattern;
         }
         public override bool IsValidCapture(Tile from, Tile to, Board board)
         {
