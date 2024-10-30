@@ -42,20 +42,34 @@ public class BishopTests
 
     public static IEnumerable<object[]> GetBishopCaptureBoardCaptureMoves()
     {
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("C3"), _captureBoardSetup.GetTileByNotation("D5") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("F3"), _captureBoardSetup.GetTileByNotation("E5") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("C6") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("F6") };
     }
 
     public static IEnumerable<object[]> GetBishopCaptureBoardMoves()
     {
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("C3"), _captureBoardSetup.GetTileByNotation("B1") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("C3"), _captureBoardSetup.GetTileByNotation("A4") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("C3"), _captureBoardSetup.GetTileByNotation("E2") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("C3"), _captureBoardSetup.GetTileByNotation("B5") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("F3"), _captureBoardSetup.GetTileByNotation("G1") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("F3"), _captureBoardSetup.GetTileByNotation("H4") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("F3"), _captureBoardSetup.GetTileByNotation("D2") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("F3"), _captureBoardSetup.GetTileByNotation("G5") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("A6") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("C4") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("A4") };
+
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("H6") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("F4") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("H4") };
+    }
+
+    public static IEnumerable<object[]> GetInvalidBishopCaptureBoardMoves()
+    {
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("C5") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("B7") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("A5") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("B4") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("B5"), _captureBoardSetup.GetTileByNotation("D7") };
+
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("F5") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("G7") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("H5") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("G4") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("G5"), _captureBoardSetup.GetTileByNotation("E7") };
     }
 
     [Theory]
@@ -68,23 +82,30 @@ public class BishopTests
         Assert.True(isValidMove);
     }
 
-    private void AssertBishopMovement(Tile fromTile, Tile toTile, bool expectedOutcome)
+    private void AssertBishopMovement(Tile fromTile, Tile toTile, bool expectedOutcome, Board board)
     {
-        bool result = new Bishop().IsValidMovement(fromTile, toTile, _standardBoardSetup._boardStateService.Board);
+        bool result = new Bishop().IsValidMovement(fromTile, toTile, board);
         Assert.Equal(expectedOutcome, result);
     }
 
     [Theory]
-    [MemberData(nameof(GetStandardBishopMoves))]
+    [MemberData(nameof(GetBishopCaptureBoardMoves))]
     public void Test_BishopMovementWithinLimits_Expect_True(Tile fromTile, Tile toTile)
     {
-        AssertBishopMovement(fromTile, toTile, true);
+        AssertBishopMovement(fromTile, toTile, true, _captureBoardSetup._boardStateService.Board);
     }
 
     [Theory]
     [MemberData(nameof(GetInvalidBishopMoves))]
     public void Test_BishopMovementWithinLimits_Expect_False(Tile fromTile, Tile toTile)
     {
-        AssertBishopMovement(fromTile, toTile, false);
+        AssertBishopMovement(fromTile, toTile, false, _standardBoardSetup._boardStateService.Board);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetInvalidBishopCaptureBoardMoves))]
+    public void Test_BishopCaptureBoardMovementWithinLimits_Expect_False(Tile fromTile, Tile toTile)
+    {
+        AssertBishopMovement(fromTile, toTile, false, _captureBoardSetup._boardStateService.Board);
     }
 }
