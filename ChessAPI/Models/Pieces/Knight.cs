@@ -16,30 +16,19 @@ namespace ChessAPI.Models.Pieces
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
-
-            int[] knightRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            if (!this.movePattern.Contains(movementType))
-            {
-                return false;
-            }
-            return MoveValidatorHelper.CheckTileRange([difference], from, to, board);
+            var knightRange = MoveValidatorHelper.GetMovementRange(this.capturePattern.First());
+            return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, Board board)
         {
+
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
+            var knightRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
+            return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
 
-            int[] knightRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            if (!this.movePattern.Contains(movementType))
-            {
-                return false;
-            }
-            return
-                 knightRange.Contains(difference) ?
-                 MoveValidatorHelper.CheckTileRange([difference], from, to, board) :
-                 false;
         }
     }
 }

@@ -17,28 +17,18 @@ namespace ChessAPI.Models.Pieces
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
-            int[] rookRange = MoveValidatorHelper.GetMovementRange(movementType);
-            if (!this.movePattern.Contains(movementType))
-            {
-                return false;
-            }
-            return MoveValidatorHelper.CheckTileRange(rookRange, from, to, board);
+            var rookRange = MoveValidatorHelper.GetMovementRange(movementType);
+            return this.capturePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(rookRange, from, to, board) : false;
         }
          
         public override bool IsValidMovement(Tile from, Tile to, Board board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-            
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
-            int[] rookRange = MoveValidatorHelper.GetMovementRange(movementType);
-            if (!this.movePattern.Contains(movementType))
-            {
-                return false;
-            }
-            return MoveValidatorHelper.CheckTileRange(rookRange, from, to, board);
+            var rookRange = MoveValidatorHelper.GetMovementRange(movementType);
+            return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(rookRange, from, to, board) : false;
         }
     }
 }

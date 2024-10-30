@@ -20,7 +20,7 @@ namespace ChessAPI.Models.Pieces
 
             int[] kingRange = [];
 
-            foreach(var movementType in this.movePattern)
+            foreach(var movementType in this.capturePattern)
             {
                 if (MoveValidatorHelper.GetMovementRange(movementType).Contains(difference))
                 {
@@ -28,12 +28,8 @@ namespace ChessAPI.Models.Pieces
                     break;
                 }
             }
-
             // king has multiple ways to move, but can always only move one square, so we make a new int array with the difference found.
-            return
-                kingRange.Contains(difference) ?
-                MoveValidatorHelper.CheckTileRange([difference], from, to, board) :
-                false;
+            return kingRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, Board board)
@@ -54,10 +50,7 @@ namespace ChessAPI.Models.Pieces
             }
 
             // king has multiple ways to move, but can always only move one square, so we make a new int array with the difference found.
-            return
-                kingRange.Contains(difference) ? 
-                MoveValidatorHelper.CheckTileRange([difference], from, to, board) : 
-                false;
+            return kingRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
         }
     }
 }
