@@ -20,47 +20,65 @@ public class PawnTests
 
     public static IEnumerable<object[]> GetInvalidPawnMoves()
     {
-        yield return new object[] { _standardBoardSetup.GetTile(2, 1), _standardBoardSetup.GetTile(2, 2), MovementType.Vertical };  // A2 to A3
+        // white
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("A2") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("C2") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("A1") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("B1") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("C1") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("D4") };
+        // black
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B7"), _standardBoardSetup.GetTileByNotation("A7") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B7"), _standardBoardSetup.GetTileByNotation("C7") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B7"), _standardBoardSetup.GetTileByNotation("A8") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B7"), _standardBoardSetup.GetTileByNotation("B8") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B7"), _standardBoardSetup.GetTileByNotation("C8") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B7"), _standardBoardSetup.GetTileByNotation("D5") };
     }
     public static IEnumerable<object[]> GetStandardPawnMoves()
     {
-        yield return new object[] { _standardBoardSetup.GetTile(2, 1), _standardBoardSetup.GetTile(3, 1), MovementType.Vertical };  // A2 to A3
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("A2"), _standardBoardSetup.GetTileByNotation("A3") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("A7"), _standardBoardSetup.GetTileByNotation("A6") };
         //yield return new object[] { StandardBoardSetup.GetTile(2, 1), StandardBoardSetup.GetTile(2, 2), MovementType.Horizontal };  // A2 to A4 for initial two-square move
     }
 
     public static IEnumerable<object[]> GetCapturePawnMoves()
     {
-        yield return new object[] { _captureBoardSetup.GetTile(6, 3), _captureBoardSetup.GetTile(7, 4), MovementType.Vertical };  // D6 to E7
-        yield return new object[] { _captureBoardSetup.GetTile(6, 3), _captureBoardSetup.GetTile(7, 2), MovementType.Vertical };  // D6 to C7
-    }
-
-    [Theory]
-    [MemberData(nameof(GetStandardPawnMoves))]
-    public void Test_PawnMovementWithinLimits_Expect_True(Tile fromTile, Tile toTile, MovementType expectedType)
-    {
-        // Act
-        bool isValidMove = new Pawn().IsValidMovement(fromTile, toTile, _standardBoardSetup._boardStateService.Board, expectedType);
-        // Assert
-        Assert.True(isValidMove);
-    }
-
-    [Theory]
-    [MemberData(nameof(GetInvalidPawnMoves))]
-    public void Test_PawnMovementWithinLimits_Expect_False(Tile fromTile, Tile toTile, MovementType expectedType)
-    {
-        // Act
-        bool isInvalidMove = new Pawn().IsValidMovement(fromTile, toTile, _standardBoardSetup._boardStateService.Board, expectedType);
-        // Assert
-        Assert.False(isInvalidMove);
+        // white
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("D4"), _captureBoardSetup.GetTileByNotation("E5") }; 
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("E4"), _captureBoardSetup.GetTileByNotation("D5") };
+        // black
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("D5"), _captureBoardSetup.GetTileByNotation("E4") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("E5"), _captureBoardSetup.GetTileByNotation("D4") };
     }
 
     [Theory]
     [MemberData(nameof(GetCapturePawnMoves))]
-    public void Test_PawnMovementCapture(Tile fromTile, Tile toTile, MovementType expectedType)
+    public void Test_PawnMovementCapture(Tile fromTile, Tile toTile)
     {
         // Act
         bool isValidMove = new Pawn().IsValidCapture(fromTile, toTile, _captureBoardSetup._boardStateService.Board);
         // Assert
         Assert.True(isValidMove);
+    }
+
+    private void AssertPawnMovement(Tile fromTile, Tile toTile, bool expectedOutcome)
+    {
+        bool result = new Pawn().IsValidMovement(fromTile, toTile, _standardBoardSetup._boardStateService.Board);
+        Assert.Equal(expectedOutcome, result);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetStandardPawnMoves))]
+    public void Test_PawnMovementWithinLimits_Expect_True(Tile fromTile, Tile toTile)
+    {
+        AssertPawnMovement(fromTile, toTile, true);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetInvalidPawnMoves))]
+    public void Test_PawnMovementWithinLimits_Expect_False(Tile fromTile, Tile toTile)
+    {
+        AssertPawnMovement(fromTile, toTile, false);
     }
 }

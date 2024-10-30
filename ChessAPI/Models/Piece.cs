@@ -13,9 +13,9 @@ namespace ChessAPI.Models
 
         public string name = string.Empty;
 
-        public string movePattern = string.Empty;
+        public MovementType[] movePattern { get; set; }
 
-        public virtual bool IsValidMovement(Tile from, Tile to, Board board, MovementType movementType) { return false; }
+        public virtual bool IsValidMovement(Tile from, Tile to, Board board) { return false; }
 
         public virtual bool IsValidCapture(Tile from, Tile to, Board board) { return false; }
     }

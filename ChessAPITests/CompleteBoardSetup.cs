@@ -39,6 +39,12 @@ namespace ChessAPITests
             _boardGenerator.SetupBoard();
             _boardGenerator.AddInitialPieces();
         }
+        public Tile GetTileByNotation(string notation)
+        {
+            int rank = int.Parse(notation[1].ToString());
+            int file = notation[0] - 'A';
+            return _boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == rank && c.Key.Item2 == file).Value;
+        }
 
         public Tile GetTile(int rank, int file) => _boardStateService.Board.playingFieldDictionary.First(t => t.Key.Item1 == rank && t.Key.Item2 == file).Value;
     }

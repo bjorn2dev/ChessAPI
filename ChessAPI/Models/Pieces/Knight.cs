@@ -8,35 +8,36 @@ namespace ChessAPI.Models.Pieces
         public Knight()
         {
             this.name = "N";
+            this.movePattern = [MovementType.LShaped];
         }
         public override bool IsValidCapture(Tile from, Tile to, Board board)
         {
-            var fromLocation = board.playingFieldDictionary.FirstOrDefault((s) => s.Value == from);
-            var fromIndex = board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
+            var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
+            var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
 
-            var toLocation = board.playingFieldDictionary.FirstOrDefault(s => s.Value == to);
-            var toIndex = board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-
-            var difference = from.piece.color == PieceColor.White ? toIndex - fromIndex : fromIndex - toIndex;
-
-            int[] knightRange = [5, 6, 10, 11, 15, 17];
-            return MoveValidatorHelper.CheckTileRange(knightRange, fromIndex, toIndex, difference, board, MovementType.Capture);
+            int[] knightRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
+            if (!this.movePattern.Contains(movementType))
+            {
+                return false;
+            }
+            return MoveValidatorHelper.CheckTileRange([difference], from, to, board);
         }
 
-        public override bool IsValidMovement(Tile from, Tile to, Board board, MovementType movementType)
+        public override bool IsValidMovement(Tile from, Tile to, Board board)
         {
-            var fromLocation = board.playingFieldDictionary.FirstOrDefault((s) => s.Value == from);
-            var fromIndex = board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
+            var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
+            var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
 
-            var toLocation = board.playingFieldDictionary.FirstOrDefault(s => s.Value == to);
-            var toIndex = board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-
-            var difference = from.piece.color == PieceColor.White ? toIndex - fromIndex : fromIndex - toIndex; ;
-
-            int[] knightRange = [5, 6, 10, 11, 15, 17];
+            int[] knightRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
+            if (!this.movePattern.Contains(movementType))
+            {
+                return false;
+            }
             return
                  knightRange.Contains(difference) ?
-                 MoveValidatorHelper.CheckTileRange([difference], fromIndex, toIndex, difference, board, movementType) :
+                 MoveValidatorHelper.CheckTileRange([difference], from, to, board) :
                  false;
         }
     }

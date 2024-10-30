@@ -120,15 +120,11 @@ namespace ChessAPITests
             // C6
             var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 2).Value;
 
-            var fromLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault((s) => s.Value == fromTile);
-            var fromIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
-
-            var toLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault(s => s.Value == toTile);
-            var toIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-            var difference = fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
+            var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromIndex, toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical);
+            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the path is clear
             Assert.True(pathClear);
@@ -141,20 +137,16 @@ namespace ChessAPITests
             // this test requires the captureboard starting setup, which has a white pawn on D6 and thus disallowing pawn movement from D6 to D7
 
             // Arrange: Fetch specific tiles for testing invalid movement
-            // D7
-            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 7 && c.Key.Item2 == 3).Value;
+            // D8
+            var fromTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 8 && c.Key.Item2 == 3).Value;
             // D6
             var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
 
-            var fromLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault((s) => s.Value == fromTile);
-            var fromIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
-
-            var toLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault(s => s.Value == toTile);
-            var toIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-            var difference = fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
+            var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromIndex, toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical);
+            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the path is not clear
             Assert.False(pathClear);
@@ -172,15 +164,10 @@ namespace ChessAPITests
             // D6
             var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
 
-            var fromLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault((s) => s.Value == fromTile);
-            var fromIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
-
-            var toLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault(s => s.Value == toTile);
-            var toIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-            var difference = fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
-
-
-            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromIndex, toIndex, difference, boardSetup._boardStateService.Board, MovementType.Capture);
+            var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
+            
+            var pathClear = MoveValidatorHelper.CheckTileRange([8], fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the path is not clear
             Assert.True(pathClear);
@@ -196,15 +183,11 @@ namespace ChessAPITests
             // D6
             var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
 
-            var fromLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault((s) => s.Value == fromTile);
-            var fromIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
-
-            var toLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault(s => s.Value == toTile);
-            var toIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-            var difference = fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
+            var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckPath(fromIndex, toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical);
+            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical);
 
             // Assert that the path is not clear
             Assert.True(pathClear);
@@ -222,15 +205,11 @@ namespace ChessAPITests
             // D6
             var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
 
-            var fromLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault((s) => s.Value == fromTile);
-            var fromIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
-
-            var toLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault(s => s.Value == toTile);
-            var toIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-            var difference = fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
+            var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckPath(fromIndex, toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical);
+            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical);
 
             // Assert that the path is not clear
             Assert.False(pathClear);
@@ -246,15 +225,11 @@ namespace ChessAPITests
             // D6
             var toTile = boardSetup._boardStateService.Board.playingFieldDictionary.First(c => c.Key.Item1 == 6 && c.Key.Item2 == 3).Value;
 
-            var fromLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault((s) => s.Value == fromTile);
-            var fromIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
-
-            var toLocation = boardSetup._boardStateService.Board.playingFieldDictionary.FirstOrDefault(s => s.Value == toTile);
-            var toIndex = boardSetup._boardStateService.Board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-            var difference = fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
+            var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckPath(fromIndex, toIndex, difference, boardSetup._boardStateService.Board, MovementType.Capture);
+            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Capture);
 
             // Assert that the path is not clear
             Assert.True(pathClear);

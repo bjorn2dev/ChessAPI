@@ -24,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="PieceTests\BishopTests.cs" />
+    <Compile Include="PieceTests\KnightTests.cs" />
     <Compile Include="PieceTests\PawnTests.cs" />
   </ItemGroup>
 

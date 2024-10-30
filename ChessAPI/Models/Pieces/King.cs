@@ -9,40 +9,53 @@ namespace ChessAPI.Models.Pieces
         public King()
         {
             this.name = "K";
+            this.movePattern = [MovementType.Diagonal, MovementType.Horizontal, MovementType.Vertical];
         }
 
         public override bool IsValidCapture(Tile from, Tile to, Board board)
         {
-            int[] kingRange = [1, 7, 8, 9];
-            var fromLocation = board.playingFieldDictionary.FirstOrDefault((s) => s.Value == from);
-            var fromIndex = board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
+            var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
-            var toLocation = board.playingFieldDictionary.FirstOrDefault(s => s.Value == to);
-            var toIndex = board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-            var difference = from.piece.color == PieceColor.White ? toIndex - fromIndex : fromIndex - toIndex;
+            int[] kingRange = [];
+
+            foreach(var movementType in this.movePattern)
+            {
+                if (MoveValidatorHelper.GetMovementRange(movementType).Contains(difference))
+                {
+                    kingRange = MoveValidatorHelper.GetMovementRange(movementType);
+                    break;
+                }
+            }
 
             // king has multiple ways to move, but can always only move one square, so we make a new int array with the difference found.
             return
                 kingRange.Contains(difference) ?
-                MoveValidatorHelper.CheckTileRange([difference], fromIndex, toIndex, difference, board, MovementType.Capture) :
+                MoveValidatorHelper.CheckTileRange([difference], from, to, board) :
                 false;
         }
 
-        public override bool IsValidMovement(Tile from, Tile to, Board board, MovementType movementType)
+        public override bool IsValidMovement(Tile from, Tile to, Board board)
         {
 
-            int[] kingRange = [1, 7, 8, 9];
-            var fromLocation = board.playingFieldDictionary.FirstOrDefault((s) => s.Value == from);
-            var fromIndex = board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
+            var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
-            var toLocation = board.playingFieldDictionary.FirstOrDefault(s => s.Value == to);
-            var toIndex = board.playingFieldDictionary.IndexOfKey(toLocation.Key);
-            var difference = from.piece.color == PieceColor.White ? toIndex - fromIndex : fromIndex - toIndex;
-            
+            int[] kingRange = [];
+
+            foreach (var movementType in this.movePattern)
+            {
+                if (MoveValidatorHelper.GetMovementRange(movementType).Contains(difference))
+                {
+                    kingRange = MoveValidatorHelper.GetMovementRange(movementType);
+                    break;
+                }
+            }
+
             // king has multiple ways to move, but can always only move one square, so we make a new int array with the difference found.
             return
                 kingRange.Contains(difference) ? 
-                MoveValidatorHelper.CheckTileRange([difference], fromIndex, toIndex, difference, board, movementType) : 
+                MoveValidatorHelper.CheckTileRange([difference], from, to, board) : 
                 false;
         }
     }
