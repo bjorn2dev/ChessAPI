@@ -29,6 +29,7 @@
     <Compile Include="PieceTests\KnightTests.cs" />
     <Compile Include="PieceTests\PawnTests.cs" />
     <Compile Include="PieceTests\QueenTests.cs" />
+    <Compile Include="PieceTests\RookTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
