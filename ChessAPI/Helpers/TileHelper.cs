@@ -36,5 +36,7 @@ namespace ChessAPI.Helpers
             };
         }
 
+        public static Tile GetTileByRankAndFileNumber(int rank, int file, Board board) => board.playingFieldDictionary.First(t => t.Key.Item1 == rank && t.Key.Item2 == file).Value;
+        public static Tile GetTileByAnnotation(string annotation, Board board) => board.playingFieldDictionary.First(t => t.Value.tileAnnotation == annotation).Value;
     }
 }
