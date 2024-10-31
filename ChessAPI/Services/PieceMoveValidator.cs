@@ -15,6 +15,7 @@ namespace ChessAPI.Services
         public bool ValidateMove(Tile from, Tile to)
         {
             var fromPiece = from.piece;
+
             var board = _boardStateService.Board;
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
 

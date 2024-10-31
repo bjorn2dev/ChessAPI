@@ -9,30 +9,22 @@ namespace ChessAPI.Controllers
     public class BoardController : ControllerBase
     {
         private readonly ILogger<BoardController> _logger;
-        private readonly IBoardService _boardService;
         private readonly IPieceMovingService _pieceMovingService;
+        private readonly IGameGenerator _gameGenerator;
 
-        public BoardController(ILogger<BoardController> logger, IBoardService boardService, IPieceMovingService pieceMovingService)
+        public BoardController(ILogger<BoardController> logger, IPieceMovingService pieceMovingService, IGameGenerator gameGenerator)
         {
-            _boardService = boardService;
             _pieceMovingService = pieceMovingService;
             _logger = logger;
+            _gameGenerator = gameGenerator;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var htmlContent = _boardService.GetBoard();
+            var htmlContent = _gameGenerator.GetBoard();
             return Content(htmlContent, "text/html");
         }
-
-
-        [HttpGet("GetBoardDictionary")]
-        public string GetBoardDictionary()
-        {
-            return _boardService.GetBoardDictionary();
-        }
-
 
         [HttpPut("{from}/{to}")]
         public IActionResult MovePiece(string from, string to)

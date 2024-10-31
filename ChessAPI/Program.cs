@@ -18,6 +18,8 @@ namespace ChessAPI
 
             // Add services to the container.
 
+            builder.Services.AddSingleton<IGameGenerator, GameGenerator>();
+            builder.Services.AddSingleton<IPlayerTurnService, PlayerTurnService>();
             builder.Services.AddSingleton<IBoardStateService, BoardStateService>();
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
             builder.Services.AddSingleton<IPieceHtmlRenderer, PieceHtmlRenderer>();

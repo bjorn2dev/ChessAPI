@@ -10,6 +10,5 @@ namespace ChessAPI.Interfaces
     {
         void InitializeBoard();
         string GetBoard();
-        string GetBoardDictionary();
     }
 }

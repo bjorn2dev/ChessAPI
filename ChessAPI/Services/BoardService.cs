@@ -40,16 +40,5 @@ namespace ChessAPI.Services
 
             return _boardRenderer.RenderBoard(board.playingFieldDictionary);
         }
-
-        public string GetBoardDictionary()
-        {
-            var board = _boardStateService.Board;
-            if (board.playingFieldDictionary.Count == 0)
-            {
-                InitializeBoard(); // Initialize the board if it's not already initialized
-            }
-
-            return JsonConvert.SerializeObject(board.playingFieldDictionary);
-        }
     }
 }

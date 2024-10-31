@@ -27,6 +27,7 @@ public class PawnTests
         yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("B1") };
         yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("C1") };
         yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("D4") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("B5") };
         // black
         yield return new object[] { _standardBoardSetup.GetTileByNotation("B7"), _standardBoardSetup.GetTileByNotation("A7") };
         yield return new object[] { _standardBoardSetup.GetTileByNotation("B7"), _standardBoardSetup.GetTileByNotation("C7") };

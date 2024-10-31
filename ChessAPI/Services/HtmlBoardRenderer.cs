@@ -74,8 +74,8 @@ document.addEventListener(""DOMContentLoaded"", function() {
         xhr.setRequestHeader(""Content-Type"", ""application/json"");
 
         xhr.onload = function () {
+            localStorage.removeItem(""firstClick"");
             if (xhr.status === 204) {
-                localStorage.removeItem(""firstClick"");
                 console.log(""Move was successful"");
                 location.reload(); 
             } else {

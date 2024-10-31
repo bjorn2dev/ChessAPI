@@ -9,27 +9,39 @@ namespace ChessAPI.Services
         private readonly ITileRenderer _tileRenderer;
         private readonly IPieceMoveValidator _pieceMoveValidator;
         private readonly IBoardStateService _boardStateService;
-        public PieceMovingService(ITileRenderer tileRenderer, IPieceMoveValidator pieceMoveValidator, IBoardStateService boardStateService)
+        private readonly IPlayerTurnService _playerTurnService;
+        public PieceMovingService(ITileRenderer tileRenderer, IPieceMoveValidator pieceMoveValidator, IBoardStateService boardStateService, IPlayerTurnService playerTurnService)
         {
             _tileRenderer = tileRenderer;
             _pieceMoveValidator = pieceMoveValidator;
             _boardStateService = boardStateService;
+            _playerTurnService = playerTurnService;
         }
         public void MovePiece(string from, string to)
         {
             var fromTile = TileHelper.GetTileByAnnotation(from, _boardStateService.Board);
             var toTile = TileHelper.GetTileByAnnotation(to, _boardStateService.Board);
 
-            // check if move is legal, 
-            // return if move isn't valid
-            if (_pieceMoveValidator.ValidateMove(fromTile, toTile))
-            {
-                _boardStateService.MovePiece(fromTile, toTile);
-                toTile.html = _tileRenderer.Render(toTile);
-                fromTile.html = _tileRenderer.Render(fromTile);
-            }
+            if (fromTile == null || toTile == null || fromTile.piece == null)
+                throw new InvalidOperationException("Invalid move");
 
+            if (!_playerTurnService.IsValidTurn(fromTile.piece.color))
+                throw new InvalidOperationException("It's not this player's turn");
 
+            // check if the move is legal
+            if (!_pieceMoveValidator.ValidateMove(fromTile, toTile))
+                throw new InvalidOperationException("Invalid move");
+
+            // record turn
+            _playerTurnService.RecordTurn(fromTile, toTile);
+
+            // move the piece
+            toTile.piece = fromTile.piece;
+            fromTile.piece = null;
+
+            // update the tiles' HTML content
+            toTile.html = _tileRenderer.Render(toTile);
+            fromTile.html = _tileRenderer.Render(fromTile);
         }
     }
 }

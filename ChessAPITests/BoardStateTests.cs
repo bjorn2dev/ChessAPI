@@ -19,25 +19,6 @@ namespace ChessAPITests
         }
 
         [Fact]
-        public void Test_MovingPiece_ExpectEmptyFromFilledTo()
-        {
-            // Arrange
-            var boardStateService = new BoardStateService();
-
-            // Set up two tiles with a piece on the 'from' tile
-            var fromTile = new Tile { piece = new King() };
-            var toTile = new Tile();
-
-            // Act
-            boardStateService.MovePiece(fromTile, toTile);
-
-            // Assert: Verify the piece has been moved
-            Assert.Null(fromTile.piece);  // The 'from' tile should now be empty
-            Assert.NotNull(toTile.piece); // The 'to' tile should now contain the piece
-            Assert.IsType<King>(toTile.piece); // Verify that the moved piece is a King
-        }
-
-        [Fact]
         public void Test_BoardInitialization_ExpectEmptyPlayingFieldDictionary()
         {
             // Arrange
