@@ -13,5 +13,11 @@
             White
         }
 
+        public enum PlayerColor
+        {
+            Black,
+            White
+        }
+
     }
 }

@@ -137,10 +137,10 @@ document.addEventListener(""DOMContentLoaded"", function() {
             boardStringBuilder.AppendLine(_tableStart);
 
             // Rendering the tiles based on their positions in the dictionary
-            for (int rank = 8; rank >= 1; rank--)
+            for (int rank = 1; rank <= 8; rank++) // Start from 1, go to 8
             {
                 boardStringBuilder.AppendLine(_tableRowStart);
-                for (int file = 0; file < 8; file++)
+                for (int file = 7; file >= 0; file--) // Start from 7, go to 0
                 {
                     var key = Tuple.Create(rank, file);
                     var tile = board[key];

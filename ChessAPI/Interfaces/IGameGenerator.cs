@@ -2,7 +2,7 @@
 {
     public interface IGameGenerator
     {
-        void InitializeGame();
+        void InitializeBoard();
 
         string GetBoard();
     }

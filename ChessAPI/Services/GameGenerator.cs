@@ -6,30 +6,48 @@ namespace ChessAPI.Services
     {
         private readonly IBoardService _boardService;
         private readonly IPlayerTurnService _playerTurnService;
-        private bool _isGameInitialized;
-        public GameGenerator(IBoardService boardService, IPlayerTurnService playerTurnService)
+        private readonly IGameService _gameService;
+        private bool _boardInitialized;
+        public GameGenerator(IBoardService boardService, IPlayerTurnService playerTurnService, IGameService gameService)
         {
-            _playerTurnService = playerTurnService; 
-            _boardService = boardService; ;
-            _isGameInitialized = false;
+            _playerTurnService = playerTurnService;
+            _boardService = boardService;
+            _gameService = gameService;
+            _boardInitialized = false;
         }
 
         public string GetBoard()
         {
-            if (!_isGameInitialized)
+            if (!_boardInitialized)
             {
-                InitializeGame();
+                return this.ChooseColor(); // redirect naar gamecontroller / dashboard
             }
+
             return _boardService.GetBoard();
         }
 
-        public void InitializeGame()
+        public void InitializeBoard()
         {
-            if (!_isGameInitialized)
+            if (!_boardInitialized)
             {
                 _boardService.InitializeBoard();
-                _isGameInitialized = true;
+                _boardInitialized = true;
             }
+        }
+
+        public string ChooseColor()
+        {
+            //this.InitializeBoard();
+            if (_gameService.IsBoardInitialized())
+            {
+                this.InitializeBoard();
+                return _boardService.GetBoard();
+            }
+            else
+            {
+                return _gameService.GetColorSelector();
+            }
+
         }
     }
 }
