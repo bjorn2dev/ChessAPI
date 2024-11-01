@@ -24,6 +24,8 @@ namespace ChessAPI.Services
             return _boardService.GetBoard(_gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
         }
 
+        public string GetBoardAsJson() => Newtonsoft.Json.JsonConvert.SerializeObject(_boardService.GetBoard());
+
         public void InitializeBoard()
         {
             if (!_boardInitialized)

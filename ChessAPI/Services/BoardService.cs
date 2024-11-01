@@ -41,5 +41,7 @@ namespace ChessAPI.Services
 
             return _boardRenderer.RenderBoard(board.playingFieldDictionary, playerColor);
         }
+
+        public Board GetBoard() => _boardStateService.Board;
     }
 }

@@ -11,5 +11,6 @@ namespace ChessAPI.Interfaces
     {
         void InitializeBoard();
         string GetBoard(Color.PlayerColor playerColor = Color.PlayerColor.White);
+        Board GetBoard();
     }
 }

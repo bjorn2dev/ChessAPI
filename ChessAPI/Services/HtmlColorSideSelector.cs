@@ -92,12 +92,11 @@ document.addEventListener(""DOMContentLoaded"", function() {
      xhr.send(); // Send the request
  }
 
-document.querySelector("".selection"").addEventListener(""click"", function(event) {
-    var color = event.target.classList.contains(""white"") ? ""White"" : ""Black"";
-    sendMoveRequest(color);
-
+document.querySelectorAll("".selection"").forEach(function (element) {
+        element.addEventListener(""click"", function () {
+            var color = element.classList.contains(""white"") ? ""White"" : ""Black"";
+            sendMoveRequest(color);
 });
-
 });
 </script>
 ";
