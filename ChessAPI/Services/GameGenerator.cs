@@ -20,7 +20,7 @@ namespace ChessAPI.Services
         {
             if (!_boardInitialized)
             {
-                return this.ChooseColor(); // redirect naar gamecontroller / dashboard
+                return this.ChooseColor(); 
             }
 
             return _boardService.GetBoard();
@@ -38,7 +38,7 @@ namespace ChessAPI.Services
         public string ChooseColor()
         {
             //this.InitializeBoard();
-            if (_gameService.IsBoardInitialized())
+            if (_gameService.IsGameInitialized())
             {
                 this.InitializeBoard();
                 return _boardService.GetBoard();

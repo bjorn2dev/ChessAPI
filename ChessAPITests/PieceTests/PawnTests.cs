@@ -20,6 +20,11 @@ public class PawnTests
 
     public static IEnumerable<object[]> GetInvalidPawnMoves()
     {
+        // check +1 steps
+        // check backward step
+        // check backwards +1 steps
+        // check taking pieces on the outside of the board
+
         // white
         yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("A2") };
         yield return new object[] { _standardBoardSetup.GetTileByNotation("B2"), _standardBoardSetup.GetTileByNotation("C2") };

@@ -73,10 +73,6 @@ namespace ChessAPI.Services
             
             const string _pageJs = @" <script>
 document.addEventListener(""DOMContentLoaded"", function() {
-
-   
-
-
  function sendMoveRequest(color) {
      var xhr = new XMLHttpRequest();
      var url = `/Game/ChooseColor/${color}`;

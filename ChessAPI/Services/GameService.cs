@@ -1,6 +1,7 @@
 ﻿using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
+using Microsoft.Extensions.Options;
 namespace ChessAPI.Services
 {
     public class GameService : IGameService
@@ -9,14 +10,21 @@ namespace ChessAPI.Services
         private User WhitePlayer;
         private User BlackPlayer;
         public bool _playersInitialized;
+        private readonly GameSettings _gameSettings;
+ 
 
-        public GameService(IColorSideSelector colorSideSelector)
+        public GameService(IColorSideSelector colorSideSelector, IOptions<GameSettings> gameSettings)
         {
+            this._gameSettings = gameSettings.Value;
             this._colorSideSelector = colorSideSelector;
-            this._playersInitialized = false;
+            this._playersInitialized = this._gameSettings.SkipColorSelection ? true : false;
         }
         public string GetColorSelector()
         {
+            if (this._playersInitialized)
+            {
+                return string.Empty;
+            }
             List<Color.PieceColor> pieceColorsToShow = new List<Color.PieceColor>();
             if (this.WhitePlayer == null)
             {
@@ -56,7 +64,7 @@ namespace ChessAPI.Services
             this.BlackPlayer = new User();
         }
 
-        public bool IsBoardInitialized() => this._playersInitialized;
+        public bool IsGameInitialized() => this._playersInitialized;
 
     }
 }

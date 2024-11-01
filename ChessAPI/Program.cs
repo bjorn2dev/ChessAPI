@@ -15,10 +15,11 @@ namespace ChessAPI
 
             // add options
             builder.Services.Configure<StartingPositionSettings>(builder.Configuration.GetSection("StartingPosition"));
+            builder.Services.Configure<GameSettings>(builder.Configuration.GetSection("GameSettings"));
 
             // Add services to the container.
 
-            
+
             builder.Services.AddSingleton<IColorSideSelector, HtmlColorSideSelector>();
             builder.Services.AddSingleton<IGameService, GameService>();
             builder.Services.AddSingleton<IGameGenerator, GameGenerator>();

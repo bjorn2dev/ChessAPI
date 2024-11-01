@@ -6,6 +6,6 @@ namespace ChessAPI.Interfaces
     {
         string GetColorSelector();
         void SetupPlayer(Color.PlayerColor playerColor);
-        bool IsBoardInitialized();
+        bool IsGameInitialized();
     }
 }

@@ -19,8 +19,13 @@ namespace ChessAPI.Controllers
         public IActionResult Get()
         {
             var htmlContent = _gameService.GetColorSelector();
-             
-            return string.IsNullOrWhiteSpace(htmlContent) ? RedirectToAction("Board") : Content(htmlContent, "text/html");
+
+            if (string.IsNullOrWhiteSpace(htmlContent))
+            {
+                return RedirectToAction("Get", "Board");
+            }
+
+            return Content(htmlContent, "text/html");
         }
 
         [HttpPut("ChooseColor/{color}")]
