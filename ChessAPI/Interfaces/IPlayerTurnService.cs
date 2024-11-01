@@ -1,5 +1,7 @@
 ﻿using ChessAPI.Models;
 using ChessAPI.Models.Enums;
+using System.Drawing;
+using Color = ChessAPI.Models.Enums.Color;
 namespace ChessAPI.Interfaces
 {
     public interface IPlayerTurnService
@@ -11,5 +13,8 @@ namespace ChessAPI.Interfaces
         bool IsValidTurn(Color.PieceColor color, string userAgent, string userIp);
         void SetWhitePlayer(string userAgent, string userIp);
         void SetBlackPlayer(string userAgent, string userIp);
+        Color.PlayerColor CheckWhoseTurn();
+        bool WhiteAndBlackAreSimilarPlayer();
+        User GetPlayerByInfo(string userAgent, string userIp);
     }
 }

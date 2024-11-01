@@ -22,7 +22,9 @@ namespace ChessAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var htmlContent = _gameGenerator.GetBoard();
+            var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+            var htmlContent = _gameGenerator.GetBoard(userAgent, userIpAddress);
             return Content(htmlContent, "text/html");
         }
 

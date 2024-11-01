@@ -1,4 +1,5 @@
-﻿using ChessAPI.Interfaces;
+﻿using ChessAPI.Helpers;
+using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,13 @@ namespace ChessAPI.Services
                 (this.BlackPlayer != null && this.BlackPlayer.userAgent == userAgent && this.BlackPlayer.userIp == userIp));
         }
 
+        public Color.PlayerColor CheckWhoseTurn() => PlayerTurns.Count == 0 || this.PlayerTurns.Any() && this.PlayerTurns.Last().color == Color.PieceColor.Black ? Color.PlayerColor.White : Color.PlayerColor.Black;
+
+        public bool WhiteAndBlackAreSimilarPlayer()
+        {
+            return this.WhitePlayer.userAgent == this.BlackPlayer.userAgent && this.WhitePlayer.userIp == this.BlackPlayer.userIp;
+        }
+
         public void RecordTurn(Tile fromTile, Tile toTile)
         {
             var playerTurn = new PlayerTurn();
@@ -44,6 +52,11 @@ namespace ChessAPI.Services
         public void SetBlackPlayer(string userAgent, string userIp)
         {
             this.BlackPlayer = new User { color = Color.PlayerColor.Black, userAgent = userAgent, userIp = userIp };
+        }
+
+        public User GetPlayerByInfo(string userAgent, string userIp)
+        {
+            return userAgent == this.WhitePlayer.userAgent && userIp == this.WhitePlayer.userIp ? this.WhitePlayer : this.BlackPlayer;
         }
     }
 }

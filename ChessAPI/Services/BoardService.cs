@@ -3,6 +3,7 @@ using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using Newtonsoft;
 using Newtonsoft.Json;
+using Color = ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Services
 {
@@ -29,7 +30,7 @@ namespace ChessAPI.Services
             _boardGenerator.AddInitialPieces();
         }
 
-        public string GetBoard()
+        public string GetBoard(Color.PlayerColor playerColor = Color.PlayerColor.White)
         {
             var board = _boardStateService.Board;
             // Ensure the board is initialized before returning it
@@ -38,7 +39,7 @@ namespace ChessAPI.Services
                 InitializeBoard();  // Initialize the board if it's not already initialized
             }
 
-            return _boardRenderer.RenderBoard(board.playingFieldDictionary);
+            return _boardRenderer.RenderBoard(board.playingFieldDictionary, playerColor);
         }
     }
 }

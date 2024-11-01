@@ -1,4 +1,5 @@
 ﻿using ChessAPI.Models;
+using Color = ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Interfaces
 {
@@ -12,6 +13,6 @@ namespace ChessAPI.Interfaces
         /// </summary>
         /// <param name="board"></param>
         /// <returns></returns>
-        string RenderBoard(SortedList<Tuple<int, int>, Tile> board);
+        string RenderBoard(SortedList<Tuple<int, int>, Tile> board, Color.PlayerColor showBoardForPlayer);
     }
 }

@@ -4,6 +4,6 @@
     {
         void InitializeBoard();
 
-        string GetBoard();
+        string GetBoard(string userAgent, string userIpAddress);
     }
 }

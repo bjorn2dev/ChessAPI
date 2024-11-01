@@ -14,14 +14,14 @@ namespace ChessAPI.Services
             _boardInitialized = false;
         }
 
-        public string GetBoard()
+        public string GetBoard(string userAgent, string userIpAddress)
         {
             if (!_boardInitialized)
             {
-                return this.ChooseColor(); 
+                return this.ChooseColor(userAgent, userIpAddress); 
             }
 
-            return _boardService.GetBoard();
+            return _boardService.GetBoard(_gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
         }
 
         public void InitializeBoard()
@@ -33,13 +33,12 @@ namespace ChessAPI.Services
             }
         }
 
-        public string ChooseColor()
+        public string ChooseColor(string userAgent, string userIpAddress)
         {
-            //this.InitializeBoard();
             if (_gameService.IsGameInitialized())
             {
                 this.InitializeBoard();
-                return _boardService.GetBoard();
+                return _boardService.GetBoard(_gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
             }
             else
             {

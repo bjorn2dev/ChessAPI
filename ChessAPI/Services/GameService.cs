@@ -12,7 +12,8 @@ namespace ChessAPI.Services
         private readonly IPlayerTurnService _playerTurnService;
         public bool _playersInitialized;
         private readonly GameSettings _gameSettings;
- 
+        public bool IsSinglePlayerGame { get; private set; }
+
 
         public GameService(IColorSideSelector colorSideSelector, IOptions<GameSettings> gameSettings, IPlayerTurnService playerTurnService)
         {
@@ -38,6 +39,7 @@ namespace ChessAPI.Services
             }
             if (pieceColorsToShow.Count() == 0)
             {
+                this.IsSinglePlayerGame = _playerTurnService.WhiteAndBlackAreSimilarPlayer();
                 this._playersInitialized = true;
             }
             return _colorSideSelector.RenderColorSelector(pieceColorsToShow);
@@ -56,7 +58,12 @@ namespace ChessAPI.Services
             }
         }
 
-        public bool IsGameInitialized() => this._playersInitialized;
+        public Color.PlayerColor ShowBoardForPlayerColor(string userAgent, string userIpAddress)
+        {
 
+            return IsSinglePlayerGame ? Color.PlayerColor.White : this._playerTurnService.GetPlayerByInfo(userAgent, userIpAddress).color;
+        }
+
+        public bool IsGameInitialized() => this._playersInitialized;
     }
 }

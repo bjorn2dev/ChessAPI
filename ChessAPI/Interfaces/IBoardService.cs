@@ -1,5 +1,6 @@
 ﻿using ChessAPI.Models;
 using ChessAPI.Services;
+using Color = ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Interfaces
 {
@@ -9,6 +10,6 @@ namespace ChessAPI.Interfaces
     public interface IBoardService
     {
         void InitializeBoard();
-        string GetBoard();
+        string GetBoard(Color.PlayerColor playerColor = Color.PlayerColor.White);
     }
 }
