@@ -17,7 +17,7 @@ namespace ChessAPI.Services
             _boardStateService = boardStateService;
             _playerTurnService = playerTurnService;
         }
-        public void MovePiece(string from, string to)
+        public void MovePiece(string from, string to, string userAgent, string userIp)
         {
             var fromTile = TileHelper.GetTileByAnnotation(from, _boardStateService.Board);
             var toTile = TileHelper.GetTileByAnnotation(to, _boardStateService.Board);
@@ -25,7 +25,7 @@ namespace ChessAPI.Services
             if (fromTile == null || toTile == null || fromTile.piece == null)
                 throw new InvalidOperationException("Invalid move");
 
-            if (!_playerTurnService.IsValidTurn(fromTile.piece.color))
+            if (!_playerTurnService.IsValidTurn(fromTile.piece.color, userAgent, userIp))
                 throw new InvalidOperationException("It's not this player's turn");
 
             // check if the move is legal

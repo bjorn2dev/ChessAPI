@@ -5,12 +5,10 @@ namespace ChessAPI.Services
     public class GameGenerator : IGameGenerator
     {
         private readonly IBoardService _boardService;
-        private readonly IPlayerTurnService _playerTurnService;
         private readonly IGameService _gameService;
         private bool _boardInitialized;
-        public GameGenerator(IBoardService boardService, IPlayerTurnService playerTurnService, IGameService gameService)
+        public GameGenerator(IBoardService boardService, IGameService gameService)
         {
-            _playerTurnService = playerTurnService;
             _boardService = boardService;
             _gameService = gameService;
             _boardInitialized = false;

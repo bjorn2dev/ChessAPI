@@ -29,7 +29,9 @@ namespace ChessAPI.Controllers
         [HttpPut("{from}/{to}")]
         public IActionResult MovePiece(string from, string to)
         {
-            _pieceMovingService.MovePiece(from, to);
+            var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+            _pieceMovingService.MovePiece(from, to, userAgent, userIpAddress);
             return NoContent();
         }
 

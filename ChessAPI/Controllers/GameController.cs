@@ -34,7 +34,9 @@ namespace ChessAPI.Controllers
 
             if (Enum.TryParse(color, out Color.PlayerColor colorOut))
             {
-                _gameService.SetupPlayer(colorOut);
+                var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+                var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+                _gameService.SetupPlayer(colorOut, userAgent, userIpAddress);
             }
 
             return NoContent();

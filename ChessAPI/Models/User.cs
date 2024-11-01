@@ -1,4 +1,6 @@
-﻿using ChessAPI.Models.Enums;
+﻿using ChessAPI.Helpers;
+using ChessAPI.Models.Enums;
+using Newtonsoft.Json.Linq;
 
 namespace ChessAPI.Models
 {
@@ -6,21 +8,26 @@ namespace ChessAPI.Models
     {
         public User()
         {
-            
         }
-        public string name { get; set; }
-
-        private Color.PlayerColor color;
-
-        public Color.PlayerColor GetColor()
-        {
-            return color;
+        public string name { get; private set; }
+        private Color.PlayerColor _color;
+        public Color.PlayerColor color {
+            get => _color;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    name = $"{this.color.ToString()} Player";
+                    _color = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Color can't be changed once set");
+                }
+            }
         }
+        public string userAgent { get; set; }
+        public string userIp { get; set; }
 
-        public void SetColor(Color.PlayerColor value)
-        {
-            this.color = value;
-            this.name = $"{value.ToString()} Player";
-        }
     }
 }
