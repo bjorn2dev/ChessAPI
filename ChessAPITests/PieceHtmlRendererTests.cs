@@ -1,5 +1,5 @@
-﻿using ChessAPI.Helpers;
-using ChessAPI.Models.Pieces;
+﻿using ChessAPI.Models.Pieces;
+using ChessAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,8 +1,8 @@
-﻿using ChessAPI.Helpers;
-using ChessAPI.Interfaces;
+﻿using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
 using ChessAPI.Models.Pieces;
+using ChessAPI.Services;
 using Moq;
 using System;
 using System.Collections.Generic;

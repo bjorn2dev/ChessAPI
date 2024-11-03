@@ -2,7 +2,7 @@
 using ChessAPI.Models;
 using static ChessAPI.Models.Enums.Color;
 
-namespace ChessAPI.Helpers
+namespace ChessAPI.Services
 {
     public class PieceHtmlRenderer : IPieceHtmlRenderer
     {

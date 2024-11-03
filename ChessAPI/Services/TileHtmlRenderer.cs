@@ -1,7 +1,7 @@
 ﻿using ChessAPI.Interfaces;
 using ChessAPI.Models;
 
-namespace ChessAPI.Helpers
+namespace ChessAPI.Services
 {
     public class TileHtmlRenderer : ITileRenderer
     {
