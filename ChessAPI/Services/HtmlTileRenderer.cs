@@ -3,10 +3,10 @@ using ChessAPI.Models;
 
 namespace ChessAPI.Services
 {
-    public class TileHtmlRenderer : ITileRenderer
+    public class HtmlTileRenderer : ITileRenderer
     {
-        private readonly IPieceHtmlRenderer _pieceHtmlRenderer;
-        public TileHtmlRenderer(IPieceHtmlRenderer pieceHtmlRenderer)
+        private readonly IPieceRenderer _pieceHtmlRenderer;
+        public HtmlTileRenderer(IPieceRenderer pieceHtmlRenderer)
         {
             _pieceHtmlRenderer = pieceHtmlRenderer;
         }

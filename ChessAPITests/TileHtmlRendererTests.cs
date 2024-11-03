@@ -14,13 +14,13 @@ namespace ChessAPITests
 {
     public class TileHtmlRendererTests
     {
-        private TileHtmlRenderer _tileHtmlRenderer;
-        private Mock<IPieceHtmlRenderer> _pieceHtmlRendererMock;
+        private HtmlTileRenderer _tileHtmlRenderer;
+        private Mock<IPieceRenderer> _pieceHtmlRendererMock;
 
         public TileHtmlRendererTests()
         {
-            _pieceHtmlRendererMock = new Mock<IPieceHtmlRenderer>();
-            _tileHtmlRenderer = new TileHtmlRenderer(_pieceHtmlRendererMock.Object);
+            _pieceHtmlRendererMock = new Mock<IPieceRenderer>();
+            _tileHtmlRenderer = new HtmlTileRenderer(_pieceHtmlRendererMock.Object);
         }
 
         [Fact]

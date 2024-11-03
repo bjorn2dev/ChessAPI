@@ -16,8 +16,8 @@ namespace ChessAPITests
         public BoardGenerator _boardGenerator;
         public IBoardStateService _boardStateService;
         public IStartingPositionProvider _startingPositionProvider;
-        public IPieceHtmlRenderer _pieceHtmlRenderer;
-        public TileHtmlRenderer _tileHtmlRenderer;
+        public IPieceRenderer _pieceHtmlRenderer;
+        public HtmlTileRenderer _tileHtmlRenderer;
         public CompleteBoardSetup(string configSection = "StartingPosition")
         {
             // Use ConfigurationBuilder to load the appsettings file in the test project’s output directory
@@ -30,8 +30,8 @@ namespace ChessAPITests
             IOptions<StartingPositionSettings> options = Options.Create(settings);
             _startingPositionProvider = new StartingPositionService(options);
 
-            _pieceHtmlRenderer = new PieceHtmlRenderer();
-            _tileHtmlRenderer = new TileHtmlRenderer(_pieceHtmlRenderer);
+            _pieceHtmlRenderer = new HtmlPieceRenderer();
+            _tileHtmlRenderer = new HtmlTileRenderer(_pieceHtmlRenderer);
             _boardStateService = new BoardStateService();
             _boardGenerator = new BoardGenerator(_startingPositionProvider, _tileHtmlRenderer, _boardStateService);
 

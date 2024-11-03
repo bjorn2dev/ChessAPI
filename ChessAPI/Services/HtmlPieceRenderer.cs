@@ -4,7 +4,7 @@ using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Services
 {
-    public class PieceHtmlRenderer : IPieceHtmlRenderer
+    public class HtmlPieceRenderer : IPieceRenderer
     {
         public string RenderHtml(Piece piece)
         {

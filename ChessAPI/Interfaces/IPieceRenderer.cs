@@ -2,7 +2,7 @@
 
 namespace ChessAPI.Interfaces
 {
-    public interface IPieceHtmlRenderer
+    public interface IPieceRenderer
     {
         string RenderHtml(Piece piece);
     }

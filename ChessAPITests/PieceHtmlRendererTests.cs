@@ -10,10 +10,10 @@ namespace ChessAPITests
 {
     public class PieceHtmlRendererTests
     {
-        private PieceHtmlRenderer _pieceHtmlRenderer;
+        private HtmlPieceRenderer _pieceHtmlRenderer;
         public PieceHtmlRendererTests()
         {
-            _pieceHtmlRenderer = new PieceHtmlRenderer();
+            _pieceHtmlRenderer = new HtmlPieceRenderer();
         }
 
         [Fact]

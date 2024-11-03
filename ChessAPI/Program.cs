@@ -26,8 +26,8 @@ namespace ChessAPI
             builder.Services.AddSingleton<IPlayerTurnService, PlayerTurnService>();
             builder.Services.AddSingleton<IBoardStateService, BoardStateService>();
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
-            builder.Services.AddSingleton<IPieceHtmlRenderer, PieceHtmlRenderer>();
-            builder.Services.AddSingleton<ITileRenderer, TileHtmlRenderer>();
+            builder.Services.AddSingleton<IPieceRenderer, HtmlPieceRenderer>();
+            builder.Services.AddSingleton<ITileRenderer, HtmlTileRenderer>();
             builder.Services.AddSingleton<IPieceMoveValidator, PieceMoveValidator>();
             builder.Services.AddSingleton<IPieceMovingService, PieceMovingService>();
             builder.Services.AddSingleton<IStartingPositionProvider, StartingPositionService>();  
