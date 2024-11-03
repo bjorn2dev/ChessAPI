@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ChessAPI.Models.Enums;
+using ChessAPI.Models;
+using Microsoft.Extensions.Options;
 
 namespace ChessAPI.Controllers
 {
@@ -11,16 +13,18 @@ namespace ChessAPI.Controllers
     {
         private readonly IPlayerService _playerService;
         private readonly IGameService _gameService;
-        public GameController(IPlayerService playerService, IGameService gameService)
+        private readonly GameSettings _gameSettings;
+        public GameController(IPlayerService playerService, IGameService gameService, IOptions<GameSettings> gameSettings)
         {
-            _playerService = playerService;
-            _gameService = gameService;
+            this._gameSettings = gameSettings.Value;
+            this._playerService = playerService;
+            this._gameService = gameService;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var htmlContent = _gameService.GetColorSelector();
+            var htmlContent = this._gameService.GetColorSelector();
 
             if (string.IsNullOrWhiteSpace(htmlContent))
             {
@@ -40,7 +44,12 @@ namespace ChessAPI.Controllers
                 var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
                 this._playerService.ConfigurePlayer(colorOut, userAgent, userIpAddress);
             }
-
+            if (this._gameSettings.IsSinglePlayerGame)
+            {
+                var userIpAddress = this._gameSettings.SinglePlayerUserIpAddress;
+                var userAgent = this._gameSettings.SinglePlayerUserAgent;
+                this._playerService.ConfigurePlayer(colorOut == Color.PlayerColor.White ? Color.PlayerColor.Black : Color.PlayerColor.White, userAgent, userIpAddress);
+            }
             return NoContent();
         }
 

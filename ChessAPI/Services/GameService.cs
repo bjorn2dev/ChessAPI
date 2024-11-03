@@ -12,7 +12,6 @@ namespace ChessAPI.Services
         private readonly IColorSideSelector _colorSideSelector;
         private readonly IPlayerService _playerService;
         private readonly GameSettings _gameSettings;
-        public bool IsSinglePlayerGame { get; private set; }
 
         public GameService(IColorSideSelector colorSideSelector, IOptions<GameSettings> gameSettings, IPlayerService playerService)
         {
@@ -21,7 +20,6 @@ namespace ChessAPI.Services
             this._playerService = playerService;
             if (this._gameSettings.SkipColorSelection)
             {
-                this.IsSinglePlayerGame = true;
                 this._playerService.ConfigurePlayer(PlayerColor.White, this._gameSettings.SkipUserAgent, this._gameSettings.SkipUserIpAddress);
                 this._playerService.ConfigurePlayer(PlayerColor.Black, this._gameSettings.SkipUserAgent, this._gameSettings.SkipUserIpAddress);
             }
@@ -41,17 +39,12 @@ namespace ChessAPI.Services
             {
                 pieceColorsToShow.Add(Color.PieceColor.Black);
             }
-            if (pieceColorsToShow.Count() == 0)
-            {
-                this.IsSinglePlayerGame = this._playerService.WhiteAndBlackAreSimilarPlayer();
-            }
             return _colorSideSelector.RenderColorSelector(pieceColorsToShow);
         }
 
         public Color.PlayerColor ShowBoardForPlayerColor(string userAgent, string userIpAddress)
         {
-
-            return this.IsSinglePlayerGame ? Color.PlayerColor.White : this._playerService.GetPlayerByInfo(userAgent, userIpAddress).color;
+            return this._playerService.GetPlayerByInfo(userAgent, userIpAddress).color;
         }
 
         public bool IsGameInitialized() => this._playerService.PlayersInitialized;
