@@ -8,7 +8,7 @@ namespace ChessAPI.Models.Pieces
     {
         public Bishop()
         {
-            this.name = "B";
+            this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Chess_blt45.svg/1280px-Chess_blt45.svg.png\" width=\"100\" height=\"100\">";
             this.movePattern = [MovementType.Diagonal];
             this.capturePattern = this.movePattern;
         }

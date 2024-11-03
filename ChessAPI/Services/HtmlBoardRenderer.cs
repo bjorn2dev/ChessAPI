@@ -95,7 +95,7 @@ document.addEventListener(""DOMContentLoaded"", function() {
     Array.prototype.slice.call(document.getElementsByTagName(""p"")).forEach(function(element) {
         element.addEventListener(""click"", function(event) {
             event.stopPropagation();
-            var parent = event.target.parentElement;
+            var parent = event.target.closest(""td"");
             var tileAnnotation = parent.dataset.tileAnnotation;
 
             if (localStorage.getItem(""firstClick"") == null) {

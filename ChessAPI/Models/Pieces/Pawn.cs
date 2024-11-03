@@ -9,7 +9,7 @@ namespace ChessAPI.Models.Pieces
     {
         public Pawn()
         {
-            this.name = "P";
+            this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Chess_plt45.svg/1280px-Chess_plt45.svg.png\" width=\"100\" height=\"100\">";
             this.movePattern = [MovementType.Vertical];
             this.capturePattern = [MovementType.Diagonal];
         }

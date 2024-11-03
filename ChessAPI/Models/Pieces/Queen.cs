@@ -7,7 +7,7 @@ namespace ChessAPI.Models.Pieces
     {
         public Queen()
         {
-            this.name = "Q";
+            this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Chess_qlt45.svg/1280px-Chess_qlt45.svg.png\"\" width=\"100\" height=\"100\">";
             this.movePattern = [MovementType.Diagonal, MovementType.Horizontal, MovementType.Vertical];
             this.capturePattern = this.movePattern;
         }

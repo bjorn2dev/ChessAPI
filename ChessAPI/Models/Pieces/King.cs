@@ -8,7 +8,7 @@ namespace ChessAPI.Models.Pieces
     {
         public King()
         {
-            this.name = "K";
+            this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Chess_klt45.svg/1280px-Chess_klt45.svg.png\" width=\"100\" height=\"100\">";
             this.movePattern = [MovementType.Diagonal, MovementType.Horizontal, MovementType.Vertical];
             this.capturePattern = this.movePattern;
         }
