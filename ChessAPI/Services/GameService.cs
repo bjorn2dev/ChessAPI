@@ -4,6 +4,7 @@ using ChessAPI.Models.Enums;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.Extensions.Options;
 using System.Runtime.InteropServices;
+using static ChessAPI.Models.Enums.Color;
 namespace ChessAPI.Services
 {
     public class GameService : IGameService
@@ -18,6 +19,12 @@ namespace ChessAPI.Services
             this._gameSettings = gameSettings.Value;
             this._colorSideSelector = colorSideSelector;
             this._playerService = playerService;
+            if (this._gameSettings.SkipColorSelection)
+            {
+                this.IsSinglePlayerGame = true;
+                this._playerService.ConfigurePlayer(PlayerColor.White, this._gameSettings.SkipUserAgent, this._gameSettings.SkipUserIpAddress);
+                this._playerService.ConfigurePlayer(PlayerColor.Black, this._gameSettings.SkipUserAgent, this._gameSettings.SkipUserIpAddress);
+            }
         }
         public string GetColorSelector()
         {

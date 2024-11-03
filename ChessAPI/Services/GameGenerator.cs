@@ -1,4 +1,6 @@
 ﻿using ChessAPI.Interfaces;
+using ChessAPI.Models;
+using Microsoft.Extensions.Options;
 
 namespace ChessAPI.Services
 {
@@ -7,18 +9,26 @@ namespace ChessAPI.Services
         private readonly IBoardService _boardService;
         private readonly IGameService _gameService;
         private bool _boardInitialized;
-        public GameGenerator(IBoardService boardService, IGameService gameService)
+        private readonly GameSettings _gameSettings;
+        public GameGenerator(IBoardService boardService, IGameService gameService, IOptions<GameSettings> gameSettings)
         {
-            _boardService = boardService;
-            _gameService = gameService;
-            _boardInitialized = false;
+            this._gameSettings = gameSettings.Value;
+            this._boardService = boardService;
+            this._gameService = gameService;
+            this._boardInitialized = false;
         }
 
         public string GetBoard(string userAgent, string userIpAddress)
         {
-            if (!_boardInitialized)
+            if (!this._boardInitialized)
             {
                 return this.ChooseColor(userAgent, userIpAddress); 
+            }
+
+            if (this._gameSettings.SkipColorSelection)
+            {
+                userAgent = this._gameSettings.SkipUserAgent;
+                userIpAddress = this._gameSettings.SkipUserIpAddress;
             }
 
             return _boardService.GetBoard(_gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
@@ -26,23 +36,23 @@ namespace ChessAPI.Services
 
         public void InitializeBoard()
         {
-            if (!_boardInitialized)
+            if (!this._boardInitialized)
             {
-                _boardService.InitializeBoard();
-                _boardInitialized = true;
+                this._boardService.InitializeBoard();
+                this._boardInitialized = true;
             }
         }
 
         public string ChooseColor(string userAgent, string userIpAddress)
         {
-            if (_gameService.IsGameInitialized())
+            if (this._gameService.IsGameInitialized())
             {
                 this.InitializeBoard();
-                return _boardService.GetBoard(_gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
+                return this._boardService.GetBoard(this._gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
             }
             else
             {
-                return _gameService.GetColorSelector();
+                return this._gameService.GetColorSelector();
             }
 
         }
