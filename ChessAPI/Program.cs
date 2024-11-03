@@ -23,6 +23,8 @@ namespace ChessAPI
             builder.Services.AddSingleton<IColorSideSelector, HtmlColorSideSelector>();
             builder.Services.AddSingleton<IGameService, GameService>();
             builder.Services.AddSingleton<IGameGenerator, GameGenerator>();
+            builder.Services.AddSingleton<IPlayerService, PlayerService>();
+            builder.Services.AddSingleton<IPlayerSetupService, PlayerSetupService>();
             builder.Services.AddSingleton<IPlayerTurnService, PlayerTurnService>();
             builder.Services.AddSingleton<IBoardStateService, BoardStateService>();
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();

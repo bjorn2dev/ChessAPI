@@ -9,9 +9,11 @@ namespace ChessAPI.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        private IGameService _gameService;
-        public GameController(IGameService gameService)
+        private readonly IPlayerService _playerService;
+        private readonly IGameService _gameService;
+        public GameController(IPlayerService playerService, IGameService gameService)
         {
+            _playerService = playerService;
             _gameService = gameService;
         }
 
@@ -36,7 +38,7 @@ namespace ChessAPI.Controllers
             {
                 var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
                 var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
-                _gameService.SetupPlayer(colorOut, userAgent, userIpAddress);
+                this._playerService.ConfigurePlayer(colorOut, userAgent, userIpAddress);
             }
 
             return NoContent();
