@@ -8,7 +8,9 @@ namespace ChessAPI.Models
     {
         public User()
         {
+
         }
+        
         public string name { get; private set; }
         private Color.PlayerColor _color;
         public Color.PlayerColor color {

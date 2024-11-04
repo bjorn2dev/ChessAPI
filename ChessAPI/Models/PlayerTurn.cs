@@ -3,6 +3,7 @@ namespace ChessAPI.Models
 {
     public class PlayerTurn
     {
+        public TimeSpan turnTimeSpan {  get; set; }
         public User user {  get; set; }
         public Color.PieceColor color { get; set; }
         public Tile fromTile { get; set; }

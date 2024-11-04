@@ -10,11 +10,12 @@ namespace ChessAPI.Services
     {
       private readonly IPlayerService _playerService;
         public List<PlayerTurn> PlayerTurns { get; private set; }
-
-        public PlayerTurnService(IPlayerService playerService)
+        private readonly IGameStateService _gameStateService;
+        public PlayerTurnService(IPlayerService playerService, IGameStateService gameStateService)
         {
             PlayerTurns = new List<PlayerTurn>();
             _playerService = playerService;
+            _gameStateService = gameStateService;
         }
 
         public bool IsValidTurn(Color.PieceColor color, string userAgent, string userIp)
@@ -34,9 +35,20 @@ namespace ChessAPI.Services
 
         public void RecordTurn(Tile fromTile, Tile toTile)
         {
+            var playerColor = fromTile.piece.color;
             var playerTurn = new PlayerTurn();
-            playerTurn.color = fromTile.piece.color;
-            playerTurn.user = playerTurn.color == Color.PieceColor.White ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
+            TimeSpan turnTime = TimeSpan.Zero;
+            if (this.PlayerTurns.Any())
+            {
+                turnTime = this.PlayerTurns.Last((x) => x.color == playerColor).turnTimeSpan;
+            } else
+            {
+                turnTime = DateTime.Now - _gameStateService.GameStartTime;
+            }
+            
+            playerTurn.turnTimeSpan = turnTime;
+            playerTurn.color = playerColor;
+            playerTurn.user = playerColor == Color.PieceColor.White ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
             playerTurn.fromTile = fromTile;
             playerTurn.toTile = toTile;
             PlayerTurns.Add(playerTurn);

@@ -24,6 +24,8 @@ namespace ChessAPI.Services
                 this._playerService.ConfigurePlayer(PlayerColor.Black, this._gameSettings.SkipUserAgent, this._gameSettings.SkipUserIpAddress);
             }
         }
+
+
         public string GetColorSelector()
         {
             if (this._gameSettings.SkipColorSelection)

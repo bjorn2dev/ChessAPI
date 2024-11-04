@@ -14,11 +14,14 @@ namespace ChessAPI.Controllers
         private readonly IPlayerService _playerService;
         private readonly IGameService _gameService;
         private readonly GameSettings _gameSettings;
-        public GameController(IPlayerService playerService, IGameService gameService, IOptions<GameSettings> gameSettings)
+        private readonly IGameStateService _gameStateService;
+        public GameController(IPlayerService playerService, IGameService gameService, IOptions<GameSettings> gameSettings, IGameStateService gameStateService)
         {
             this._gameSettings = gameSettings.Value;
             this._playerService = playerService;
             this._gameService = gameService;
+            this._gameStateService = gameStateService;
+            this._gameStateService.SetPlayerTime(5);
         }
 
         [HttpGet]
@@ -28,6 +31,7 @@ namespace ChessAPI.Controllers
 
             if (string.IsNullOrWhiteSpace(htmlContent))
             {
+                this._gameStateService.StartGameTimer();
                 return RedirectToAction("Get", "Board");
             }
 

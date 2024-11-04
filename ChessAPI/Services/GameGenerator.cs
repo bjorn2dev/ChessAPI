@@ -48,7 +48,8 @@ namespace ChessAPI.Services
             if (this._gameService.IsGameInitialized())
             {
                 this.InitializeBoard();
-                return this._boardService.GetBoard(this._gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
+                var board = this._boardService.GetBoard(this._gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
+                return board;
             }
             else
             {
