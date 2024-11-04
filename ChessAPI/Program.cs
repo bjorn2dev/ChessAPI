@@ -33,6 +33,10 @@ namespace ChessAPI
             builder.Services.AddSingleton<IStartingPositionProvider, StartingPositionService>();  
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
             builder.Services.AddSingleton<IBoardService, BoardService>();
+            builder.Services.AddMvc().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            });
             builder.Services.AddControllersWithViews();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
