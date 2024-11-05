@@ -2,6 +2,7 @@
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
 using Microsoft.AspNetCore.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Runtime.InteropServices;
 using static ChessAPI.Models.Enums.Color;
@@ -12,6 +13,7 @@ namespace ChessAPI.Services
         private readonly IColorSideSelector _colorSideSelector;
         private readonly IPlayerService _playerService;
         private readonly GameSettings _gameSettings;
+        public Guid GameId { get; set; }
 
         public GameService(IColorSideSelector colorSideSelector, IOptions<GameSettings> gameSettings, IPlayerService playerService)
         {
@@ -24,6 +26,23 @@ namespace ChessAPI.Services
                 this._playerService.ConfigurePlayer(PlayerColor.Black, this._gameSettings.SkipUserAgent, this._gameSettings.SkipUserIpAddress);
             }
         }
+
+        public string GetBoard(string userAgent, string userIpAddress)
+        {
+            if (!this._boardInitialized)
+            {
+                return this.ChooseColor(userAgent, userIpAddress);
+            }
+
+            if (this._gameSettings.SkipColorSelection)
+            {
+                userAgent = this._gameSettings.SkipUserAgent;
+                userIpAddress = this._gameSettings.SkipUserIpAddress;
+            }
+
+            return _boardService.GetBoard(_gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
+        }
+
         public string GetColorSelector()
         {
             if (this._gameSettings.SkipColorSelection)

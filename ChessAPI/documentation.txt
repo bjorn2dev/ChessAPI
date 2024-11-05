@@ -1,0 +1,20 @@
+1. Scoped vs. Singleton: Key Principles for Multi-Game Instances
+
+For services that hold state or manipulate data specific to each game (like the board state, piece movement validation, or player turns), you should use Scoped lifetimes. This ensures that each game instance operates independently, avoiding cross-game data bleed.
+
+However, utility services (like a renderer that only generates HTML output without state) can typically remain Singleton. This keeps memory usage low while providing consistent, shared functionality across all game instances.
+Service Type Breakdown
+
+    Game- and Board-Specific Services (Scoped)
+        IGameService, IBoardService, PlayerTurnService
+        These services are directly involved in game-specific operations and hold data or state that should not be shared between games. Making them Scoped ensures each game instance has its own isolated version of these services.
+
+    Stateless or Purely Functional Services (Singleton)
+        TileRenderer, BoardRenderer
+        If these services only handle rendering or output generation without storing or manipulating game-specific data, they can remain as Singleton. This allows them to be shared across all games without affecting individual game states.
+        Utility Services (if any)
+        For any helper or utility classes (e.g., a service to format data), Singleton can be ideal, provided they don't retain game-specific data or configuration.
+
+    Transient Services
+        Validator Services or Factories (if you need unique instances per operation)
+        In some cases, you might have validators or factories that need to be created per action but don't need to persist state across the game session. For example, if MoveValidator checks moves independently and doesn’t retain any game-specific data, making it Transient can reduce memory footprint while supporting stateless operations.

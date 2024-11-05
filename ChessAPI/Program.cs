@@ -1,3 +1,4 @@
+using ChessAPI.Controllers;
 using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Services;
@@ -16,23 +17,29 @@ namespace ChessAPI
             builder.Services.Configure<GameSettings>(builder.Configuration.GetSection("GameSettings"));
 
             // Add services to the container.
+            builder.Services.AddSingleton<IGameManagerService, GameManagerService>(); // Tracks all games as a Singleton
 
+            // Scoped services, specific to each game instance
+            builder.Services.AddScoped<IGameService, GameService>();
+            builder.Services.AddScoped<IBoardService, BoardService>();
+            builder.Services.AddScoped<IPlayerTurnService, PlayerTurnService>();
 
-            builder.Services.AddSingleton<IColorSideSelector, HtmlColorSideSelector>();
-            builder.Services.AddSingleton<IGameService, GameService>();
+            // Singleton services for stateless rendering
             builder.Services.AddSingleton<IGameGenerator, GameGenerator>();
+            builder.Services.AddSingleton<IColorSideSelector, HtmlColorSideSelector>();
             builder.Services.AddSingleton<IPlayerService, PlayerService>();
             builder.Services.AddSingleton<IPlayerSetupService, PlayerSetupService>();
-            builder.Services.AddSingleton<IPlayerTurnService, PlayerTurnService>();
             builder.Services.AddSingleton<IBoardStateService, BoardStateService>();
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
+            builder.Services.AddSingleton<IStartingPositionProvider, StartingPositionService>();
+            builder.Services.AddSingleton<IPieceMoveValidator, PieceMoveValidator>();
             builder.Services.AddSingleton<IPieceRenderer, HtmlPieceRenderer>();
             builder.Services.AddSingleton<ITileRenderer, HtmlTileRenderer>();
-            builder.Services.AddSingleton<IPieceMoveValidator, PieceMoveValidator>();
-            builder.Services.AddSingleton<IPieceMovingService, PieceMovingService>();
-            builder.Services.AddSingleton<IStartingPositionProvider, StartingPositionService>();  
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
-            builder.Services.AddSingleton<IBoardService, BoardService>();
+
+            // Transient for services used briefly and independently per operation
+            builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
+
             builder.Services.AddControllersWithViews();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ChessAPI.Models.Enums;
 using ChessAPI.Models;
 using Microsoft.Extensions.Options;
+using ChessAPI.Services;
 
 namespace ChessAPI.Controllers
 {
@@ -11,15 +12,48 @@ namespace ChessAPI.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        private readonly IPlayerService _playerService;
-        private readonly IGameService _gameService;
-        private readonly GameSettings _gameSettings;
-        public GameController(IPlayerService playerService, IGameService gameService, IOptions<GameSettings> gameSettings)
+        private readonly IGameManagerService _gameManagerService;
+        public GameController(IGameManagerService gameManagerService) //IPlayerService playerService, IGameService gameService, IOptions<GameSettings> gameSettings)
         {
-            this._gameSettings = gameSettings.Value;
-            this._playerService = playerService;
-            this._gameService = gameService;
+            this._gameManagerService = gameManagerService;
         }
+
+        [HttpPost("new")]
+        public IActionResult CreateNewGame()
+        {
+            var gameId = _gameManagerService.CreateNewGame();
+            return Ok(gameId);
+        }
+
+        [HttpGet("{gameId}")]
+        public IActionResult GetGameState(Guid gameId)
+        {
+            var gameService = _gameManagerService.GetGameById(gameId);
+            if (gameService == null)
+            {
+                return NotFound("Game not found");
+            }
+
+            var boardHtml = gameService.GetBoard();
+            return Content(boardHtml, "text/html");
+        }
+
+        [HttpPut("{gameId}/move/{from}/{to}")]
+        public IActionResult MakeMove(Guid gameId, string from, string to)
+        {
+            var gameService = _gameManagerService.GetGameById(gameId);
+            if (gameService == null)
+            {
+                return NotFound("Game not found");
+            }
+
+            gameService.MovePiece(from, to);
+            return NoContent();
+        }
+
+
+
+
 
         [HttpGet]
         public IActionResult Get()
