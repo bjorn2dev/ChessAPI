@@ -1,54 +1,48 @@
 ﻿using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
-using Microsoft.AspNetCore.Http.Headers;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Runtime.InteropServices;
-using static ChessAPI.Models.Enums.Color;
 namespace ChessAPI.Services
 {
     public class GameService : IGameService
     {
-        private readonly IColorSideSelector _colorSideSelector;
         private readonly IPlayerService _playerService;
-        private readonly GameSettings _gameSettings;
-        public Guid GameId { get; set; }
-
-        public GameService(IColorSideSelector colorSideSelector, IOptions<GameSettings> gameSettings, IPlayerService playerService)
+        private readonly IGameGenerator _gameGenerator;
+        private readonly IPlayerTurnService _playerTurnService;
+        private readonly IPieceMovingService _pieceMovingService;
+        public GameService(IPlayerService playerService, IGameGenerator gameGenerator, IPlayerTurnService playerTurnService, IPieceMovingService pieceMovingService)
         {
-            this._gameSettings = gameSettings.Value;
-            this._colorSideSelector = colorSideSelector;
             this._playerService = playerService;
-            if (this._gameSettings.SkipColorSelection)
+            this._gameGenerator = gameGenerator;
+            this._playerTurnService = playerTurnService;
+            this._pieceMovingService = pieceMovingService;
+        }
+
+        public string InitializeGame()
+        {
+            if (this._playerService.PlayersInitialized)
             {
-                this._playerService.ConfigurePlayer(PlayerColor.White, this._gameSettings.SkipUserAgent, this._gameSettings.SkipUserIpAddress);
-                this._playerService.ConfigurePlayer(PlayerColor.Black, this._gameSettings.SkipUserAgent, this._gameSettings.SkipUserIpAddress);
+                this._gameGenerator.InitializeBoard();
+                return this._gameGenerator.GetBoard(this._playerTurnService.CheckWhoseTurn());
+            }
+            else
+            {
+                return this.GetColorSelector();
             }
         }
 
-        public string GetBoard(string userAgent, string userIpAddress)
+        public void MovePiece(string from, string to)
         {
-            if (!this._boardInitialized)
-            {
-                return this.ChooseColor(userAgent, userIpAddress);
-            }
-
-            if (this._gameSettings.SkipColorSelection)
-            {
-                userAgent = this._gameSettings.SkipUserAgent;
-                userIpAddress = this._gameSettings.SkipUserIpAddress;
-            }
-
-            return _boardService.GetBoard(_gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
+            throw new NotImplementedException();
         }
 
-        public string GetColorSelector()
+        public void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp)
         {
-            if (this._gameSettings.SkipColorSelection)
-            {
-                return string.Empty; // return empty string thus continuing to board
-            }
+            this._playerService.ConfigurePlayer(playerColor, userAgent, userIp);
+        }
+
+        private string GetColorSelector()
+        {
             List<Color.PieceColor> pieceColorsToShow = new List<Color.PieceColor>();
             if (this._playerService.WhitePlayer == null)
             {
@@ -58,14 +52,7 @@ namespace ChessAPI.Services
             {
                 pieceColorsToShow.Add(Color.PieceColor.Black);
             }
-            return _colorSideSelector.RenderColorSelector(pieceColorsToShow);
+            return this._gameGenerator.ChooseColor(pieceColorsToShow);
         }
-
-        public Color.PlayerColor ShowBoardForPlayerColor(string userAgent, string userIpAddress)
-        {
-            return this._playerService.GetPlayerByInfo(userAgent, userIpAddress).color;
-        }
-
-        public bool IsGameInitialized() => this._playerService.PlayersInitialized;
     }
 }

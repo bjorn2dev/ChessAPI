@@ -11,22 +11,21 @@ namespace ChessAPI.Services
         readonly IPlayerSetupService _playerSetupService;
         public User? WhitePlayer { get; set; }
         public User? BlackPlayer { get; set; }
-        private void SetWhitePlayer(User user) => WhitePlayer = user;
-        private void SetBlackPlayer(User user) => BlackPlayer = user;
+        private void SetWhitePlayer(User user) => this. WhitePlayer = user;
+        private void SetBlackPlayer(User user) => this.BlackPlayer = user;
+        public List<PlayerTurn> PlayerTurns { get; private set; }
 
         public PlayerService(IPlayerSetupService playerSetupService)
         {
-            _playerSetupService = playerSetupService;
+            PlayerTurns = new List<PlayerTurn>();
+            this._playerSetupService = playerSetupService;
         }
+
         public User GetPlayerByInfo(string userAgent, string userIp)
         {
             return userAgent == this.WhitePlayer.userAgent && userIp == this.WhitePlayer.userIp ? this.WhitePlayer : this.BlackPlayer;
         }
 
-        public bool WhiteAndBlackAreSimilarPlayer()
-        {
-            return this.WhitePlayer.userAgent == this.BlackPlayer.userAgent && this.WhitePlayer.userIp == this.BlackPlayer.userIp;
-        }
 
         public void ConfigurePlayer(Color.PlayerColor playerColor, string userAgent, string userIp)
         {

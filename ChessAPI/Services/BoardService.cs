@@ -16,6 +16,7 @@ namespace ChessAPI.Services
         private readonly IBoardGenerator _boardGenerator;
         private readonly IBoardRenderer _boardRenderer;
         private readonly IBoardStateService _boardStateService;
+        public bool BoardInitialized { get; set; }
 
         public BoardService(IBoardGenerator boardGenerator, IBoardRenderer boardRenderer, IBoardStateService boardStateService)
         {
@@ -28,6 +29,7 @@ namespace ChessAPI.Services
         {
             _boardGenerator.SetupBoard();
             _boardGenerator.AddInitialPieces();
+            this.BoardInitialized = true;
         }
 
         public string GetBoard(Color.PlayerColor playerColor = Color.PlayerColor.White)

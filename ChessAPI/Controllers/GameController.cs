@@ -34,7 +34,7 @@ namespace ChessAPI.Controllers
                 return NotFound("Game not found");
             }
 
-            var boardHtml = gameService.GetBoard();
+            var boardHtml = gameService.InitializeGame();
             return Content(boardHtml, "text/html");
         }
 
@@ -51,39 +51,23 @@ namespace ChessAPI.Controllers
             return NoContent();
         }
 
-
-
-
-
-        [HttpGet]
-        public IActionResult Get()
-        {
-            var htmlContent = this._gameService.GetColorSelector();
-
-            if (string.IsNullOrWhiteSpace(htmlContent))
-            {
-                return RedirectToAction("Get", "Board");
-            }
-
-            return Content(htmlContent, "text/html");
-        }
-
-        [HttpPut("ChooseColor/{color}")]
-        public IActionResult ChooseColor(string color)
+        [HttpPut("{gameId}/choosecolor/{color}")]
+        public IActionResult ChooseColor(Guid gameId, string color)
         {
 
             if (Enum.TryParse(color, out Color.PlayerColor colorOut))
             {
+                var gameService = _gameManagerService.GetGameById(gameId);
                 var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
                 var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
-                this._playerService.ConfigurePlayer(colorOut, userAgent, userIpAddress);
+                gameService.RegisterPlayerColor(colorOut, userAgent, userIpAddress);
             }
-            if (this._gameSettings.IsSinglePlayerGame)
-            {
-                var userIpAddress = this._gameSettings.SinglePlayerUserIpAddress;
-                var userAgent = this._gameSettings.SinglePlayerUserAgent;
-                this._playerService.ConfigurePlayer(colorOut == Color.PlayerColor.White ? Color.PlayerColor.Black : Color.PlayerColor.White, userAgent, userIpAddress);
-            }
+            //if (this._gameSettings.IsSinglePlayerGame)
+            //{
+            //    var userIpAddress = this._gameSettings.SinglePlayerUserIpAddress;
+            //    var userAgent = this._gameSettings.SinglePlayerUserAgent;
+            //    this._playerService.ConfigurePlayer(colorOut == Color.PlayerColor.White ? Color.PlayerColor.Black : Color.PlayerColor.White, userAgent, userIpAddress);
+            //}
             return NoContent();
         }
 

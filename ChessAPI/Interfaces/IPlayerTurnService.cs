@@ -6,7 +6,6 @@ namespace ChessAPI.Interfaces
 {
     public interface IPlayerTurnService
     {
-        List<PlayerTurn> PlayerTurns { get; }
         void RecordTurn(Tile fromTile, Tile toTile);
         bool IsValidTurn(Color.PieceColor color, string userAgent, string userIp);
         Color.PlayerColor CheckWhoseTurn();

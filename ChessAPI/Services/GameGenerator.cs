@@ -1,5 +1,6 @@
 ﻿using ChessAPI.Interfaces;
 using ChessAPI.Models;
+using ChessAPI.Models.Enums;
 using Microsoft.Extensions.Options;
 
 namespace ChessAPI.Services
@@ -7,53 +8,36 @@ namespace ChessAPI.Services
     public class GameGenerator : IGameGenerator
     {
         private readonly IBoardService _boardService;
-        private readonly IGameService _gameService;
-        private bool _boardInitialized;
         private readonly GameSettings _gameSettings;
-        public GameGenerator(IBoardService boardService, IGameService gameService, IOptions<GameSettings> gameSettings)
+        private readonly IColorSideSelector _colorSideSelector;
+        public GameGenerator(IBoardService boardService, IOptions<GameSettings> gameSettings, IColorSideSelector colorSideSelector)
         {
             this._gameSettings = gameSettings.Value;
             this._boardService = boardService;
-            this._gameService = gameService;
-            this._boardInitialized = false;
+            this._colorSideSelector = colorSideSelector;
         }
 
-        public string GetBoard(string userAgent, string userIpAddress)
+        public string GetBoard(Color.PlayerColor playerColorToShow)
         {
-            if (!this._boardInitialized)
-            {
-                return this.ChooseColor(userAgent, userIpAddress); 
-            }
+            //if (!this._boardService.BoardInitialized)
+            //{
+            //    return this.ChooseColor(pieceColorsToShow);
+            //}
 
-            if (this._gameSettings.SkipColorSelection)
-            {
-                userAgent = this._gameSettings.SkipUserAgent;
-                userIpAddress = this._gameSettings.SkipUserIpAddress;
-            }
-
-            return _boardService.GetBoard(_gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
+            return _boardService.GetBoard(playerColorToShow);
         }
 
         public void InitializeBoard()
         {
-            if (!this._boardInitialized)
+            if (!this._boardService.BoardInitialized)
             {
                 this._boardService.InitializeBoard();
-                this._boardInitialized = true;
             }
         }
 
-        public string ChooseColor(string userAgent, string userIpAddress)
+        public string ChooseColor(List<Color.PieceColor> pieceColorsToShow)
         {
-            if (this._gameService.IsGameInitialized())
-            {
-                this.InitializeBoard();
-                return this._boardService.GetBoard(this._gameService.ShowBoardForPlayerColor(userAgent, userIpAddress));
-            }
-            else
-            {
-                return this._gameService.GetColorSelector();
-            }
+            return this._colorSideSelector.RenderColorSelector(pieceColorsToShow);
 
         }
     }

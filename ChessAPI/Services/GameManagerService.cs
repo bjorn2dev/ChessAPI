@@ -6,6 +6,10 @@ namespace ChessAPI.Services
     public class GameManagerService : IGameManagerService
     {
         private readonly ConcurrentDictionary<Guid, IGameService> _activeGames;
+        private IPlayerService _playerService;
+        private IGameGenerator _gameGenerator;
+        private IPlayerTurnService _turnService;
+        private IPieceMovingService _peceMovingService;
 
         public GameManagerService()
         {
@@ -14,6 +18,8 @@ namespace ChessAPI.Services
 
         public Guid CreateNewGame()
         {
+            _playerService = new PlayerService();
+            _gameGenerator = new PlayerTurnService();
             var gameId = Guid.NewGuid();
             var gameService = new GameService(/* inject dependencies here */);
 

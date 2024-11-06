@@ -4,8 +4,9 @@ namespace ChessAPI.Interfaces
 {
     public interface IGameService
     {
-        string GetColorSelector();
-        bool IsGameInitialized();
-        Color.PlayerColor ShowBoardForPlayerColor(string userAgent, string userIpAddress);
+        string InitializeGame();
+
+        void MovePiece(string from, string to);
+        void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp);
     }
 }

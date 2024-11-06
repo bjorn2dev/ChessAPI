@@ -9,6 +9,7 @@ namespace ChessAPI.Interfaces
     /// </summary>
     public interface IBoardService
     {
+        bool BoardInitialized { get; set; }
         void InitializeBoard();
         string GetBoard(Color.PlayerColor playerColor = Color.PlayerColor.White);
     }
