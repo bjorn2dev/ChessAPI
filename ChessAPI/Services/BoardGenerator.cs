@@ -12,19 +12,16 @@ namespace ChessAPI.Services
     {
         private readonly IStartingPositionProvider _startingPositionProvider;
         private readonly ITileRenderer _tileRenderer;
-        private readonly IBoardStateService _boardStateService;
         
 
-        public BoardGenerator(IStartingPositionProvider startingPositionProvider, ITileRenderer tileRenderer, IBoardStateService boardStateService)
+        public BoardGenerator(IStartingPositionProvider startingPositionProvider, ITileRenderer tileRenderer)
         {
             _startingPositionProvider = startingPositionProvider;
             _tileRenderer = tileRenderer;
-            _boardStateService = boardStateService;
         }
 
-        public void SetupBoard()
+        public void SetupBoard(Board board)
         {
-            var board = _boardStateService.Board;
             // rank starts from 1 at the bottom and goes up to 8
             for (int rank = board.ranks; rank >= 1; rank--)
             {
@@ -38,9 +35,8 @@ namespace ChessAPI.Services
             }
         }
 
-        public void AddInitialPieces()
+        public void AddInitialPieces(Board board)
         {
-            var board = _boardStateService.Board;
             if (board.playingFieldDictionary.Count == 0)
             {
                 throw new InvalidOperationException("no board");

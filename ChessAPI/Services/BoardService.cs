@@ -20,28 +20,28 @@ namespace ChessAPI.Services
 
         public BoardService(IBoardGenerator boardGenerator, IBoardRenderer boardRenderer, IBoardStateService boardStateService)
         {
-            _boardGenerator = boardGenerator;
-            _boardRenderer = boardRenderer;
-            _boardStateService = boardStateService;
+            this._boardGenerator = boardGenerator;
+            this._boardRenderer = boardRenderer;
+            this._boardStateService = boardStateService;
         }
         // Method to initialize the board by calling SetupBoard and AddInitialPieces
         public void InitializeBoard()
         {
-            _boardGenerator.SetupBoard();
-            _boardGenerator.AddInitialPieces();
+            this._boardGenerator.SetupBoard(this._boardStateService.Board);
+            this._boardGenerator.AddInitialPieces(this._boardStateService.Board);
             this.BoardInitialized = true;
         }
 
         public string GetBoard(Color.PlayerColor playerColor = Color.PlayerColor.White)
         {
-            var board = _boardStateService.Board;
+            var board = this._boardStateService.Board;
             // Ensure the board is initialized before returning it
             if (board.playingFieldDictionary.Count == 0)
             {
-                InitializeBoard();  // Initialize the board if it's not already initialized
+                this.InitializeBoard();  // Initialize the board if it's not already initialized
             }
 
-            return _boardRenderer.RenderBoard(board.playingFieldDictionary, playerColor);
+            return this._boardRenderer.RenderBoard(board.playingFieldDictionary, playerColor);
         }
     }
 }

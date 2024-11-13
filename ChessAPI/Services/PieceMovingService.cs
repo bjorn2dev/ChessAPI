@@ -29,7 +29,7 @@ namespace ChessAPI.Services
                 throw new InvalidOperationException("It's not this player's turn");
 
             // check if the move is legal
-            if (!_pieceMoveValidator.ValidateMove(fromTile, toTile))
+            if (!_pieceMoveValidator.ValidateMove(fromTile, toTile, this._boardStateService.Board))
                 throw new InvalidOperationException("Invalid move");
 
             // record turn

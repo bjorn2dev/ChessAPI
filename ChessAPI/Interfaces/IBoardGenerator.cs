@@ -12,7 +12,7 @@ namespace ChessAPI.Interfaces
         /// 
         /// </summary>
         /// <returns></returns>
-        void SetupBoard();
-        void AddInitialPieces();
+        void SetupBoard(Board board);
+        void AddInitialPieces(Board board);
     }
 }

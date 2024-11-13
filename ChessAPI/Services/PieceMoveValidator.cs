@@ -6,17 +6,15 @@ namespace ChessAPI.Services
 {
     public class PieceMoveValidator : IPieceMoveValidator
     {
-        private readonly IBoardStateService _boardStateService;
-        public PieceMoveValidator(IBoardStateService boardStateService)
+        
+        public PieceMoveValidator()
         {
-            _boardStateService = boardStateService;
         }
 
-        public bool ValidateMove(Tile from, Tile to)
+        public bool ValidateMove(Tile from, Tile to, Board board)
         {
             var fromPiece = from.piece;
 
-            var board = _boardStateService.Board;
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
 
             // every move is done with a piece and cant capture pieces of the same color

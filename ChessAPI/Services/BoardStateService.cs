@@ -11,7 +11,6 @@ namespace ChessAPI.Services
         public BoardStateService()
         {
             Board = new Board();
-            
         }
     }
 }
