@@ -13,11 +13,10 @@ namespace ChessAPI.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGameManagerService _gameManagerService;
-        public GameController(IGameManagerService gameManagerService) //IPlayerService playerService, IGameService gameService, IOptions<GameSettings> gameSettings)
+        public GameController(IGameManagerService gameManagerService)
         {
             this._gameManagerService = gameManagerService;
         }
-
 
         [HttpGet]
         public IActionResult GetAllGames()
@@ -25,7 +24,6 @@ namespace ChessAPI.Controllers
             var gameId = _gameManagerService.GetAllGames();
             return Ok(gameId);
         }
-
 
         [HttpPost("new")]
         public IActionResult CreateNewGame()

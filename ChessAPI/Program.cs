@@ -17,7 +17,9 @@ namespace ChessAPI
             builder.Services.Configure<GameSettings>(builder.Configuration.GetSection("GameSettings"));
 
             // Add services to the container.
-            builder.Services.AddSingleton<IGameManagerService, GameManagerService>(); // Tracks all games as a Singleton
+
+            // Tracks all games as a Singleton
+            builder.Services.AddSingleton<IGameManagerService, GameManagerService>(); 
 
             // Scoped services, specific to each game instance
             builder.Services.AddScoped<IGameService, GameService>();
@@ -25,20 +27,20 @@ namespace ChessAPI
             builder.Services.AddScoped<IPlayerService, PlayerService>();
             builder.Services.AddScoped<IGameGenerator, GameGenerator>();
             builder.Services.AddScoped<IBoardStateService, BoardStateService>();
-            builder.Services.AddScoped<IPlayerTurnService, PlayerTurnService>();
 
             // Singleton services for stateless rendering
+            builder.Services.AddSingleton<IPlayerTurnService, PlayerTurnService>();
             builder.Services.AddSingleton<IPieceMoveValidator, PieceMoveValidator>();
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
-            builder.Services.AddSingleton<IColorSideSelector, HtmlColorSideSelector>();
-            builder.Services.AddSingleton<IPlayerSetupService, PlayerSetupService>();
-            builder.Services.AddSingleton<IStartingPositionProvider, StartingPositionService>();
-            builder.Services.AddSingleton<IPieceRenderer, HtmlPieceRenderer>();
-            builder.Services.AddSingleton<ITileRenderer, HtmlTileRenderer>();
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
+            builder.Services.AddSingleton<IPieceMovingService, PieceMovingService>();
 
             // Transient for services used briefly and independently per operation
-            builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
+            builder.Services.AddTransient<IColorSideSelector, HtmlColorSideSelector>();
+            builder.Services.AddTransient<IStartingPositionProvider, StartingPositionService>();
+            builder.Services.AddTransient<IPlayerSetupService, PlayerSetupService>();
+            builder.Services.AddTransient<ITileRenderer, HtmlTileRenderer>();
+            builder.Services.AddTransient<IPieceRenderer, HtmlPieceRenderer>();
 
             builder.Services.AddControllersWithViews();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

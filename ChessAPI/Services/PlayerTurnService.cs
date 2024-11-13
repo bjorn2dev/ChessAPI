@@ -3,39 +3,36 @@ using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
 using Microsoft.AspNetCore.Http;
+using System.Numerics;
 
 namespace ChessAPI.Services
 {
     public class PlayerTurnService : IPlayerTurnService
     {
-      private readonly IPlayerService _playerService;
 
-        public PlayerTurnService(IPlayerService playerService)
+        public PlayerTurnService()
         {
-            _playerService = playerService;
         }
 
-        public bool IsValidTurn(Color.PieceColor color, string userAgent, string userIp)
+        public bool IsValidTurn(List<PlayerTurn> playerTurns, User player)
         {
-            var turn = this.CheckWhoseTurn();
-            if (turn == Color.PlayerColor.White && this._playerService.PlayerTurns.Count == 0) return true;  // First turn is always valid and white always starts
+            var turn = this.CheckWhoseTurn(playerTurns);
+            if (turn == Color.PlayerColor.White && playerTurns.Count == 0) return true;  // First turn is always valid and white always starts
+            if (turn == Color.PlayerColor.Black && playerTurns.Count == 1) return true;  // Second turn is black 
 
-            return this._playerService.PlayerTurns.Count > 0 && this._playerService.PlayerTurns.Last().color != color 
-                && (color == Color.PieceColor.White ? 
-                (this._playerService.WhitePlayer != null && this._playerService.WhitePlayer.userAgent == userAgent && this._playerService.WhitePlayer.userIp == userIp) :
-                (this._playerService.BlackPlayer != null && this._playerService.BlackPlayer.userAgent == userAgent && this._playerService.BlackPlayer.userIp == userIp));
+            return playerTurns.Count > 1 && playerTurns.Last().user.color != player.color
+                && playerTurns.Any((b) => b.user.userIp == player.userIp && b.user.userAgent == player.userAgent && b.user.color == player.color);
         }
 
-        public Color.PlayerColor CheckWhoseTurn() => this._playerService.PlayerTurns.Count == 0 || this._playerService.PlayerTurns.Any() && this._playerService.PlayerTurns.Last().color == Color.PieceColor.Black ? Color.PlayerColor.White : Color.PlayerColor.Black;
+        public Color.PlayerColor CheckWhoseTurn(List<PlayerTurn> playerTurns) => playerTurns.Count == 0 || playerTurns.Any() && playerTurns.Last().user.color == Color.PlayerColor.Black ? Color.PlayerColor.White : Color.PlayerColor.Black;
 
-        public void RecordTurn(Tile fromTile, Tile toTile)
+        public PlayerTurn ConfigureTurn(Tile fromTile, Tile toTile, User player)
         {
             var playerTurn = new PlayerTurn();
-            playerTurn.color = fromTile.piece.color;
-            playerTurn.user = playerTurn.color == Color.PieceColor.White ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
+            playerTurn.user = player;
             playerTurn.fromTile = fromTile;
             playerTurn.toTile = toTile;
-            this._playerService.PlayerTurns.Add(playerTurn);
+            return playerTurn;
         }
     }
 }

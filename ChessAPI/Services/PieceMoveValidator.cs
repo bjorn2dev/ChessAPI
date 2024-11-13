@@ -16,6 +16,7 @@ namespace ChessAPI.Services
             var fromPiece = from.piece;
 
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
+            movementType = MoveValidatorHelper.CheckIfCapture(from, to, movementType) ? MovementType.Capture : movementType;
 
             // every move is done with a piece and cant capture pieces of the same color
             if (fromPiece == null || (to.piece != null && fromPiece.color == to.piece.color) || movementType == MovementType.Invalid) return false;

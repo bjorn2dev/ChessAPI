@@ -7,9 +7,11 @@ namespace ChessAPI.Interfaces
     {
         List<PlayerTurn> PlayerTurns { get; }
         bool PlayersInitialized { get; }
-        User? WhitePlayer { get; set; }
-        User? BlackPlayer { get; set; }
+        bool SameDevice { get; }
+        User? WhitePlayer { get; }
+        User? BlackPlayer { get; }
         User GetPlayerByInfo(string userAgent, string userIp);
         void ConfigurePlayer(Color.PlayerColor playerColor, string userAgent, string userIp);
+        void RecordTurn(PlayerTurn playerTurn);
     }
 }

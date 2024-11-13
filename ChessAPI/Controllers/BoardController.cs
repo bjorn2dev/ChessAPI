@@ -1,4 +1,5 @@
-﻿using ChessAPI.Interfaces;
+﻿using ChessAPI.Helpers;
+using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,9 @@ namespace ChessAPI.Controllers
         public BoardController(ILogger<BoardController> logger, IPieceMovingService pieceMovingService, IGameGenerator gameGenerator, IOptions<GameSettings> gameSettings)
         {
             this._gameSettings = gameSettings.Value;
-            _pieceMovingService = pieceMovingService;
-            _logger = logger;
-            _gameGenerator = gameGenerator;
+            this._pieceMovingService = pieceMovingService;
+            this._logger = logger;
+            this._gameGenerator = gameGenerator;
         }
 
         //[HttpGet]
@@ -39,20 +40,23 @@ namespace ChessAPI.Controllers
         //    return Content(htmlContent, "text/html");
         //}
 
-        [HttpPut("{from}/{to}")]
-        public IActionResult MovePiece(string from, string to)
-        {
-            var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+        //[HttpPut("{from}/{to}")]
+        //public IActionResult MovePiece(string from, string to)
+        //{
+        //    var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        //    var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
 
-            if (this._gameSettings.SkipColorSelection)
-            {
-                userAgent = this._gameSettings.SkipUserAgent;
-                userIpAddress = this._gameSettings.SkipUserIpAddress;
-            }
-            _pieceMovingService.MovePiece(from, to, userAgent, userIpAddress);
-            return NoContent();
-        }
+        //    if (this._gameSettings.SkipColorSelection)
+        //    {
+        //        userAgent = this._gameSettings.SkipUserAgent;
+        //        userIpAddress = this._gameSettings.SkipUserIpAddress;
+        //    }
+        //    var fromTile = TileHelper.GetTileByAnnotation(from, this._boardStateService.Board);
+        //    var toTile = TileHelper.GetTileByAnnotation(to, this._boardStateService.Board);
+
+        //    this._pieceMovingService.MovePiece(fromTile, toTile, userAgent, userIpAddress);
+        //    return NoContent();
+        //}
 
     }
 }

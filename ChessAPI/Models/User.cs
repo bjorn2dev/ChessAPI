@@ -17,7 +17,7 @@ namespace ChessAPI.Models
             {
                 if (string.IsNullOrWhiteSpace(name))
                 {
-                    name = $"{this.color.ToString()} Player";
+                    name = $"{value.ToString()} Player";
                     _color = value;
                 }
                 else
