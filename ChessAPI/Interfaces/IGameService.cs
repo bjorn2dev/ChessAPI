@@ -6,7 +6,7 @@ namespace ChessAPI.Interfaces
     {
         string InitializeGame();
 
-        void MovePiece(string from, string to);
+        void MovePiece(string from, string to, string userAgent, string userIpAddress);
         void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp);
     }
 }

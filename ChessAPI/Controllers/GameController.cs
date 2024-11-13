@@ -55,8 +55,9 @@ namespace ChessAPI.Controllers
             {
                 return NotFound("Game not found");
             }
-
-            gameService.MovePiece(from, to);
+            var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+            gameService.MovePiece(from, to, userAgent, userIpAddress);
             return NoContent();
         }
 

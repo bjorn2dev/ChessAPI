@@ -31,9 +31,9 @@ namespace ChessAPI.Services
             }
         }
 
-        public void MovePiece(string from, string to)
+        public void MovePiece(string from, string to, string userAgent, string userIpAddress)
         {
-            throw new NotImplementedException();
+            this._pieceMovingService.MovePiece(from, to, userAgent, userIpAddress);
         }
 
         public void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp)

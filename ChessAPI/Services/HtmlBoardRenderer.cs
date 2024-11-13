@@ -68,7 +68,8 @@ document.addEventListener(""DOMContentLoaded"", function() {
     // Function to send the XHR request
     function sendMoveRequest(from, to) {
         var xhr = new XMLHttpRequest();
-        var url = `/Board/${from}/${to}`;
+        var gameId = location.pathname.split(""/"")[2];
+        var url = `/Game/${gameId}/move/${from}/${to}`;
         xhr.open(""PUT"", url, true);
 
         // Set request headers if necessary (e.g., Content-Type)
