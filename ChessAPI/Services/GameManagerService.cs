@@ -1,40 +1,49 @@
 ﻿using ChessAPI.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System.Collections.Concurrent;
 
 namespace ChessAPI.Services
 {
     public class GameManagerService : IGameManagerService
     {
-        private readonly ConcurrentDictionary<Guid, IGameService> _activeGames;
-        private IPlayerService _playerService;
-        private IGameGenerator _gameGenerator;
-        private IPlayerTurnService _turnService;
-        private IPieceMovingService _peceMovingService;
+        private readonly ConcurrentDictionary<Guid, (IServiceScope scope, IGameService gameService)> _activeGames;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public GameManagerService()
+        public GameManagerService(IServiceScopeFactory scopeFactory)
         {
-            _activeGames = new ConcurrentDictionary<Guid, IGameService>();
+            _scopeFactory = scopeFactory;
+            _activeGames = new ConcurrentDictionary<Guid, (IServiceScope, IGameService)>();
         }
 
         public Guid CreateNewGame()
         {
-            _playerService = new PlayerService();
-            _gameGenerator = new PlayerTurnService();
-            var gameId = Guid.NewGuid();
-            var gameService = new GameService(/* inject dependencies here */);
+            var scope = _scopeFactory.CreateScope();
+            var gameService = scope.ServiceProvider.GetRequiredService<IGameService>();
 
-            _activeGames.TryAdd(gameId, gameService);
+            var gameId = Guid.NewGuid();
+            _activeGames.TryAdd(gameId, (scope, gameService));
+
             return gameId;
         }
 
         public IGameService GetGameById(Guid gameId)
         {
-            return _activeGames.TryGetValue(gameId, out var gameService) ? gameService : null;
+            return _activeGames.TryGetValue(gameId, out var gameTuple) ? gameTuple.gameService : null;
         }
 
         public void EndGame(Guid gameId)
         {
-            _activeGames.TryRemove(gameId, out _);
+            if (_activeGames.TryRemove(gameId, out var gameTuple))
+            {
+                // Dispose of the scope to release all scoped services
+                gameTuple.scope.Dispose();
+            }
+        }
+
+        public string GetAllGames()
+        {
+            return JsonConvert.SerializeObject(_activeGames.Keys);
         }
 
     }

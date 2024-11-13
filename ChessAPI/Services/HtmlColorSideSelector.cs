@@ -75,7 +75,8 @@ namespace ChessAPI.Services
 document.addEventListener(""DOMContentLoaded"", function() {
  function sendMoveRequest(color) {
      var xhr = new XMLHttpRequest();
-     var url = `/Game/ChooseColor/${color}`;
+    var gameId = location.pathname.split(""/"")[2];
+     var url = `/Game/${gameId}/ChooseColor/${color}`;
      xhr.open(""PUT"", url, true);
 
      // Set request headers if necessary (e.g., Content-Type)

@@ -22,17 +22,17 @@ namespace ChessAPI
             // Scoped services, specific to each game instance
             builder.Services.AddScoped<IGameService, GameService>();
             builder.Services.AddScoped<IBoardService, BoardService>();
+            builder.Services.AddScoped<IPlayerService, PlayerService>();
+            builder.Services.AddScoped<IGameGenerator, GameGenerator>();
+            builder.Services.AddScoped<IBoardStateService, BoardStateService>();
             builder.Services.AddScoped<IPlayerTurnService, PlayerTurnService>();
+            builder.Services.AddScoped<IBoardGenerator, BoardGenerator>();
+            builder.Services.AddScoped<IPieceMoveValidator, PieceMoveValidator>();
 
             // Singleton services for stateless rendering
-            builder.Services.AddSingleton<IGameGenerator, GameGenerator>();
             builder.Services.AddSingleton<IColorSideSelector, HtmlColorSideSelector>();
-            builder.Services.AddSingleton<IPlayerService, PlayerService>();
             builder.Services.AddSingleton<IPlayerSetupService, PlayerSetupService>();
-            builder.Services.AddSingleton<IBoardStateService, BoardStateService>();
-            builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
             builder.Services.AddSingleton<IStartingPositionProvider, StartingPositionService>();
-            builder.Services.AddSingleton<IPieceMoveValidator, PieceMoveValidator>();
             builder.Services.AddSingleton<IPieceRenderer, HtmlPieceRenderer>();
             builder.Services.AddSingleton<ITileRenderer, HtmlTileRenderer>();
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();

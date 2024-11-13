@@ -19,12 +19,7 @@ namespace ChessAPI.Services
 
         public string GetBoard(Color.PlayerColor playerColorToShow)
         {
-            //if (!this._boardService.BoardInitialized)
-            //{
-            //    return this.ChooseColor(pieceColorsToShow);
-            //}
-
-            return _boardService.GetBoard(playerColorToShow);
+            return this._boardService.GetBoard(playerColorToShow);
         }
 
         public void InitializeBoard()

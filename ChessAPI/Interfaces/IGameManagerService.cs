@@ -6,5 +6,6 @@
         Guid CreateNewGame();
         IGameService GetGameById(Guid gameId);
         void EndGame(Guid gameId);
+        string GetAllGames();
     }
 }

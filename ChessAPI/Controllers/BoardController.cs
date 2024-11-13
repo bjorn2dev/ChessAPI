@@ -23,23 +23,21 @@ namespace ChessAPI.Controllers
             _gameGenerator = gameGenerator;
         }
 
-        [HttpGet]
-        public IActionResult Get()
-        {
-           
+        //[HttpGet]
+        //public IActionResult Get()
+        //{
+        //    var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        //    var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
 
-            var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-            var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
+        //    if (this._gameSettings.SkipColorSelection)
+        //    {
+        //        userAgent = this._gameSettings.SkipUserAgent;
+        //        userIpAddress = this._gameSettings.SkipUserIpAddress;
+        //    }
 
-            if (this._gameSettings.SkipColorSelection)
-            {
-                userAgent = this._gameSettings.SkipUserAgent;
-                userIpAddress = this._gameSettings.SkipUserIpAddress;
-            }
-
-            var htmlContent = _gameGenerator.GetBoard(userAgent, userIpAddress);
-            return Content(htmlContent, "text/html");
-        }
+        //    var htmlContent = _gameGenerator.GetBoard(userAgent, userIpAddress);
+        //    return Content(htmlContent, "text/html");
+        //}
 
         [HttpPut("{from}/{to}")]
         public IActionResult MovePiece(string from, string to)

@@ -18,6 +18,15 @@ namespace ChessAPI.Controllers
             this._gameManagerService = gameManagerService;
         }
 
+
+        [HttpGet]
+        public IActionResult GetAllGames()
+        {
+            var gameId = _gameManagerService.GetAllGames();
+            return Ok(gameId);
+        }
+
+
         [HttpPost("new")]
         public IActionResult CreateNewGame()
         {
@@ -51,7 +60,7 @@ namespace ChessAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{gameId}/choosecolor/{color}")]
+        [HttpPut("{gameId}/ChooseColor/{color}")]
         public IActionResult ChooseColor(Guid gameId, string color)
         {
 
