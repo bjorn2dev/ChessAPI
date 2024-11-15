@@ -3,6 +3,6 @@ namespace ChessAPI.Interfaces
 {
     public interface IColorSideSelector
     {
-        string RenderColorSelector(List<Color.PieceColor> pieceColorsToShow);
+        string Render(List<Color.PieceColor> pieceColorsToShow);
     }
 }

@@ -4,7 +4,7 @@ using ChessAPI.Models;
 using ChessAPI.Models.Enums;
 using Microsoft.Extensions.Options;
 namespace ChessAPI.Services
-{
+{ 
     public class GameService : IGameService
     {
         private readonly IPlayerService _playerService;
@@ -13,6 +13,11 @@ namespace ChessAPI.Services
         private readonly IPieceMovingService _pieceMovingService;
         private readonly IBoardStateService _boardStateService;
         private readonly IPieceMoveValidator _pieceMoveValidator;
+
+        private readonly IGameInitializationService _gameInitializationService;
+      //  private readonly IPieceMovementService _pieceMovementService;
+        private readonly IPlayerManagementService _playerManagementService;
+        private readonly IGameRenderingService _gameRenderingService;
         public GameService(IPlayerService playerService, IGameGenerator gameGenerator, IPlayerTurnService playerTurnService, IPieceMovingService pieceMovingService, IBoardStateService boardStateService, IPieceMoveValidator pieceMoveValidator)
         {
             this._playerService = playerService;
@@ -23,30 +28,18 @@ namespace ChessAPI.Services
             this._pieceMoveValidator = pieceMoveValidator;
         }
 
-        public string InitializeGame()
-        {
-            if (this._playerService.PlayersInitialized)
-            {
-                this._gameGenerator.InitializeBoard();
-                return this._gameGenerator.GetBoard(Color.PlayerColor.White);
-            }
-            else
-            {
-                return this.GetPlayerColorSelector();
-            }
-        }
-
         public void MovePiece(string from, string to, string userAgent, string userIpAddress)
         {
+
+            var player = this._playerManagementService.GetPlayerByInfo(userAgent, userIpAddress);
+
             var fromTile = TileHelper.GetTileByAnnotation(from, this._boardStateService.Board);
             var toTile = TileHelper.GetTileByAnnotation(to, this._boardStateService.Board);
-
-            var player = this._playerService.GetPlayerByInfo(userAgent, userIpAddress);
 
             if (fromTile == null || toTile == null || fromTile.piece == null)
                 throw new InvalidOperationException("Invalid move");
 
-            if (!this._playerTurnService.IsValidTurn(this._playerService.PlayerTurns, player))
+            if (!this._playerTurnService.IsValidTurn(player))
                 throw new InvalidOperationException("It's not this player's turn");
 
             // check if the move is legal
@@ -56,28 +49,26 @@ namespace ChessAPI.Services
             // record turn
             var playerTurn = this._playerTurnService.ConfigureTurn(fromTile, toTile, player);
 
-            this._playerService.RecordTurn(playerTurn);
-
-            this._pieceMovingService.MovePiece(fromTile, toTile, userAgent, userIpAddress);
+            this._pieceMovingService.MovePiece(fromTile, toTile);
+            this._playerTurnService.RecordTurn(playerTurn);
         }
 
         public void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp)
         {
-            this._playerService.ConfigurePlayer(playerColor, userAgent, userIp);
+            _playerManagementService.RegisterPlayerColor(playerColor, userAgent, userIp);
         }
 
-        private string GetPlayerColorSelector()
+        public string StartGame()
         {
-            List<Color.PieceColor> pieceColorsToShow = new List<Color.PieceColor>();
-            if (this._playerService.WhitePlayer == null)
+            if (!this._playerManagementService.ArePlayersRegistered())
             {
-                pieceColorsToShow.Add(Color.PieceColor.White);
-            }
-            if (this._playerService.BlackPlayer == null)
+                return _gameRenderingService.RenderColorSelector();
+            } 
+            else
             {
-                pieceColorsToShow.Add(Color.PieceColor.Black);
+                this._gameInitializationService.InitializeGame();
+                return _gameRenderingService.RenderBoard();
             }
-            return this._gameGenerator.ChooseColor(pieceColorsToShow);
         }
     }
 }

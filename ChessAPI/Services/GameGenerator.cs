@@ -9,12 +9,10 @@ namespace ChessAPI.Services
     {
         private readonly IBoardService _boardService;
         private readonly GameSettings _gameSettings;
-        private readonly IColorSideSelector _colorSideSelector;
-        public GameGenerator(IBoardService boardService, IOptions<GameSettings> gameSettings, IColorSideSelector colorSideSelector)
+        public GameGenerator(IBoardService boardService, IOptions<GameSettings> gameSettings)
         {
             this._gameSettings = gameSettings.Value;
             this._boardService = boardService;
-            this._colorSideSelector = colorSideSelector;
         }
 
         public string GetBoard(Color.PlayerColor playerColorToShow)
@@ -30,10 +28,6 @@ namespace ChessAPI.Services
             }
         }
 
-        public string ChooseColor(List<Color.PieceColor> pieceColorsToShow)
-        {
-            return this._colorSideSelector.RenderColorSelector(pieceColorsToShow);
-
-        }
+       
     }
 }

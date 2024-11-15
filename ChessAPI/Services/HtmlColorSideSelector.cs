@@ -10,7 +10,7 @@ namespace ChessAPI.Services
 
         }
 
-        public string RenderColorSelector(List<Color.PieceColor> pieceColorsToShow)
+        public string Render(List<Color.PieceColor> pieceColorsToShow)
         {
             const string _pageCss = @"<style>
         * {            margin: 0;

@@ -4,6 +4,6 @@ namespace ChessAPI.Interfaces
 {
     public interface IPieceMovingService
     {
-        void MovePiece(Tile fromTile, Tile toTile, string userAgent, string userIp);
+        void MovePiece(Tile fromTile, Tile toTile);
     }
 }

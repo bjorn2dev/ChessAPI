@@ -41,7 +41,7 @@ namespace ChessAPI.Controllers
                 return NotFound("Game not found");
             }
 
-            var boardHtml = gameService.InitializeGame();
+            var boardHtml = gameService.StartGame();
             return Content(boardHtml, "text/html");
         }
 

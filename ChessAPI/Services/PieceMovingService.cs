@@ -11,7 +11,7 @@ namespace ChessAPI.Services
         {
             this._tileRenderer = tileRenderer;
         }
-        public void MovePiece(Tile fromTile, Tile toTile, string userAgent, string userIp)
+        public void MovePiece(Tile fromTile, Tile toTile)
         {
             // move the piece
             toTile.piece = fromTile.piece;

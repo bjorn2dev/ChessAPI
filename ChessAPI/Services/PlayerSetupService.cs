@@ -13,5 +13,6 @@ namespace ChessAPI.Services
         {
             return new User { color = playerColor, userAgent = userAgent, userIp = userIp };
         }
+
     }
 }

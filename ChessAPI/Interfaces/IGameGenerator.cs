@@ -7,6 +7,5 @@ namespace ChessAPI.Interfaces
         void InitializeBoard();
 
         string GetBoard(Color.PlayerColor playerColorToShow);
-        string ChooseColor(List<Color.PieceColor> pieceColorsToShow);
     }
 }
