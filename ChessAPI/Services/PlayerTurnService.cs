@@ -22,11 +22,10 @@ namespace ChessAPI.Services
         public bool IsValidTurn(User player)
         {
             var turn = this.CheckWhoseTurn();
-            if (turn == Color.PlayerColor.White && this.PlayerTurns.Count == 0) return true;  // First turn is always valid and white always starts
-            if (turn == Color.PlayerColor.Black && this.PlayerTurns.Count == 1) return true;  // Second turn is black 
 
-            return this.PlayerTurns.Count > 1 && this.PlayerTurns.Last().user.color != player.color
-                && this.PlayerTurns.Any((b) => b.user.userIp == player.userIp && b.user.userAgent == player.userAgent && b.user.color == player.color);
+            return  (this.PlayerTurns.Count == 0 && turn == Color.PlayerColor.White) || 
+                    (this.PlayerTurns.Count > 0 && this.PlayerTurns.Last().user.color != turn);
+              
         }
 
         public Color.PlayerColor CheckWhoseTurn() => this.PlayerTurns.Count == 0 || this.PlayerTurns.Last().user.color == Color.PlayerColor.Black ? Color.PlayerColor.White : Color.PlayerColor.Black;

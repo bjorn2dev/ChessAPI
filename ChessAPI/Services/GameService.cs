@@ -41,7 +41,7 @@ namespace ChessAPI.Services
             if (!this._playerManagementService.ArePlayersRegistered())
             {
 
-                return _gameRenderingService.RenderColorSelector(this._playerManagementService.GetUnregisteredPlayers());
+                return this._gameRenderingService.RenderColorSelector(this._playerManagementService.GetUnregisteredPlayers());
             } 
             else
             {

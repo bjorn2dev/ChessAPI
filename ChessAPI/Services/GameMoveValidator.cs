@@ -26,6 +26,7 @@ namespace ChessAPI.Services
 
         public void Move(string from, string to, User player)
         {
+            var turn = this._playerTurnService.CheckWhoseTurn();
             var fromTile = TileHelper.GetTileByAnnotation(from, this._boardStateService.Board);
             var toTile = TileHelper.GetTileByAnnotation(to, this._boardStateService.Board);
             if (fromTile == null || toTile == null || fromTile.piece == null)
