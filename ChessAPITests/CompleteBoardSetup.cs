@@ -33,10 +33,10 @@ namespace ChessAPITests
             _pieceHtmlRenderer = new HtmlPieceRenderer();
             _tileHtmlRenderer = new HtmlTileRenderer(_pieceHtmlRenderer);
             _boardStateService = new BoardStateService();
-            _boardGenerator = new BoardGenerator(_startingPositionProvider, _tileHtmlRenderer, _boardStateService);
+            _boardGenerator = new BoardGenerator(_startingPositionProvider, _tileHtmlRenderer);
 
-            _boardGenerator.SetupBoard();
-            _boardGenerator.AddInitialPieces();
+            _boardGenerator.SetupBoard(_boardStateService.Board);
+            _boardGenerator.AddInitialPieces(_boardStateService.Board);
         }
         public Tile GetTileByNotation(string notation)
         {

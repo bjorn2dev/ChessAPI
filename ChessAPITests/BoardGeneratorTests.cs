@@ -20,30 +20,16 @@ namespace ChessAPITests
         }
 
         [Fact]
-        public void Test_BoardGeneratorInitial_Expect_BoardNotNull()
-        {
-            // Arrange
-            var boardStateService = new BoardStateService();
-            _boardStateServiceMock.Setup(bs => bs.Board).Returns(boardStateService.Board);
-
-            // Act
-            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object, _boardStateServiceMock.Object);
-
-            // Assert: Ensure the board is instantiated through BoardStateService
-            Assert.NotNull(boardStateService.Board);
-        }
-
-        [Fact]
         public void Test_BoardGeneratorAfterSetup_Expect_PopulatedBoard()
         {
             // Arrange
             var boardStateService = new BoardStateService();
             _boardStateServiceMock.Setup(bs => bs.Board).Returns(boardStateService.Board);
 
-            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object, _boardStateServiceMock.Object);
+            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object);
 
             // Act
-            boardGenerator.SetupBoard();
+            boardGenerator.SetupBoard(_boardStateServiceMock.Object.Board);
 
             // Assert: Ensure the board has 64 tiles after setup
             Assert.Equal(64, boardStateService.Board.playingFieldDictionary.Count);
@@ -56,10 +42,10 @@ namespace ChessAPITests
             var boardStateService = new BoardStateService();
             _boardStateServiceMock.Setup(bs => bs.Board).Returns(boardStateService.Board);
 
-            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object, _boardStateServiceMock.Object);
+            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object);
 
             // Act & Assert: Expect an exception when trying to add pieces without setting up the board
-            Assert.Throws<InvalidOperationException>(() => boardGenerator.AddInitialPieces());
+            Assert.Throws<InvalidOperationException>(() => boardGenerator.AddInitialPieces(_boardStateServiceMock.Object.Board));
         }
 
         [Fact]
@@ -69,11 +55,11 @@ namespace ChessAPITests
             var boardStateService = new BoardStateService();
             _boardStateServiceMock.Setup(bs => bs.Board).Returns(boardStateService.Board);
 
-            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object, _boardStateServiceMock.Object);
+            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object);
 
             // Act: Set up the board and add pieces
-            boardGenerator.SetupBoard();
-            boardGenerator.AddInitialPieces();
+            boardGenerator.SetupBoard(_boardStateServiceMock.Object.Board);
+            boardGenerator.AddInitialPieces(_boardStateServiceMock.Object.Board);
 
             // Assert: Check if the board contains 64 tiles (8x8 chessboard)
             Assert.Equal(64, boardStateService.Board.playingFieldDictionary.Count);
