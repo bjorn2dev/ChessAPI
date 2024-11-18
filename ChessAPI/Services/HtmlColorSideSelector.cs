@@ -10,7 +10,7 @@ namespace ChessAPI.Services
 
         }
 
-        public string Render(List<Color.PieceColor> pieceColorsToShow)
+        public string Render(List<Color.PlayerColor> pieceColorsToShow)
         {
             const string _pageCss = @"<style>
         * {            margin: 0;
@@ -60,11 +60,11 @@ namespace ChessAPI.Services
         }
     </style>";
            
-           var whiteDiv = !pieceColorsToShow.Contains(Color.PieceColor.White) ? "" : @$"<div class=""selection white"">
+           var whiteDiv = !pieceColorsToShow.Contains(Color.PlayerColor.White) ? "" : @$"<div class=""selection white"">
             <img src=""https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg"" alt=""White King"">
             Play as White
         </div>";
-            var blackDiv = !pieceColorsToShow.Contains(Color.PieceColor.Black) ? "" : @$"<div class=""selection black"">
+            var blackDiv = !pieceColorsToShow.Contains(Color.PlayerColor.Black) ? "" : @$"<div class=""selection black"">
             <img src=""https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg"" alt=""Black King"">
             Play as Black
         </div>";

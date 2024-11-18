@@ -8,15 +8,15 @@ public class GameInitializationService : IGameInitializationService
 
     public GameInitializationService(IBoardService boardService, IPlayerManagementService playerManagementService)
     {
-        _boardService = boardService;
-        _playerManagementService = playerManagementService;
+        this._boardService = boardService;
+        this._playerManagementService = playerManagementService;
     }
 
     public void InitializeGame()
     {
-        if (_playerManagementService.ArePlayersRegistered())
+        if (this._playerManagementService.ArePlayersRegistered() && !this._boardService.BoardInitialized)
         {
-            _boardService.InitializeBoard();
+            this._boardService.InitializeBoard();
         }
     }
 }

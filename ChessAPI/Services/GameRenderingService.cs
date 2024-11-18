@@ -13,9 +13,9 @@ namespace ChessAPI.Services
             _colorSideSelector = colorSideSelector;
         }
 
-        public string RenderColorSelector()
+        public string RenderColorSelector(List<Color.PlayerColor> showColor)
         {
-            return this._colorSideSelector.Render(new List<Color.PieceColor> { Color.PieceColor.Black, Color.PieceColor.White });
+            return this._colorSideSelector.Render(showColor);
         }
 
         public string RenderBoard()

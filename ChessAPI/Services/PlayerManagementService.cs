@@ -1,6 +1,7 @@
 ﻿using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
+using System.Collections.Generic;
 
 public class PlayerManagementService : IPlayerManagementService
 {
@@ -30,5 +31,13 @@ public class PlayerManagementService : IPlayerManagementService
             //return this.PlayerTurns.Any() && this.PlayerTurns.Last().user == this.BlackPlayer || !this.PlayerTurns.Any() ? this.WhitePlayer : this.BlackPlayer;
         }
         return userAgent == this._playerService.WhitePlayer.userAgent && userIp == this._playerService.WhitePlayer.userIp ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
+    }
+
+    public List<Color.PlayerColor> GetUnregisteredPlayers()
+    {
+        var unregisteredPlayers = new List<Color.PlayerColor>();
+        if (this._playerService.WhitePlayer == null) unregisteredPlayers.Add(Color.PlayerColor.White);
+        if (this._playerService.BlackPlayer == null) unregisteredPlayers.Add(Color.PlayerColor.Black);
+        return unregisteredPlayers;
     }
 }
