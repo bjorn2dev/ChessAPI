@@ -20,8 +20,7 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.capturePattern.First());
-            return this.capturePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
-
+            return this.capturePattern.First() == movementType && pawnRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, Board board)
@@ -30,7 +29,7 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex); 
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
+            return this.movePattern.First() == movementType && difference == pawnRange.First() ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
 
         }
     }
