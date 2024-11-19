@@ -37,7 +37,7 @@ namespace ChessAPI
             builder.Services.AddSingleton<IPieceMoveValidator, PieceMoveValidator>();
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
-            builder.Services.AddSingleton<IPieceMovingService, PieceMovingService>();
+            builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
 
             // Transient for services used briefly and independently per operation
             builder.Services.AddTransient<IColorSideSelector, HtmlColorSideSelector>();

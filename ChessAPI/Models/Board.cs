@@ -10,6 +10,29 @@
         /// 
         /// </summary>
         public int ranks { get; set; } = 8;
-        public SortedList<Tuple<int, int>, Tile> playingFieldDictionary { get; } = new SortedList<Tuple<int, int>, Tile>();
+        public SortedList<Tuple<int, int>, Tile> playingFieldDictionary { get; private set; } = new SortedList<Tuple<int, int>, Tile>();
+
+        public Board Clone()
+        {
+            var clonedBoard = new Board
+            {
+                playingFieldDictionary = new SortedList<Tuple<int, int>, Tile>(
+                    this.playingFieldDictionary.ToDictionary(
+                        entry => entry.Key,
+                        entry => new Tile
+                        {
+                            piece = entry.Value.piece?.Clone(), // Assuming Clone() exists in Piece
+                            html = entry.Value.html,
+                            color = entry.Value.color,
+                            fileNumber = entry.Value.fileNumber,
+                            rank = entry.Value.rank
+                        }
+                    )
+                )
+            };
+
+            return clonedBoard;
+        }
+
     }
 }

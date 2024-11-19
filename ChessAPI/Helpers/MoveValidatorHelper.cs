@@ -1,5 +1,6 @@
 ﻿using ChessAPI.Models;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace ChessAPI.Helpers
@@ -101,19 +102,23 @@ namespace ChessAPI.Helpers
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
-            if (from.rank == to.rank)
+
+            if (from.rank == to.rank && from.piece.movePattern.Contains(MovementType.Horizontal))
             {
                 return MovementType.Horizontal;
             }
-            else if (difference % 8 == 0)
+            else if (difference % 8 == 0 && from.piece.movePattern.Contains(MovementType.Vertical))
             {
                 return MovementType.Vertical;
             }
-            else if ((Math.Abs(indexes.toIndex - indexes.fromIndex) % 9 == 0) || (Math.Abs(indexes.toIndex - indexes.fromIndex) % 7 == 0))
+            else if (
+                ((Math.Abs(indexes.toIndex - indexes.fromIndex) % 9 == 0) || 
+                (Math.Abs(indexes.toIndex - indexes.fromIndex) % 7 == 0) ) &&
+                from.piece.movePattern.Contains(MovementType.Diagonal))
             {
                 return MovementType.Diagonal;
             }
-            else if (MoveValidatorHelper.GetMovementRange(MovementType.LShaped).Contains(difference))
+            else if (MoveValidatorHelper.GetMovementRange(MovementType.LShaped).Contains(difference) && from.piece.movePattern.Contains(MovementType.LShaped))
             {
                 return MovementType.LShaped;
             }

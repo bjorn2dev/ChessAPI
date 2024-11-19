@@ -19,5 +19,11 @@ namespace ChessAPI.Models
         public virtual bool IsValidMovement(Tile from, Tile to, Board board) { return false; }
 
         public virtual bool IsValidCapture(Tile from, Tile to, Board board) { return false; }
+
+        public virtual Piece Clone()
+        {
+            // create a shallow copy of the current object and return it
+            return (Piece)MemberwiseClone();
+        }
     }
 }

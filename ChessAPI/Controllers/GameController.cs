@@ -25,7 +25,7 @@ namespace ChessAPI.Controllers
             return Ok(gameId);
         }
 
-        [HttpPost("new")]
+        [HttpGet("new")]
         public IActionResult CreateNewGame()
         {
             var gameId = _gameManagerService.CreateNewGame();
