@@ -29,14 +29,14 @@ namespace ChessAPI.Services
             var isValidMove = movementType != MovementType.Capture ? fromPiece.IsValidMovement(from, to, board) : fromPiece.IsValidCapture(from, to, board);
 
             // check if the move is a move that sets the king in check
-           // isValidMove = IsCheckMove(from, to, board);
-
+            isValidMove = !IsPlayingSideKingChecked(from, to, board);
+             
 
             return isValidMove;
            
         }
 
-        public bool IsCheckMove(Tile from, Tile to, Board board)
+        public bool IsPlayingSideKingChecked(Tile from, Tile to, Board board)
         {
             // Clone the board for simulation
             var simulatedBoard = board.Clone();
@@ -58,32 +58,13 @@ namespace ChessAPI.Services
             var playingSideKingChecked = false;
             foreach(var oppositeSidePieceTile in oppositeSidePieceTiles)
             {
-                var pieceRangeNumbers = new List<int>();
-                foreach(var pattern in oppositeSidePieceTile.piece.capturePattern)
-                {
-                    pieceRangeNumbers.AddRange(MoveValidatorHelper.GetMovementRange(pattern));
-                }
-
-                playingSideKingChecked = MoveValidatorHelper.CheckTileRange(pieceRangeNumbers.ToArray(), oppositeSidePieceTile, playingSideKingTile, simulatedBoard);
-                if(playingSideKingChecked) {
-                    // playing side king is checked so we return false, playing side cannot move a piece if it would check its own king
-                    return false;
+                if(oppositeSidePieceTile.piece.IsCheckingKing(oppositeSidePieceTile, playingSideKingTile, simulatedBoard)){
+                    return true;
                 }
             }
 
-            // Check if the opponent's king is in check
-            var movementType = MoveValidatorHelper.GetMovementType(simulatedToTile, simulatedToTile.piece.color == Color.PieceColor.White ? kingTiles.blackKingTile : kingTiles.whiteKingTile, simulatedBoard);
-            var opponentKingInCheck = simulatedToTile.piece.capturePattern.Contains(movementType);
-
-            //    this.IsKingChecked(
-            //    simulatedFromTile,
-            //    simulatedToTile,
-            //    simulatedToTile.piece.color == Color.PieceColor.White ? kingTiles.whiteKingTile : kingTiles.blackKingTile,
-            //    simulatedBoard
-            //);
-
             // If the player's king is under check after the move, return false
-             return opponentKingInCheck;
+             return false;
         }
 
         private bool IsKingChecked(Tile from, Tile to, Tile kingTile, Board board)

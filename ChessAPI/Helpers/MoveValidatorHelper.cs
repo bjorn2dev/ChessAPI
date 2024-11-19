@@ -33,6 +33,7 @@ namespace ChessAPI.Helpers
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
             var differenceBetweenTiles = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
+            if (movementType == MovementType.Invalid) return false;
             // loop through every step in the piece range
             foreach (var step in pieceRange)
             {

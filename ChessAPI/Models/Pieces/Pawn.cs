@@ -32,6 +32,21 @@ namespace ChessAPI.Models.Pieces
             return this.movePattern.First() == movementType && difference == pawnRange.First() ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
 
         }
+
+        public bool IsValidEnPassant(Tile from, Tile to, Board board)
+        {
+            return false;
+        }
+
+        public bool CanPromote(Tile from, Tile to, Board board)
+        {
+            return false;
+        }
+
+        public override bool IsCheckingKing(Tile from, Tile to, Board board)
+        {
+            return false;
+        }
     }
 }
 

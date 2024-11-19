@@ -19,6 +19,7 @@ namespace ChessAPI.Models
         public virtual bool IsValidMovement(Tile from, Tile to, Board board) { return false; }
 
         public virtual bool IsValidCapture(Tile from, Tile to, Board board) { return false; }
+        public virtual bool IsCheckingKing(Tile from, Tile to, Board board) { return false; }
 
         public virtual Piece Clone()
         {
