@@ -56,9 +56,12 @@ namespace ChessAPI.Helpers
             Tile from = board.playingFieldDictionary.GetValueAtIndex(fromIndex);
             Tile to = board.playingFieldDictionary.GetValueAtIndex(toIndex);
             movementType = MoveValidatorHelper.CheckIfCapture(from, to, movementType) ? MovementType.Capture : movementType;
+
+            // early return on faulty movement
+            if (movementType == MovementType.Invalid) return false;
+
             int currentIndex = fromIndex;
-            while (currentIndex != toIndex //&&(toIndex > fromIndex ?(currentIndex + step >= 0) :(currentIndex - step >= 0))
-                )
+            while (currentIndex != toIndex)
             {
                 currentIndex = toIndex > fromIndex ? currentIndex + Math.Abs(step) : currentIndex - Math.Abs(step);
 

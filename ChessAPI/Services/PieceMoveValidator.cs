@@ -29,7 +29,7 @@ namespace ChessAPI.Services
             var isValidMove = movementType != MovementType.Capture ? fromPiece.IsValidMovement(from, to, board) : fromPiece.IsValidCapture(from, to, board);
 
             // check if the move is a move that sets the king in check
-            isValidMove = IsCheckMove(from, to, board);
+           // isValidMove = IsCheckMove(from, to, board);
 
 
             return isValidMove;
@@ -55,7 +55,7 @@ namespace ChessAPI.Services
             var playingSideKingTile = playingSideColor == Color.PieceColor.White ? kingTiles.whiteKingTile : kingTiles.blackKingTile;
             var oppositeSidePieceTiles = simulatedBoard.playingFieldDictionary.Select((x) => x.Value).Where((x) => x.piece != null && x.piece.color == opponentSideColor).ToList();
 
-
+            var playingSideKingChecked = false;
             foreach(var oppositeSidePieceTile in oppositeSidePieceTiles)
             {
                 var pieceRangeNumbers = new List<int>();
@@ -64,8 +64,13 @@ namespace ChessAPI.Services
                     pieceRangeNumbers.AddRange(MoveValidatorHelper.GetMovementRange(pattern));
                 }
 
-                return MoveValidatorHelper.CheckTileRange(pieceRangeNumbers.ToArray(), oppositeSidePieceTile, playingSideKingTile, simulatedBoard);
+                playingSideKingChecked = MoveValidatorHelper.CheckTileRange(pieceRangeNumbers.ToArray(), oppositeSidePieceTile, playingSideKingTile, simulatedBoard);
+                if(playingSideKingChecked) {
+                    // playing side king is checked so we return false, playing side cannot move a piece if it would check its own king
+                    return false;
+                }
             }
+
             // Check if the opponent's king is in check
             var movementType = MoveValidatorHelper.GetMovementType(simulatedToTile, simulatedToTile.piece.color == Color.PieceColor.White ? kingTiles.blackKingTile : kingTiles.whiteKingTile, simulatedBoard);
             var opponentKingInCheck = simulatedToTile.piece.capturePattern.Contains(movementType);
