@@ -31,7 +31,7 @@ namespace ChessAPI.Helpers
         public static bool CheckTileRange(int[] pieceRange, Tile from, Tile to, Board board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
-            var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var differenceBetweenTiles = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             if (movementType == MovementType.Invalid) return false;
             // loop through every step in the piece range
@@ -56,7 +56,6 @@ namespace ChessAPI.Helpers
         {
             Tile from = board.playingFieldDictionary.GetValueAtIndex(fromIndex);
             Tile to = board.playingFieldDictionary.GetValueAtIndex(toIndex);
-            movementType = MoveValidatorHelper.CheckIfCapture(from, to, movementType) ? MovementType.Capture : movementType;
 
             // early return on faulty movement
             if (movementType == MovementType.Invalid) return false;
@@ -73,6 +72,7 @@ namespace ChessAPI.Helpers
                 {
                     continue;
                 }
+
                 // check if movement type is not capture and the tile we're checking has no occupying piece,
                 // also if the movement type is capture, but there we have not reached the destination tile, the path is blocked and we can return false.
                 if (movementType != MovementType.Capture && tileCheck.piece != null || (movementType == MovementType.Capture && tileCheck.piece != null && currentIndex != toIndex))
@@ -101,37 +101,49 @@ namespace ChessAPI.Helpers
             return fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
         }
 
-        public static MovementType GetMovementType(Tile from, Tile to, Board board)
+        public static MovementType DetermineMovementType(Tile from, Tile to, Board board)
         {
+            // Get basic indexes and differences
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
+            // Early exit: no piece on 'from' tile
+            if (from.piece == null) return MovementType.Invalid;
 
-            if (from.rank == to.rank && from.piece.movePattern.Contains(MovementType.Horizontal))
+            // Check for captures
+            bool isCapture = to.piece != null && from.piece.color != to.piece.color;
+
+            // Determine applicable movement patterns
+            var applicablePatterns = isCapture ? from.piece.capturePattern : from.piece.movePattern;
+
+            // Horizontal
+            if (from.rank == to.rank && applicablePatterns.Contains(MovementType.Horizontal))
             {
                 return MovementType.Horizontal;
             }
-            else if (difference % 8 == 0 && from.piece.movePattern.Contains(MovementType.Vertical))
+
+            // Vertical
+            if (difference % 8 == 0 && applicablePatterns.Contains(MovementType.Vertical))
             {
                 return MovementType.Vertical;
             }
-            else if (
-                ((Math.Abs(indexes.toIndex - indexes.fromIndex) % 9 == 0) || 
-                (Math.Abs(indexes.toIndex - indexes.fromIndex) % 7 == 0) ) &&
-                from.piece.movePattern.Contains(MovementType.Diagonal))
+
+            // Diagonal
+            if (((Math.Abs(difference) % 9 == 0) || (Math.Abs(difference) % 7 == 0)) &&
+                applicablePatterns.Contains(MovementType.Diagonal))
             {
                 return MovementType.Diagonal;
             }
-            else if (MoveValidatorHelper.GetMovementRange(MovementType.LShaped).Contains(difference) && from.piece.movePattern.Contains(MovementType.LShaped))
+
+            // L-Shaped (Knights)
+            if (MoveValidatorHelper.GetMovementRange(MovementType.LShaped).Contains(difference) &&
+                applicablePatterns.Contains(MovementType.LShaped))
             {
                 return MovementType.LShaped;
             }
-            return MovementType.Invalid;
-        }
 
-        public static bool CheckIfCapture(Tile from, Tile to, MovementType originalMovementType) { 
-            return from.piece != null && to.piece != null && from.piece.color != to.piece.color && from.piece.capturePattern.Contains(originalMovementType);
-        } 
-        
+            // Default: Invalid movement
+            return MovementType.Invalid;
+        }        
     }
 }

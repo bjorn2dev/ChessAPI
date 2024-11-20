@@ -1,4 +1,5 @@
 ﻿using ChessAPI.Helpers;
+using ChessAPI.Models.Enums;
 using System;
 using static ChessAPI.Models.Enums.Color;
 
@@ -51,6 +52,27 @@ namespace ChessAPI.Models.Pieces
 
             // king has multiple ways to move, but can always only move one square, so we make a new int array with the difference found.
             return kingRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
+        }
+
+        public bool IsInCheck(Board board)
+        {
+            var kingTile = board.GetKingTile(this.color);
+            var opponentSideColor = this.color == PieceColor.White ? PieceColor.Black : PieceColor.White;
+            var oppositeSidePieceTiles = board.playingFieldDictionary.Select((x) => x.Value).Where((x) => x.piece != null && x.piece.color == opponentSideColor).ToList();
+
+            foreach (var oppositeSidePieceTile in oppositeSidePieceTiles)
+            {
+                if (oppositeSidePieceTile.piece.IsCheckingKing(oppositeSidePieceTile, kingTile, board))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsSafeToCastle(Board board)
+        {
+            return true;
         }
     }
 }

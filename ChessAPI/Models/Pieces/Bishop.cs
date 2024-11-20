@@ -16,7 +16,7 @@ namespace ChessAPI.Models.Pieces
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-            var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
             int[] bishopRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
             return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(bishopRange, from, to, board) : false;
@@ -26,18 +26,17 @@ namespace ChessAPI.Models.Pieces
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-            var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
             int[] bishopRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
 
             return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(bishopRange, from, to, board) : false;
         }
         public override bool IsCheckingKing(Tile from, Tile kingTile, Board board)
-        {
-
+        { 
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, kingTile, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-            var movementType = MoveValidatorHelper.GetMovementType(from, kingTile, board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, kingTile, board);
 
             if (!this.capturePattern.Contains(movementType)) return false;
 
@@ -50,7 +49,6 @@ namespace ChessAPI.Models.Pieces
 
             result = MoveValidatorHelper.CheckTileRange(pieceRangeNumbers.ToArray(), from, kingTile, board);
             
-
             return result;
         }
     }

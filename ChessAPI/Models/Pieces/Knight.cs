@@ -15,20 +15,38 @@ namespace ChessAPI.Models.Pieces
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-            var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var knightRange = MoveValidatorHelper.GetMovementRange(this.capturePattern.First());
             return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, Board board)
         {
-
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-            var movementType = MoveValidatorHelper.GetMovementType(from, to, board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var knightRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
             return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
+        }
 
+        public override bool IsCheckingKing(Tile from, Tile kingTile, Board board)
+        {
+            var indexes = MoveValidatorHelper.GetMovementIndexes(from, kingTile, board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, kingTile, board);
+
+            if (!this.capturePattern.Contains(movementType)) return false;
+
+            var result = false;
+            var pieceRangeNumbers = new List<int>();
+            foreach (var pattern in this.capturePattern)
+            {
+                pieceRangeNumbers.AddRange(MoveValidatorHelper.GetMovementRange(pattern));
+            }
+
+            result = MoveValidatorHelper.CheckTileRange(pieceRangeNumbers.ToArray(), from, kingTile, board);
+
+            return result;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace ChessAPITests
             var toTile = boardSetup.GetTileByNotation("F3");
 
             // Act
-            var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the detected movement type matches the expected type
             Assert.Equal(MovementType.Diagonal, movementType);
@@ -50,7 +50,7 @@ namespace ChessAPITests
             var toTile = boardSetup.GetTileByNotation("D2");
 
             // Act
-            var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the detected movement type matches the expected type
             Assert.Equal(MovementType.Horizontal, movementType);
@@ -66,7 +66,7 @@ namespace ChessAPITests
             var toTile = boardSetup.GetTileByNotation("E3");
 
             // Act
-            var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the detected movement type matches the expected type
             Assert.Equal(MovementType.Vertical, movementType);
@@ -82,7 +82,7 @@ namespace ChessAPITests
             var toTile = boardSetup.GetTileByNotation("C3");
 
             // Act
-            var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the detected movement type matches the expected type
             Assert.Equal(MovementType.LShaped, movementType);
@@ -98,7 +98,7 @@ namespace ChessAPITests
             var toTile = boardSetup.GetTileByNotation("C4");
 
             // Act
-            var movementType = MoveValidatorHelper.GetMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
+            var movementType = MoveValidatorHelper.DetermineMovementType(fromTile, toTile, boardSetup._boardStateService.Board);
 
             // Assert that the detected movement type matches the expected type
             Assert.Equal(MovementType.Invalid, movementType);

@@ -40,6 +40,7 @@ namespace ChessAPI
             builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
 
             // Transient for services used briefly and independently per operation
+            builder.Services.AddTransient<IBoardSimulationService, BoardSimulationService>();
             builder.Services.AddTransient<IColorSideSelector, HtmlColorSideSelector>();
             builder.Services.AddTransient<IStartingPositionProvider, StartingPositionService>();
             builder.Services.AddTransient<ITileRenderer, HtmlTileRenderer>();
