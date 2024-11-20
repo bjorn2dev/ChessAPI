@@ -6,15 +6,16 @@ using System.Collections.Generic;
 public class PlayerManagementService : IPlayerManagementService
 {
     private readonly IPlayerService _playerService;
-
-    public PlayerManagementService(IPlayerService playerService)
+    private readonly IPlayerTurnService _playerTurnService;
+    public PlayerManagementService(IPlayerService playerService, IPlayerTurnService playerTurnService)
     {
-        _playerService = playerService;
+        this._playerService = playerService;
+        this._playerTurnService = playerTurnService;
     }
 
     public bool ArePlayersRegistered()
     {
-        return _playerService.PlayersInitialized;
+        return this._playerService.PlayersInitialized;
     }
 
     public void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp)
@@ -28,7 +29,7 @@ public class PlayerManagementService : IPlayerManagementService
     {
         if (this._playerService.SameDevice)
         {
-            //return this.PlayerTurns.Any() && this.PlayerTurns.Last().user == this.BlackPlayer || !this.PlayerTurns.Any() ? this.WhitePlayer : this.BlackPlayer;
+            return this._playerTurnService.CheckWhoseTurn() == Color.PlayerColor.White ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
         }
         return userAgent == this._playerService.WhitePlayer.userAgent && userIp == this._playerService.WhitePlayer.userIp ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
     }
