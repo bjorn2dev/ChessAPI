@@ -18,31 +18,31 @@ namespace ChessAPI.Services
 
         public bool ValidateMove(Tile from, Tile to, Board board)
         {
-            var fromPiece = from.piece;
-
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
-            // every move is done with a piece and cant capture pieces of the same color
-            if (fromPiece == null || (to.piece != null && fromPiece.color == to.piece.color) || movementType == MovementType.Invalid) return false;
+            // Basic validation: piece existence, movement type, and color mismatch for captures
+            if (movementType == MovementType.Invalid ||
+                from.piece == null || (to.piece != null && from.piece.color == to.piece.color) ||
+                !ValidateKingSafety(from, to, board)) return false;
 
-            var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
-            
-            // verify it is a legal move or capture
-            var isValidMove = movementType != MovementType.Capture ? fromPiece.IsValidMovement(from, to, board) : fromPiece.IsValidCapture(from, to, board);
-
-            // check if the move is a move that sets the king in check
-            isValidMove = !IsPlayingSideKingChecked(from, to, board);
-             
-            return isValidMove;
+            // Validate if the move leaves the king in check
+            return ValidateBasicMove(from, to, movementType, board);
         }
 
-        public bool IsPlayingSideKingChecked(Tile from, Tile to, Board board)
+        private bool ValidateBasicMove(Tile from, Tile to, MovementType movementType, Board board)
         {
-            var simulatedBoard = this._boardSimulationService.SimulateMove(from, to, board);
+            if (from.piece == null || (to.piece != null && from.piece.color == to.piece.color)) return false;
+            return movementType != MovementType.Capture
+                ? from.piece.IsValidMovement(from, to, board)  // Basic movement validation
+                : from.piece.IsValidCapture(from, to, board);  // Capture validation
+        }
 
-            var kingTile = simulatedBoard.GetKingTile(from.piece.color == Color.PieceColor.White ? Color.PieceColor.White : Color.PieceColor.Black);
-            King? kingPiece = kingTile.piece as King;
-            return kingPiece != null && kingPiece.IsInCheck(simulatedBoard);
+        private bool ValidateKingSafety(Tile from, Tile to, Board board)
+        {
+            var simulatedBoard = _boardSimulationService.SimulateMove(from, to, board);
+            var playingSideKing = simulatedBoard.GetKingTile(from.piece.color);
+
+            return !((King)playingSideKing.piece).IsInCheck(simulatedBoard); // Ensure king is not in check
         }
     }
 }

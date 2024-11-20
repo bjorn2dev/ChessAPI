@@ -31,24 +31,5 @@ namespace ChessAPI.Models.Pieces
             var rookRange = MoveValidatorHelper.GetMovementRange(movementType);
             return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(rookRange, from, to, board) : false;
         }
-
-        public override bool IsCheckingKing(Tile from, Tile kingTile, Board board)
-        {
-            var indexes = MoveValidatorHelper.GetMovementIndexes(from, kingTile, board);
-            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-            var movementType = MoveValidatorHelper.DetermineMovementType(from, kingTile, board);
-
-            if (!this.capturePattern.Contains(movementType)) return false;
-
-            var result = false;
-            foreach (var step in MoveValidatorHelper.GetMovementRange(movementType))
-            {
-                if(difference % step == 0)
-                {
-                    return MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, step, board, MovementType.Capture);
-                }
-            }
-            return result;
-        }
     }
 }

@@ -24,7 +24,7 @@ namespace ChessAPI.Services
             var turn = this.CheckWhoseTurn();
 
             return  (this.PlayerTurns.Count == 0 && turn == Color.PlayerColor.White) || 
-                    (this.PlayerTurns.Count > 0 && this.PlayerTurns.Last().user.color != turn);
+                    (this.PlayerTurns.Count > 0 && this.PlayerTurns.Last().user.color != turn && player.color != turn);
               
         }
 

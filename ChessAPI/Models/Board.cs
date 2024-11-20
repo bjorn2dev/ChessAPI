@@ -24,7 +24,7 @@ namespace ChessAPI.Models
                         entry => entry.Key,
                         entry => new Tile
                         {
-                            piece = entry.Value.piece?.Clone(), // Assuming Clone() exists in Piece
+                            piece = entry.Value.piece?.Clone(),
                             html = entry.Value.html,
                             color = entry.Value.color,
                             fileNumber = entry.Value.fileNumber,
@@ -39,9 +39,6 @@ namespace ChessAPI.Models
 
         public Tile GetTileByRankAndFileNumber(int rank, int file) => this.playingFieldDictionary.First(t => t.Key.Item1 == rank && t.Key.Item2 == file).Value;
         public Tile GetTileByAnnotation(string annotation) => this.playingFieldDictionary.First(t => t.Value.tileAnnotation == annotation).Value;
-
         public Tile GetKingTile(Color.PieceColor pieceColor = Color.PieceColor.White) => this.playingFieldDictionary.FirstOrDefault(x => x.Value.piece is King && x.Value.piece.color == pieceColor).Value;
-
-    
     }
 }

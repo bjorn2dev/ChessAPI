@@ -1,4 +1,5 @@
-﻿using ChessAPI.Models;
+﻿using ChessAPI.Helpers;
+using ChessAPI.Models;
 using ChessAPI.Models.Enums;
 using System.Drawing;
 using static ChessAPI.Models.Enums.Color;
@@ -19,7 +20,24 @@ namespace ChessAPI.Models
         public virtual bool IsValidMovement(Tile from, Tile to, Board board) { return false; }
 
         public virtual bool IsValidCapture(Tile from, Tile to, Board board) { return false; }
-        public virtual bool IsCheckingKing(Tile from, Tile to, Board board) { return false; }
+        public virtual bool IsCheckingKing(Tile from, Tile kingTile, Board board) {
+            var indexes = MoveValidatorHelper.GetMovementIndexes(from, kingTile, board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, kingTile, board);
+
+            if (!this.capturePattern.Contains(movementType)) return false;
+
+            var result = false;
+            foreach (var step in MoveValidatorHelper.GetMovementRange(movementType))
+            {
+                if (difference % step == 0)
+                {
+                    return MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, step, board, MovementType.Capture);
+                }
+            }
+            return result;
+
+        }
 
         public virtual Piece Clone()
         {

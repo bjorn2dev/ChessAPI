@@ -26,11 +26,22 @@ namespace ChessAPI.Models.Pieces
         public override bool IsValidMovement(Tile from, Tile to, Board board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
-            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex); 
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
             return this.movePattern.First() == movementType && difference == pawnRange.First() ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
 
+        }
+        
+        public override bool IsCheckingKing(Tile from, Tile kingTile, Board board)
+        {
+            var indexes = MoveValidatorHelper.GetMovementIndexes(from, kingTile, board);
+            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, kingTile, board);
+            
+            if (!this.capturePattern.Contains(movementType)) return false;
+            var step = MoveValidatorHelper.GetMovementRange(movementType).FirstOrDefault((rangeItem) => difference % rangeItem == 0);
+            return difference == step ? MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, step, board, MovementType.Capture) : false;
         }
 
         public bool IsValidEnPassant(Tile from, Tile to, Board board)
@@ -41,26 +52,6 @@ namespace ChessAPI.Models.Pieces
         public bool CanPromote(Tile from, Tile to, Board board)
         {
             return false;
-        }
-
-        public override bool IsCheckingKing(Tile from, Tile kingTile, Board board)
-        {
-            var indexes = MoveValidatorHelper.GetMovementIndexes(from, kingTile, board);
-            var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
-            var movementType = MoveValidatorHelper.DetermineMovementType(from, kingTile, board);
-
-            if (!this.capturePattern.Contains(movementType)) return false;
-
-            var result = false;
-            var pieceRangeNumbers = new List<int>();
-            foreach (var pattern in this.capturePattern)
-            {
-                pieceRangeNumbers.AddRange(MoveValidatorHelper.GetMovementRange(pattern));
-            }
-
-            result = MoveValidatorHelper.CheckTileRange(pieceRangeNumbers.ToArray(), from, kingTile, board);
-
-            return result;
         }
     }
 }

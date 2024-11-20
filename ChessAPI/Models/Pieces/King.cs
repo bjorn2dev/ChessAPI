@@ -74,5 +74,10 @@ namespace ChessAPI.Models.Pieces
         {
             return true;
         }
+
+        public override bool IsCheckingKing(Tile from, Tile kingTile, Board board)
+        {
+            return false;
+        }
     }
 }
