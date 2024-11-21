@@ -18,6 +18,7 @@ namespace ChessAPI.Services
             fromTile.piece = null;
 
             // update the tiles' HTML content
+            // todo dont render 
             toTile.html = this._tileRenderer.Render(toTile);
             fromTile.html = this._tileRenderer.Render(fromTile);
         }
