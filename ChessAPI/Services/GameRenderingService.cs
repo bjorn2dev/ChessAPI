@@ -6,8 +6,8 @@ namespace ChessAPI.Services
     public class GameRenderingService : IGameRenderingService
     {
         private readonly IBoardService _boardService;
-        private readonly IColorSideSelector _colorSideSelector;
-        public GameRenderingService(IBoardService boardService, IColorSideSelector colorSideSelector)
+        private readonly IDashboardRenderer _colorSideSelector;
+        public GameRenderingService(IBoardService boardService, IDashboardRenderer colorSideSelector)
         {
             _boardService = boardService;
             _colorSideSelector = colorSideSelector;
