@@ -2,6 +2,7 @@
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
 using System.Collections.Generic;
+using static ChessAPI.Models.Enums.Color;
 
 public class PlayerManagementService : IPlayerManagementService
 {
@@ -20,6 +21,11 @@ public class PlayerManagementService : IPlayerManagementService
 
     public void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp)
     {
+        if (this._playerService.SameDevice)
+        {
+            userAgent = $"{userAgent}_{playerColor}";
+            userIp = $"{userIp}_{playerColor}";
+        }
         User player = new User { color = playerColor, userAgent = userAgent, userIp = userIp };
 
         this._playerService.SetPlayer(player);
@@ -29,7 +35,9 @@ public class PlayerManagementService : IPlayerManagementService
     {
         if (this._playerService.SameDevice)
         {
-            return this._playerTurnService.CheckWhoseTurn() == Color.PlayerColor.White ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
+            var playerColor = this._playerTurnService.CheckWhoseTurn();
+            userAgent = $"{userAgent}_{playerColor}";
+            userIp = $"{userIp}_{playerColor}";
         }
         return userAgent == this._playerService.WhitePlayer.userAgent && userIp == this._playerService.WhitePlayer.userIp ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
     }

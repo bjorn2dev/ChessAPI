@@ -1,7 +1,7 @@
 ﻿using ChessAPI.Models.Enums;
 namespace ChessAPI.Interfaces
 {
-    public interface IColorSideSelector
+    public interface IDashboardRenderer
     {
         string Render(List<Color.PlayerColor> pieceColorsToShow);
     }
