@@ -8,14 +8,15 @@ namespace ChessAPI.Models
 {
     public class Piece
     {
-        public PieceColor color { get; set; }
+        public virtual PieceColor color { get; set; }
 
-        public string boardLocation { get; set; }
+        public virtual string boardLocation { get; set; }
 
-        public string name = string.Empty;
+        public virtual string name { get; set; }
 
-        public MovementType[] movePattern { get; set; }
-        public MovementType[] capturePattern { get; set; }
+        public virtual bool AllowsCastling => false;
+        public virtual MovementType[] movePattern { get; set; }
+        public virtual MovementType[] capturePattern { get; set; }
 
         public virtual bool IsValidMovement(Tile from, Tile to, Board board) { return false; }
 

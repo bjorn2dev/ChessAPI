@@ -7,6 +7,7 @@
         Horizontal,
         Vertical,
         LShaped,
-        Capture
+        Capture,
+        Castle
     }
 }

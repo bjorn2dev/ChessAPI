@@ -1,4 +1,5 @@
 ﻿using ChessAPI.Helpers;
+using ChessAPI.Interfaces;
 using ChessAPI.Models.Enums;
 using System;
 using static ChessAPI.Models.Enums.Color;
@@ -7,11 +8,20 @@ namespace ChessAPI.Models.Pieces
 {
     public class King : Piece
     {
-        public King()
+        private bool _hasMoved = false;
+        public override bool AllowsCastling => !this._hasMoved;
+        private readonly IKingSafetyValidator _kingSafetyValidator;
+        public King(IKingSafetyValidator kingSafetyValidator)
         {
             this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Chess_klt45.svg/1280px-Chess_klt45.svg.png\" width=\"100\" height=\"100\">";
             this.movePattern = [MovementType.Diagonal, MovementType.Horizontal, MovementType.Vertical];
             this.capturePattern = this.movePattern;
+            this._kingSafetyValidator = kingSafetyValidator;
+        }
+
+        public void MarkAsMoved()
+        {
+            this._hasMoved = true;
         }
 
         public override bool IsValidCapture(Tile from, Tile to, Board board)
@@ -57,17 +67,7 @@ namespace ChessAPI.Models.Pieces
         public bool IsInCheck(Board board)
         {
             var kingTile = board.GetKingTile(this.color);
-            var opponentSideColor = this.color == PieceColor.White ? PieceColor.Black : PieceColor.White;
-            var oppositeSidePieceTiles = board.playingFieldDictionary.Select((x) => x.Value).Where((x) => x.piece != null && x.piece.color == opponentSideColor).ToList();
-
-            foreach (var oppositeSidePieceTile in oppositeSidePieceTiles)
-            {
-                if (oppositeSidePieceTile.piece.IsCheckingKing(oppositeSidePieceTile, kingTile, board))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this._kingSafetyValidator.ValidateKingTileSafety(kingTile, board);
         }
 
         public bool IsSafeToCastle(Board board)

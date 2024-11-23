@@ -10,23 +10,23 @@ namespace ChessAPI.Services
 {
     public class PieceMoveValidator : IPieceMoveValidator
     {
-        private readonly IBoardSimulationService _boardSimulationService;
-        public PieceMoveValidator(IBoardSimulationService boardSimulationService)
+        private readonly IKingSafetyValidator _kingSafetyValidator;
+        public PieceMoveValidator(IKingSafetyValidator kingSafetyValidator)
         {
-            this._boardSimulationService = boardSimulationService;
+            this._kingSafetyValidator = kingSafetyValidator;
         }
 
         public bool ValidateMove(Tile from, Tile to, Board board)
         {
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
-            // Basic validation: piece existence, movement type, and color mismatch for captures
+            // Basic validation: piece existence, movement type, and color mismatch for captures and king safetey
             if (movementType == MovementType.Invalid ||
                 from.piece == null || (to.piece != null && from.piece.color == to.piece.color) ||
-                !ValidateKingSafety(from, to, board)) return false;
+                !this._kingSafetyValidator.ValidateKingSafety(from, to, movementType, board)) return false;
 
             // Validate if the move leaves the king in check
-            return ValidateBasicMove(from, to, movementType, board);
+            return this.ValidateBasicMove(from, to, movementType, board);
         }
 
         private bool ValidateBasicMove(Tile from, Tile to, MovementType movementType, Board board)
@@ -37,12 +37,6 @@ namespace ChessAPI.Services
                 : from.piece.IsValidCapture(from, to, board);  // Capture validation
         }
 
-        private bool ValidateKingSafety(Tile from, Tile to, Board board)
-        {
-            var simulatedBoard = _boardSimulationService.SimulateMove(from, to, board);
-            var playingSideKing = simulatedBoard.GetKingTile(from.piece.color);
-
-            return !((King)playingSideKing.piece).IsInCheck(simulatedBoard); // Ensure king is not in check
-        }
+        
     }
 }

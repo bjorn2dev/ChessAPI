@@ -7,11 +7,18 @@ namespace ChessAPI.Models.Pieces
 {
     public class Rook : Piece
     {
+        private bool _hasMoved = false;       
+        public override bool AllowsCastling => !this._hasMoved;
         public Rook()
         {
             this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Chess_rlt45.svg/1280px-Chess_rlt45.svg.png\" width=\"100\" height=\"100\">";
             this.movePattern = [MovementType.Vertical, MovementType.Horizontal];
             this.capturePattern = this.movePattern;
+        }
+
+        public void MarkAsMoved()
+        {
+            this._hasMoved = true;
         }
 
         public override bool IsValidCapture(Tile from, Tile to, Board board)
@@ -29,7 +36,18 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var rookRange = MoveValidatorHelper.GetMovementRange(movementType);
-            return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(rookRange, from, to, board) : false;
+            if (this.movePattern.Contains(movementType))
+            {
+                if(MoveValidatorHelper.CheckTileRange(rookRange, from, to, board))
+                {
+                    if(!this._hasMoved)
+                    {
+                        this._hasMoved = true;
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

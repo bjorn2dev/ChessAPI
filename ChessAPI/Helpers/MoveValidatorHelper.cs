@@ -1,7 +1,9 @@
 ﻿using ChessAPI.Models;
+using ChessAPI.Models.Pieces;
 using System;
 using System.Linq;
 using System.Net;
+using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Helpers
 {
@@ -116,6 +118,17 @@ namespace ChessAPI.Helpers
             // Determine applicable movement patterns
             var applicablePatterns = isCapture ? from.piece.capturePattern : from.piece.movePattern;
 
+            // Castle - (Kings)
+            if (from.piece is King && from.rank == to.rank && to.piece == null)
+            {
+                var pieceColor = from.piece.color;
+                if(pieceColor == Models.Enums.Color.PieceColor.White && (to.tileAnnotation == "C1" || to.tileAnnotation == "G1") ||
+                   pieceColor == Models.Enums.Color.PieceColor.Black && (to.tileAnnotation == "C8" || to.tileAnnotation == "G8"))
+                {
+                    return MovementType.Castle;
+                }
+            }
+
             // Horizontal
             if (from.rank == to.rank && applicablePatterns.Contains(MovementType.Horizontal))
             {
@@ -144,6 +157,8 @@ namespace ChessAPI.Helpers
 
             // Default: Invalid movement
             return MovementType.Invalid;
-        }        
+        }
+        
+       
     }
 }
