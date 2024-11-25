@@ -8,6 +8,7 @@
         Vertical,
         LShaped,
         Capture,
-        Castle
+        CastleKingSide,
+        CastleQueenSide
     }
 }

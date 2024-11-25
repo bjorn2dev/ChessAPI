@@ -4,6 +4,6 @@ namespace ChessAPI.Interfaces
 {
     public interface IPieceMoveValidator
     {
-        bool ValidateMove(Tile from, Tile to, Board board);
+        MovementType ValidateMove(Tile from, Tile to, Board board);
     }
 }

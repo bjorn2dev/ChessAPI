@@ -1,6 +1,8 @@
 using ChessAPI.Controllers;
+using ChessAPI.Factories;
 using ChessAPI.Interfaces;
 using ChessAPI.Models;
+using ChessAPI.Models.Pieces;
 using ChessAPI.Services;
 using System;
 
@@ -37,14 +39,17 @@ namespace ChessAPI
             builder.Services.AddSingleton<IPieceMoveValidator, PieceMoveValidator>();
             builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
-            builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
+            builder.Services.AddSingleton<IKingSafetyValidator, KingSafetyValidator>();
 
             // Transient for services used briefly and independently per operation
+            builder.Services.AddTransient<IPieceFactory, PieceFactory>();
+            builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
             builder.Services.AddTransient<IBoardSimulationService, BoardSimulationService>();
             builder.Services.AddTransient<IColorSideSelector, HtmlColorSideSelector>();
-            builder.Services.AddTransient<IStartingPositionProvider, StartingPositionService>();
+            builder.Services.AddTransient<IPositionProvider, PositionProvider>();
             builder.Services.AddTransient<ITileRenderer, HtmlTileRenderer>();
             builder.Services.AddTransient<IPieceRenderer, HtmlPieceRenderer>();
+            builder.Services.AddTransient<King>();
 
             builder.Services.AddControllersWithViews();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -8,13 +8,13 @@ namespace ChessAPITests
 {
     public class BoardGeneratorTests
     {
-        private Mock<IStartingPositionProvider> _startingPositionProviderMock;
+        private Mock<IPositionProvider> _startingPositionProviderMock;
         private Mock<ITileRenderer> _tileRendererMock;
         private Mock<IBoardStateService> _boardStateServiceMock;
 
         public BoardGeneratorTests()
         {
-            _startingPositionProviderMock = new Mock<IStartingPositionProvider>();
+            _startingPositionProviderMock = new Mock<IPositionProvider>();
             _tileRendererMock = new Mock<ITileRenderer>();
             _boardStateServiceMock = new Mock<IBoardStateService>();
         }

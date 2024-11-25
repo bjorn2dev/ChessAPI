@@ -16,27 +16,34 @@ namespace ChessAPI.Services
             this._kingSafetyValidator = kingSafetyValidator;
         }
 
-        public bool ValidateMove(Tile from, Tile to, Board board)
+        public MovementType ValidateMove(Tile from, Tile to, Board board)
         {
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
-            // Basic validation: piece existence, movement type, and color mismatch for captures and king safetey
+            // Basic validation
             if (movementType == MovementType.Invalid ||
                 from.piece == null || (to.piece != null && from.piece.color == to.piece.color) ||
-                !this._kingSafetyValidator.ValidateKingSafety(from, to, movementType, board)) return false;
+                !IsMoveLegal(from, to, movementType, board))
+            {
+                return MovementType.Invalid;
+            }
 
-            // Validate if the move leaves the king in check
-            return this.ValidateBasicMove(from, to, movementType, board);
+            return movementType;
         }
 
-        private bool ValidateBasicMove(Tile from, Tile to, MovementType movementType, Board board)
+        private bool IsMoveLegal(Tile from, Tile to, MovementType movementType, Board board)
         {
-            if (from.piece == null || (to.piece != null && from.piece.color == to.piece.color)) return false;
+            if (movementType == MovementType.CastleKingSide || movementType == MovementType.CastleQueenSide)
+            {
+                return this._kingSafetyValidator.ValidateKingSafety(from, to, movementType, board);
+            }
+
+            // Normal movement or capture validation
             return movementType != MovementType.Capture
-                ? from.piece.IsValidMovement(from, to, board)  // Basic movement validation
-                : from.piece.IsValidCapture(from, to, board);  // Capture validation
+                ? from.piece.IsValidMovement(from, to, board)
+                : from.piece.IsValidCapture(from, to, board);
         }
 
-        
+
     }
 }

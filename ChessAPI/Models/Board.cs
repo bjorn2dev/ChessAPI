@@ -39,6 +39,8 @@ namespace ChessAPI.Models
 
         public Tile GetTileByRankAndFileNumber(int rank, int file) => this.playingFieldDictionary.First(t => t.Key.Item1 == rank && t.Key.Item2 == file).Value;
         public Tile GetTileByAnnotation(string annotation) => this.playingFieldDictionary.First(t => t.Value.tileAnnotation == annotation).Value;
-        public Tile GetKingTile(Color.PieceColor pieceColor = Color.PieceColor.White) => this.playingFieldDictionary.FirstOrDefault(x => x.Value.piece is King && x.Value.piece.color == pieceColor).Value;
+        public Tile GetKingTile(Color.PieceColor pieceColor = Color.PieceColor.White) => this.playingFieldDictionary.First(x => x.Value.piece is King && x.Value.piece.color == pieceColor).Value;
+
+
     }
 }

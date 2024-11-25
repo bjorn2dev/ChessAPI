@@ -15,7 +15,7 @@ namespace ChessAPITests
 {
     public class StartingPositionServiceTests
     {
-        private IStartingPositionProvider _startingPositionProvider;
+        private IPositionProvider _startingPositionProvider;
         public StartingPositionServiceTests()
         {
             // Use ConfigurationBuilder to load the appsettings file in the test project’s output directory
@@ -26,7 +26,7 @@ namespace ChessAPITests
 
             var settings = configuration.GetSection("StartingPosition").Get<StartingPositionSettings>();
             IOptions<StartingPositionSettings> options = Options.Create(settings);
-            _startingPositionProvider = new StartingPositionService(options);
+            _startingPositionProvider = new PositionProvider(options);
         }
 
         [Theory]

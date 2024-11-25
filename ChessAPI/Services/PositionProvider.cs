@@ -6,17 +6,17 @@ using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Services
 {
-    public class StartingPositionService : IStartingPositionProvider
+    public class PositionProvider : IPositionProvider
     {
         private readonly StartingPositionSettings _startingPositionSettings;
-        public StartingPositionService(IOptions<StartingPositionSettings> startingPositionSettings)
+        public PositionProvider(IOptions<StartingPositionSettings> startingPositionSettings)
         {
             _startingPositionSettings = startingPositionSettings.Value;
         }
 
         public bool IsWhiteStartingPosition(string tileLocation)
         {
-            return !String.IsNullOrEmpty(tileLocation) && (
+            return !string.IsNullOrEmpty(tileLocation) && (
                 tileLocation == _startingPositionSettings.KingWhiteStart ||
                 tileLocation == _startingPositionSettings.QueenWhiteStart ||
                 _startingPositionSettings.RookWhiteStart.Contains(tileLocation) ||
@@ -27,7 +27,7 @@ namespace ChessAPI.Services
 
         public bool IsBlackStartingPosition(string tileLocation)
         {
-            return !String.IsNullOrEmpty(tileLocation) && (
+            return !string.IsNullOrEmpty(tileLocation) && (
                tileLocation == _startingPositionSettings.KingBlackStart ||
                tileLocation == _startingPositionSettings.QueenBlackStart ||
                _startingPositionSettings.RookBlackStart.Contains(tileLocation) ||

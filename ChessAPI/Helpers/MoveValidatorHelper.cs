@@ -11,10 +11,32 @@ namespace ChessAPI.Helpers
     {
         public MoveValidatorHelper()
         {
-            
+
+        }
+        public static readonly string WhiteKingSideCastleTileAnnotation = "G1";
+        public static readonly string WhiteQueenSideCastleTileAnnotation = "C1";
+        public static readonly string BlackKingSideCastleTileAnnotation = "G8";
+        public static readonly string BlackQueenSideCastleTileAnnotation = "C8";
+        public static readonly string WhiteKingSideCastleRookTileAnnotation = "H1";
+        public static readonly string WhiteQueenSideCastleRookTileAnnotation = "A1";
+        public static readonly string BlackKingSideCastleRookTileAnnotation = "H8";
+        public static readonly string BlackQueenSideCastleRookTileAnnotation = "A8";
+        public static readonly string[] WhiteKingSideCastleCheckTiles = ["F1", "G1"];
+        public static readonly string[] WhiteQueenSideCastleCheckTiles = ["D1", "C1"];
+        public static readonly string[] BlackKingSideCastleCheckTiles = ["F8", "G8"];
+        public static readonly string[] BlackQueenSideCastleCheckTiles = ["D8", "C8"];
+
+
+        public static bool ValidateCastleMovement(PieceColor playerColor, MovementType movementType, Board board)
+        {
+            if (movementType != MovementType.CastleKingSide || movementType != MovementType.CastleQueenSide) return false;
+
+
+            return true;
+
         }
 
-        public static int[] GetMovementRange(MovementType movementType) 
+        public static int[] GetMovementRange(MovementType movementType)
         {
             switch (movementType)
             {
@@ -30,6 +52,7 @@ namespace ChessAPI.Helpers
                     return [];
             }
         }
+
         public static bool CheckTileRange(int[] pieceRange, Tile from, Tile to, Board board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
@@ -122,10 +145,16 @@ namespace ChessAPI.Helpers
             if (from.piece is King && from.rank == to.rank && to.piece == null)
             {
                 var pieceColor = from.piece.color;
-                if(pieceColor == Models.Enums.Color.PieceColor.White && (to.tileAnnotation == "C1" || to.tileAnnotation == "G1") ||
-                   pieceColor == Models.Enums.Color.PieceColor.Black && (to.tileAnnotation == "C8" || to.tileAnnotation == "G8"))
-                {
-                    return MovementType.Castle;
+                if ((pieceColor == PieceColor.White && to.tileAnnotation == WhiteKingSideCastleTileAnnotation) ||
+                    (pieceColor == PieceColor.Black && to.tileAnnotation == WhiteKingSideCastleTileAnnotation))
+                { 
+                    return MovementType.CastleKingSide;
+                }
+
+                if ((pieceColor == PieceColor.White && to.tileAnnotation == WhiteQueenSideCastleTileAnnotation) ||
+                    (pieceColor == PieceColor.Black && to.tileAnnotation == WhiteQueenSideCastleTileAnnotation))
+                { 
+                    return MovementType.CastleQueenSide; 
                 }
             }
 
@@ -158,7 +187,7 @@ namespace ChessAPI.Helpers
             // Default: Invalid movement
             return MovementType.Invalid;
         }
-        
-       
+
+
     }
 }

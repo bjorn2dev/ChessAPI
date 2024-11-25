@@ -10,14 +10,15 @@ namespace ChessAPI.Services
     /// </summary>
     public class BoardGenerator : IBoardGenerator
     {
-        private readonly IStartingPositionProvider _startingPositionProvider;
+        private readonly IPositionProvider _startingPositionProvider;
         private readonly ITileRenderer _tileRenderer;
-        
+        private readonly IPieceFactory _pieceFactory;
 
-        public BoardGenerator(IStartingPositionProvider startingPositionProvider, ITileRenderer tileRenderer)
+        public BoardGenerator(IPositionProvider startingPositionProvider, ITileRenderer tileRenderer, IPieceFactory pieceFactory)
         {
-            _startingPositionProvider = startingPositionProvider;
-            _tileRenderer = tileRenderer;
+            this._startingPositionProvider = startingPositionProvider;
+            this._tileRenderer = tileRenderer;
+            this._pieceFactory = pieceFactory;
         }
 
         public void SetupBoard(Board board)
@@ -47,22 +48,18 @@ namespace ChessAPI.Services
                 if (!string.IsNullOrEmpty(tile.tileAnnotation))
                 {
                     // Determine the type of piece (king, queen, rook, etc.)
-                    var pieceType = _startingPositionProvider.GetPieceTypeForLocation(tile.tileAnnotation);
+                    var pieceType = this._startingPositionProvider.GetPieceTypeForLocation(tile.tileAnnotation);
 
                     if (pieceType != null)
                     {
-                        // Instantiate the piece dynamically using reflection
-                        tile.piece = (Piece)Activator.CreateInstance(pieceType);
+                        var isWhite = this._startingPositionProvider.IsWhiteStartingPosition(tile.tileAnnotation);
+                        var color = isWhite ? PieceColor.White : PieceColor.Black;
 
-                        // Check if the starting position is for a white or black piece
-                        tile.piece.color = _startingPositionProvider.IsWhiteStartingPosition(tile.tileAnnotation)
-                        ? PieceColor.White
-                        : PieceColor.Black;
-
+                        tile.piece = this._pieceFactory.CreatePiece(pieceType, color);
                         tile.piece.boardLocation = tile.tileAnnotation;
                     }
                 }
-                tile.html = _tileRenderer.Render(tile);
+                tile.html = this._tileRenderer.Render(tile);
             }
         }
     }

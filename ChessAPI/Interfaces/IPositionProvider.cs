@@ -2,10 +2,12 @@
 
 namespace ChessAPI.Interfaces
 {
-    public interface IStartingPositionProvider
+    public interface IPositionProvider
     {
         Type GetPieceTypeForLocation(string location);
         bool IsWhiteStartingPosition(string location);
         bool IsBlackStartingPosition(string location);
+
+        
     }
 }
