@@ -13,29 +13,7 @@ namespace ChessAPI.Helpers
         {
 
         }
-        public static readonly string WhiteKingSideCastleTileAnnotation = "G1";
-        public static readonly string WhiteQueenSideCastleTileAnnotation = "C1";
-        public static readonly string BlackKingSideCastleTileAnnotation = "G8";
-        public static readonly string BlackQueenSideCastleTileAnnotation = "C8";
-        public static readonly string WhiteKingSideCastleRookTileAnnotation = "H1";
-        public static readonly string WhiteQueenSideCastleRookTileAnnotation = "A1";
-        public static readonly string BlackKingSideCastleRookTileAnnotation = "H8";
-        public static readonly string BlackQueenSideCastleRookTileAnnotation = "A8";
-        public static readonly string[] WhiteKingSideCastleCheckTiles = ["F1", "G1"];
-        public static readonly string[] WhiteQueenSideCastleCheckTiles = ["D1", "C1"];
-        public static readonly string[] BlackKingSideCastleCheckTiles = ["F8", "G8"];
-        public static readonly string[] BlackQueenSideCastleCheckTiles = ["D8", "C8"];
-
-
-        public static bool ValidateCastleMovement(PieceColor playerColor, MovementType movementType, Board board)
-        {
-            if (movementType != MovementType.CastleKingSide || movementType != MovementType.CastleQueenSide) return false;
-
-
-            return true;
-
-        }
-
+      
         public static int[] GetMovementRange(MovementType movementType)
         {
             switch (movementType)
@@ -145,14 +123,14 @@ namespace ChessAPI.Helpers
             if (from.piece is King && from.rank == to.rank && to.piece == null)
             {
                 var pieceColor = from.piece.color;
-                if ((pieceColor == PieceColor.White && to.tileAnnotation == WhiteKingSideCastleTileAnnotation) ||
-                    (pieceColor == PieceColor.Black && to.tileAnnotation == WhiteKingSideCastleTileAnnotation))
+                if ((pieceColor == PieceColor.White && to.tileAnnotation == CastleHelper.WhiteKingSideCastleTileAnnotation) ||
+                    (pieceColor == PieceColor.Black && to.tileAnnotation == CastleHelper.WhiteKingSideCastleTileAnnotation))
                 { 
                     return MovementType.CastleKingSide;
                 }
 
-                if ((pieceColor == PieceColor.White && to.tileAnnotation == WhiteQueenSideCastleTileAnnotation) ||
-                    (pieceColor == PieceColor.Black && to.tileAnnotation == WhiteQueenSideCastleTileAnnotation))
+                if ((pieceColor == PieceColor.White && to.tileAnnotation == CastleHelper.WhiteQueenSideCastleTileAnnotation) ||
+                    (pieceColor == PieceColor.Black && to.tileAnnotation == CastleHelper.WhiteQueenSideCastleTileAnnotation))
                 { 
                     return MovementType.CastleQueenSide; 
                 }

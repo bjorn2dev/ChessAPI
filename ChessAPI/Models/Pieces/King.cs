@@ -67,7 +67,7 @@ namespace ChessAPI.Models.Pieces
         public bool IsInCheck(Board board)
         {
             var kingTile = board.GetKingTile(this.color);
-            return this._kingSafetyValidator.ValidateKingTileSafety(kingTile, board);
+            return !this._kingSafetyValidator.ValidateKingTileSafety(kingTile, board);
         }
 
         public bool IsSafeToCastle(Board board)

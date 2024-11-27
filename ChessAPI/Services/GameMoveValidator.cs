@@ -44,7 +44,7 @@ namespace ChessAPI.Services
             var playerTurn = this._playerTurnService.ConfigureTurn(fromTile, toTile, player);
 
             // Handle the move
-            this._pieceMovingService.MovePiece(fromTile, toTile, movementType);
+            this._pieceMovingService.MovePiece(fromTile, toTile, movementType, this._boardStateService.Board);
 
             // Record turn in turn history
             this._playerTurnService.RecordTurn(playerTurn);

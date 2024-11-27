@@ -1,4 +1,5 @@
-﻿using ChessAPI.Interfaces;
+﻿using ChessAPI.Factories;
+using ChessAPI.Interfaces;
 using ChessAPI.Models;
 using ChessAPI.Services;
 using Microsoft.Extensions.Configuration;
@@ -15,9 +16,11 @@ namespace ChessAPITests
     {
         public BoardGenerator _boardGenerator;
         public IBoardStateService _boardStateService;
-        public IStartingPositionProvider _startingPositionProvider;
+        public IPositionProvider _startingPositionProvider;
         public IPieceRenderer _pieceHtmlRenderer;
         public HtmlTileRenderer _tileHtmlRenderer;
+        public IPieceFactory _pieceFactory;
+        public IServiceProvider _serviceProvider;
         public CompleteBoardSetup(string configSection = "StartingPosition")
         {
             // Use ConfigurationBuilder to load the appsettings file in the test project’s output directory
@@ -28,12 +31,13 @@ namespace ChessAPITests
 
             var settings = configuration.GetSection(configSection).Get<StartingPositionSettings>();
             IOptions<StartingPositionSettings> options = Options.Create(settings);
-            _startingPositionProvider = new StartingPositionService(options);
+            _startingPositionProvider = new PositionProvider(options);
 
             _pieceHtmlRenderer = new HtmlPieceRenderer();
             _tileHtmlRenderer = new HtmlTileRenderer(_pieceHtmlRenderer);
             _boardStateService = new BoardStateService();
-            _boardGenerator = new BoardGenerator(_startingPositionProvider, _tileHtmlRenderer);
+            _pieceFactory = new PieceFactory(_serviceProvider);
+            _boardGenerator = new BoardGenerator(_startingPositionProvider, _tileHtmlRenderer, _pieceFactory);
 
             _boardGenerator.SetupBoard(_boardStateService.Board);
             _boardGenerator.AddInitialPieces(_boardStateService.Board);
