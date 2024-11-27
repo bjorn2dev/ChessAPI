@@ -15,10 +15,10 @@ namespace ChessAPI.Helpers
         public static readonly string WhiteQueenSideCastleRookTileAnnotation = "A1";
         public static readonly string BlackKingSideCastleRookTileAnnotation = "H8";
         public static readonly string BlackQueenSideCastleRookTileAnnotation = "A8";
-        public static readonly string WhiteKingSideCastleRookFinalTileAnnotation = "H1";
-        public static readonly string WhiteQueenSideCastleRookFinalTileAnnotation = "A1";
-        public static readonly string BlackKingSideCastleRookFinalTileAnnotation = "H8";
-        public static readonly string BlackQueenSideCastleRookFinalTileAnnotation = "A8";
+        public static readonly string WhiteKingSideCastleRookFinalTileAnnotation = "F1";
+        public static readonly string WhiteQueenSideCastleRookFinalTileAnnotation = "D1";
+        public static readonly string BlackKingSideCastleRookFinalTileAnnotation = "F8";
+        public static readonly string BlackQueenSideCastleRookFinalTileAnnotation = "D8";
         public static readonly string[] WhiteKingSideCastleCheckTiles = ["F1", "G1"];
         public static readonly string[] WhiteQueenSideCastleCheckTiles = ["D1", "C1"];
         public static readonly string[] BlackKingSideCastleCheckTiles = ["F8", "G8"];

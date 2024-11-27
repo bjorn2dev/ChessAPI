@@ -17,12 +17,18 @@ namespace ChessAPI.Services
 
         public bool ValidateKingSafety(Tile kingTile, Tile to, MovementType movementType, Board originalBoard)
         {
+            // Check if king ends up in check after the move
             var simulatedBoard = this._boardSimulationService.SimulateMove(kingTile, to, originalBoard);
-            var playingSideColor = kingTile.piece.color;
-            var playingSideKing = simulatedBoard.GetKingTile(playingSideColor);
-            var kingChecked = ((King)playingSideKing.piece).IsInCheck(simulatedBoard);
-            return !kingChecked ||
-                (!kingChecked && (movementType == MovementType.CastleKingSide || movementType == MovementType.CastleQueenSide) && this.ValidateCastleMovement(playingSideColor, movementType, originalBoard));
+            var kingChecked = ((King)kingTile.piece).IsInCheck(simulatedBoard);
+
+            // If it's castling, perform additional checks
+            if (!kingChecked && (movementType == MovementType.CastleKingSide || movementType == MovementType.CastleQueenSide))
+            {
+                return ValidateCastleMovement(kingTile.piece.color, movementType, originalBoard);
+            }
+
+            // Return true if king is not in check
+            return !kingChecked;
         }
 
         public bool ValidateKingTileSafety(Tile checkTile, Board board)
@@ -42,26 +48,27 @@ namespace ChessAPI.Services
 
         public bool ValidateCastleMovement(PieceColor playerColor, MovementType castleDirection, Board board)
         {
-            if (castleDirection != MovementType.CastleKingSide || castleDirection != MovementType.CastleQueenSide) return false;
+            if (castleDirection != MovementType.CastleKingSide && castleDirection != MovementType.CastleQueenSide)
+                return false;
 
             var castleTiles = CastleHelper.GetCastleTiles(playerColor, castleDirection);
-            var kingTo = board.GetTileByAnnotation(castleTiles.KingToTileAnnotation);
-            var rookTile = board.GetTileByAnnotation(castleTiles.RookTileAnnotation).piece;
-            return rookTile != null && rookTile.AllowsCastling && this.CheckCastlingTiles(castleTiles.KingTileAnnotation, castleTiles.CheckTiles, board);
-        }
 
-        private bool CheckCastlingTiles(string kingTileAnnotation, string[] checkTiles, Board board)
-        {
-            var kingTile = board.GetTileByAnnotation(kingTileAnnotation);
-            foreach (var tile in checkTiles)
+            // Ensure rook is present and allows castling
+            var rookTile = board.GetTileByAnnotation(castleTiles.RookTileAnnotation)?.piece;
+            var kingTile = board.GetTileByAnnotation(castleTiles.KingTileAnnotation)?.piece;
+            if (rookTile == null || kingTile == null || !rookTile.AllowsCastling || !kingTile.AllowsCastling)
+                return false;
+
+            // Ensure no pieces are blocking the castling path
+            foreach (var tileAnnotation in castleTiles.CheckTiles)
             {
-                var kingToTile = board.GetTileByAnnotation(tile);
+                var tile = board.GetTileByAnnotation(tileAnnotation);
+                if (tile.piece != null) return false;
 
-                if (kingToTile.piece != null) return false;
-
-                var simulatedBoard = this._boardSimulationService.SimulateMove(kingTile, kingToTile, board);
-               
-                return this.ValidateKingTileSafety(kingToTile, simulatedBoard);   
+                // Simulate each tile to ensure it's not under attack
+                var simulatedBoard = _boardSimulationService.SimulateMove(board.GetTileByAnnotation(castleTiles.KingTileAnnotation), tile, board);
+                tile = simulatedBoard.GetTileByAnnotation(tileAnnotation);
+                if (!ValidateKingTileSafety(tile, simulatedBoard)) return false;
             }
 
             return true;

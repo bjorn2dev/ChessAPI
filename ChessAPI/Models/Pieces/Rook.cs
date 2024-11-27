@@ -40,10 +40,6 @@ namespace ChessAPI.Models.Pieces
             {
                 if(MoveValidatorHelper.CheckTileRange(rookRange, from, to, board))
                 {
-                    if(!this._hasMoved)
-                    {
-                        this._hasMoved = true;
-                    }
                     return true;
                 }
             }

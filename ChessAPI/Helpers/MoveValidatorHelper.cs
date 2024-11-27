@@ -124,13 +124,13 @@ namespace ChessAPI.Helpers
             {
                 var pieceColor = from.piece.color;
                 if ((pieceColor == PieceColor.White && to.tileAnnotation == CastleHelper.WhiteKingSideCastleTileAnnotation) ||
-                    (pieceColor == PieceColor.Black && to.tileAnnotation == CastleHelper.WhiteKingSideCastleTileAnnotation))
+                    (pieceColor == PieceColor.Black && to.tileAnnotation == CastleHelper.BlackKingSideCastleTileAnnotation))
                 { 
                     return MovementType.CastleKingSide;
                 }
 
                 if ((pieceColor == PieceColor.White && to.tileAnnotation == CastleHelper.WhiteQueenSideCastleTileAnnotation) ||
-                    (pieceColor == PieceColor.Black && to.tileAnnotation == CastleHelper.WhiteQueenSideCastleTileAnnotation))
+                    (pieceColor == PieceColor.Black && to.tileAnnotation == CastleHelper.BlackQueenSideCastleTileAnnotation))
                 { 
                     return MovementType.CastleQueenSide; 
                 }
