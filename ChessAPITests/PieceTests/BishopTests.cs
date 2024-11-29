@@ -1,6 +1,6 @@
 ﻿using ChessAPI.Models.Pieces;
 using ChessAPI.Models;
-using ChessAPITests;
+using ChessAPITests.BoardSetup;
 
 public class BishopTests
 {

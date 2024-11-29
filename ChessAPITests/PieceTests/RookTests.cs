@@ -1,6 +1,6 @@
 ﻿using ChessAPI.Models.Pieces;
 using ChessAPI.Models;
-using ChessAPITests;
+using ChessAPITests.BoardSetup;
 
 public class RookTests
 {
@@ -54,7 +54,7 @@ public class RookTests
         Assert.True(isValidMove);
     }
 
-    private void AssertRookMovement(Tile fromTile, Tile toTile, bool expectedOutcome, Board board)
+    private void AssertRookMovement(Tile fromTile, Tile toTile, bool expectedOutcome, ChessBoard board)
     {
         bool result = new Rook().IsValidMovement(fromTile, toTile, board);
         Assert.Equal(expectedOutcome, result);

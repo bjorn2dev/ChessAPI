@@ -1,4 +1,4 @@
-﻿using ChessAPI.Interfaces;
+﻿using ChessAPI.Interfaces.Piece;
 using ChessAPI.Models;
 using ChessAPI.Models.Pieces;
 using static ChessAPI.Models.Enums.Color;
@@ -13,7 +13,7 @@ namespace ChessAPI.Factories
             this._serviceProvider = serviceProvider;
         }
 
-        public Piece CreatePiece(Type pieceType, PieceColor color)
+        public ChessPiece CreatePiece(Type pieceType, PieceColor color)
         {
             if(pieceType == typeof(King))
             {
@@ -22,7 +22,7 @@ namespace ChessAPI.Factories
                 return king;
             }
 
-            var piece = (Piece)Activator.CreateInstance(pieceType);
+            var piece = (ChessPiece)Activator.CreateInstance(pieceType);
             piece.color = color;
             return piece;
         }

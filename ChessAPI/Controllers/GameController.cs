@@ -1,10 +1,10 @@
-﻿using ChessAPI.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ChessAPI.Models.Enums;
 using ChessAPI.Models;
 using Microsoft.Extensions.Options;
 using ChessAPI.Services;
+using ChessAPI.Interfaces.Game;
 
 namespace ChessAPI.Controllers
 {

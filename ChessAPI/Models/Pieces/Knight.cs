@@ -3,7 +3,7 @@ using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Models.Pieces
 {
-    public class Knight : Piece
+    public class Knight : ChessPiece
     {
         public Knight()
         {
@@ -11,7 +11,7 @@ namespace ChessAPI.Models.Pieces
             this.movePattern = [MovementType.LShaped];
             this.capturePattern = this.movePattern;
         }
-        public override bool IsValidCapture(Tile from, Tile to, Board board)
+        public override bool IsValidCapture(Tile from, Tile to, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
@@ -20,7 +20,7 @@ namespace ChessAPI.Models.Pieces
             return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
         }
 
-        public override bool IsValidMovement(Tile from, Tile to, Board board)
+        public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);

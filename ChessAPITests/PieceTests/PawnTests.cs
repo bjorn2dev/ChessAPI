@@ -1,6 +1,6 @@
 ﻿using ChessAPI.Models.Pieces;
 using ChessAPI.Models;
-using ChessAPITests;
+using ChessAPITests.BoardSetup;
 
 public class PawnTests
 {
@@ -50,7 +50,7 @@ public class PawnTests
 
     private void AssertPawnMovement(Tile fromTile, Tile toTile, bool expectedOutcome)
     {
-        Board board = expectedOutcome ? _standardBoardSetup._boardStateService.Board : _invalidMovesBoardSetup._boardStateService.Board;
+        ChessBoard board = expectedOutcome ? _standardBoardSetup._boardStateService.Board : _invalidMovesBoardSetup._boardStateService.Board;
         bool result = new Pawn().IsValidMovement(fromTile, toTile, board);
         Assert.Equal(expectedOutcome, result);
     }

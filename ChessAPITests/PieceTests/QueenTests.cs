@@ -1,6 +1,6 @@
 ﻿using ChessAPI.Models.Pieces;
 using ChessAPI.Models;
-using ChessAPITests;
+using ChessAPITests.BoardSetup;
 
 public class QueenTests
 {
@@ -60,7 +60,7 @@ public class QueenTests
         Assert.True(isValidMove);
     }
 
-    private void AssertQueenMovement(Tile fromTile, Tile toTile, bool expectedOutcome, Board board)
+    private void AssertQueenMovement(Tile fromTile, Tile toTile, bool expectedOutcome, ChessBoard board)
     {
         bool result = new Queen().IsValidMovement(fromTile, toTile, board);
         Assert.Equal(expectedOutcome, result);

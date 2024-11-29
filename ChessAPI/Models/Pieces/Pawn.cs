@@ -5,7 +5,7 @@ using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Models.Pieces
 {
-    public class Pawn : Piece
+    public class Pawn : ChessPiece
     {
         public Pawn()
         {
@@ -14,7 +14,7 @@ namespace ChessAPI.Models.Pieces
             this.capturePattern = [MovementType.Diagonal];
         }
 
-        public override bool IsValidCapture(Tile from, Tile to, Board board)
+        public override bool IsValidCapture(Tile from, Tile to, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
@@ -23,7 +23,7 @@ namespace ChessAPI.Models.Pieces
             return this.capturePattern.First() == movementType && pawnRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
         }
 
-        public override bool IsValidMovement(Tile from, Tile to, Board board)
+        public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
@@ -33,7 +33,7 @@ namespace ChessAPI.Models.Pieces
 
         }
         
-        public override bool IsCheckingKing(Tile from, Tile kingTile, Board board)
+        public override bool IsCheckingKing(Tile from, Tile kingTile, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, kingTile, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
@@ -44,12 +44,12 @@ namespace ChessAPI.Models.Pieces
             return difference == step ? MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, step, board, MovementType.Capture) : false;
         }
 
-        public bool IsValidEnPassant(Tile from, Tile to, Board board)
+        public bool IsValidEnPassant(Tile from, Tile to, ChessBoard board)
         {
             return false;
         }
 
-        public bool CanPromote(Tile from, Tile to, Board board)
+        public bool CanPromote(Tile from, Tile to, ChessBoard board)
         {
             return false;
         }

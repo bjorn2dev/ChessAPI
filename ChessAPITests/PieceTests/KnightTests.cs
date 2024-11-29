@@ -1,6 +1,6 @@
 ﻿using ChessAPI.Models.Pieces;
 using ChessAPI.Models;
-using ChessAPITests;
+using ChessAPITests.BoardSetup;
 
 public class KnightTests
 {
@@ -52,7 +52,7 @@ public class KnightTests
         Assert.True(isValidMove);
     }
 
-    private void AssertKnightMovement(Tile fromTile, Tile toTile, bool expectedOutcome, Board board)
+    private void AssertKnightMovement(Tile fromTile, Tile toTile, bool expectedOutcome, ChessBoard board)
     {
         bool result = new Knight().IsValidMovement(fromTile, toTile, board);
         Assert.Equal(expectedOutcome, result);

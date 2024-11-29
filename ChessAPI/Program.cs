@@ -1,9 +1,18 @@
 using ChessAPI.Controllers;
 using ChessAPI.Factories;
-using ChessAPI.Interfaces;
+using ChessAPI.Interfaces.Board;
+using ChessAPI.Interfaces.Game;
+using ChessAPI.Interfaces.Piece;
+using ChessAPI.Interfaces.Player;
+using ChessAPI.Interfaces.Renderer;
 using ChessAPI.Models;
 using ChessAPI.Models.Pieces;
-using ChessAPI.Services;
+using ChessAPI.Services.Board;
+using ChessAPI.Services.Game;
+using ChessAPI.Services.Piece;
+using ChessAPI.Services.Player;
+using ChessAPI.Services.Renderer.Html;
+using ChessAPI.Services.Renderers.Html;
 using System;
 
 namespace ChessAPI

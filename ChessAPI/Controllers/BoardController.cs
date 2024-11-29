@@ -1,5 +1,6 @@
 ﻿using ChessAPI.Helpers;
-using ChessAPI.Interfaces;
+using ChessAPI.Interfaces.Game;
+using ChessAPI.Interfaces.Piece;
 using ChessAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

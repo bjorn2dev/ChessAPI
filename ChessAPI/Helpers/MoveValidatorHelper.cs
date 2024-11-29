@@ -31,7 +31,7 @@ namespace ChessAPI.Helpers
             }
         }
 
-        public static bool CheckTileRange(int[] pieceRange, Tile from, Tile to, Board board)
+        public static bool CheckTileRange(int[] pieceRange, Tile from, Tile to, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
@@ -55,7 +55,7 @@ namespace ChessAPI.Helpers
             return pieceRange.Any() ? true : false;
         }
 
-        public static bool CheckPath(int fromIndex, int toIndex, int step, Board board, MovementType movementType)
+        public static bool CheckPath(int fromIndex, int toIndex, int step, ChessBoard board, MovementType movementType)
         {
             Tile from = board.playingFieldDictionary.GetValueAtIndex(fromIndex);
             Tile to = board.playingFieldDictionary.GetValueAtIndex(toIndex);
@@ -88,7 +88,7 @@ namespace ChessAPI.Helpers
             return true;  // Path is clear and allows movement or potential capture
         }
 
-        public static (int fromIndex, int toIndex) GetMovementIndexes(Tile from, Tile to, Board board)
+        public static (int fromIndex, int toIndex) GetMovementIndexes(Tile from, Tile to, ChessBoard board)
         {
             var fromLocation = board.playingFieldDictionary.FirstOrDefault((s) => s.Value == from);
             var fromIndex = board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
@@ -104,7 +104,7 @@ namespace ChessAPI.Helpers
             return fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
         }
 
-        public static MovementType DetermineMovementType(Tile from, Tile to, Board board)
+        public static MovementType DetermineMovementType(Tile from, Tile to, ChessBoard board)
         {
             // Get basic indexes and differences
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);

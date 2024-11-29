@@ -1,12 +1,12 @@
 ﻿using ChessAPI.Helpers;
-using ChessAPI.Interfaces;
+using ChessAPI.Interfaces.Piece;
 using ChessAPI.Models.Enums;
 using System;
 using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Models.Pieces
 {
-    public class King : Piece
+    public class King : ChessPiece
     {
         private bool _hasMoved = false;
         public override bool AllowsCastling => !this._hasMoved;
@@ -24,7 +24,7 @@ namespace ChessAPI.Models.Pieces
             this._hasMoved = true;
         }
 
-        public override bool IsValidCapture(Tile from, Tile to, Board board)
+        public override bool IsValidCapture(Tile from, Tile to, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
@@ -43,7 +43,7 @@ namespace ChessAPI.Models.Pieces
             return kingRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
         }
 
-        public override bool IsValidMovement(Tile from, Tile to, Board board)
+        public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
         {
 
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
@@ -64,18 +64,18 @@ namespace ChessAPI.Models.Pieces
             return kingRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
         }
 
-        public bool IsInCheck(Board board)
+        public bool IsInCheck(ChessBoard board)
         {
             var kingTile = board.GetKingTile(this.color);
             return !this._kingSafetyValidator.ValidateKingTileSafety(kingTile, board);
         }
 
-        public bool IsSafeToCastle(Board board)
+        public bool IsSafeToCastle(ChessBoard board)
         {
             return true;
         }
 
-        public override bool IsCheckingKing(Tile from, Tile kingTile, Board board)
+        public override bool IsCheckingKing(Tile from, Tile kingTile, ChessBoard board)
         {
             return false;
         }

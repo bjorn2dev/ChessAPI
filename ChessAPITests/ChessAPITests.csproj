@@ -30,6 +30,7 @@
     <Compile Include="PieceTests\PawnTests.cs" />
     <Compile Include="PieceTests\QueenTests.cs" />
     <Compile Include="PieceTests\RookTests.cs" />
+    <Compile Include="PieceTests\StartingPositionServiceTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +47,10 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GameTests\" />
   </ItemGroup>
 
 </Project>
