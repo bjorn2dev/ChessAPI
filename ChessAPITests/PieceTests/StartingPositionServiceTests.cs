@@ -2,6 +2,7 @@
 using ChessAPI.Models;
 using ChessAPI.Models.Pieces;
 using ChessAPI.Services;
+using ChessAPI.Services.Piece;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;

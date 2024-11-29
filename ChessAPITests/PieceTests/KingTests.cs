@@ -1,6 +1,7 @@
 ﻿using ChessAPI.Models.Pieces;
 using ChessAPI.Models;
 using ChessAPITests.BoardSetup;
+using Microsoft.Extensions.DependencyInjection;
 
 public class KingTests
 {
@@ -60,14 +61,16 @@ public class KingTests
     [MemberData(nameof(GetKingCaptureBoardCaptureMoves))]
     public void Test_KingMovementCapture(Tile fromTile, Tile toTile)
     {
-        bool isValidMove = new King().IsValidCapture(fromTile, toTile, _captureBoardSetup._boardStateService.Board);
+        var king = _captureBoardSetup._serviceProvider.GetService<King>();
+        bool isValidMove = king.IsValidCapture(fromTile, toTile, _captureBoardSetup._boardStateService.Board);
         Assert.True(isValidMove);
     }
 
     private void AssertKingMovement(Tile fromTile, Tile toTile, bool expectedOutcome, ChessBoard board)
     {
-        bool result = new King().IsValidMovement(fromTile, toTile, board);
-        Assert.Equal(expectedOutcome, result);
+        var king = _captureBoardSetup._serviceProvider.GetService<King>();
+        bool isValidMove = king.IsValidMovement(fromTile, toTile, board);
+        Assert.Equal(expectedOutcome, isValidMove);
     }
 
     [Theory]
