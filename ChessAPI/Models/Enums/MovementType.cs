@@ -9,6 +9,7 @@
         LShaped,
         Capture,
         CastleKingSide,
-        CastleQueenSide
+        CastleQueenSide,
+        Promotion
     }
 }

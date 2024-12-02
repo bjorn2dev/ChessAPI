@@ -42,7 +42,7 @@ namespace ChessAPI.Services.Game
             // Check if the move is legal and get the movement type
             var movementType = _pieceMoveValidator.ValidateMove(fromTile, toTile, _boardStateService.Board);
             if (movementType == MovementType.Invalid)
-                throw new InvalidOperationException("Invalid move");
+                throw new InvalidOperationException("Invalid move")
 
             // record turn
             var playerTurn = _playerTurnService.ConfigureTurn(fromTile, toTile, player);

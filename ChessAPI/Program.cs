@@ -51,6 +51,7 @@ namespace ChessAPI
             builder.Services.AddSingleton<IKingSafetyValidator, KingSafetyValidator>();
 
             // Transient for services used briefly and independently per operation
+            builder.Services.AddTransient<IPawnPromotionValidator, PawnPromotionValidator>();
             builder.Services.AddTransient<IPieceFactory, PieceFactory>();
             builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
             builder.Services.AddTransient<IBoardSimulationService, BoardSimulationService>();

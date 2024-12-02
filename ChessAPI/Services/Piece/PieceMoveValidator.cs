@@ -33,6 +33,11 @@ namespace ChessAPI.Services.Piece
 
         private bool IsMoveLegal(Tile from, Tile to, MovementType movementType, ChessBoard board)
         {
+            if(from.piece != null && to.piece != null && from.piece.color != to.piece.color)
+            {
+                movementType = MovementType.Capture;
+            }
+
             if (movementType == MovementType.CastleKingSide || movementType == MovementType.CastleQueenSide)
             {
                 return _kingSafetyValidator.ValidateKingSafety(from, to, movementType, board);

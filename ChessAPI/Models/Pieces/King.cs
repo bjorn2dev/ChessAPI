@@ -70,11 +70,6 @@ namespace ChessAPI.Models.Pieces
             return !this._kingSafetyValidator.ValidateKingTileSafety(kingTile, board);
         }
 
-        public bool IsSafeToCastle(ChessBoard board)
-        {
-            return true;
-        }
-
         public override bool IsCheckingKing(Tile from, Tile kingTile, ChessBoard board)
         {
             return false;

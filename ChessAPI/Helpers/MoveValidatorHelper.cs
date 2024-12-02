@@ -119,21 +119,37 @@ namespace ChessAPI.Helpers
             // Determine applicable movement patterns
             var applicablePatterns = isCapture ? from.piece.capturePattern : from.piece.movePattern;
 
-            // Castle - (Kings)
-            if (from.piece is King && from.rank == to.rank && to.piece == null)
+            switch (from.piece)
             {
-                var pieceColor = from.piece.color;
-                if ((pieceColor == Color.PieceColor.White && to.tileAnnotation == CastleHelper.WhiteKingSideCastleTileAnnotation) ||
-                    (pieceColor == Color.PieceColor.Black && to.tileAnnotation == CastleHelper.BlackKingSideCastleTileAnnotation))
-                { 
-                    return MovementType.CastleKingSide;
-                }
+                case King:
+                    {  // Castle
+                        if (from.rank == to.rank && to.piece == null)
+                        {
+                            var pieceColor = from.piece.color;
+                            if ((pieceColor == Color.PieceColor.White && to.tileAnnotation == CastleHelper.WhiteKingSideCastleTileAnnotation) ||
+                                (pieceColor == Color.PieceColor.Black && to.tileAnnotation == CastleHelper.BlackKingSideCastleTileAnnotation))
+                            {
+                                return MovementType.CastleKingSide;
+                            }
 
-                if ((pieceColor == Color.PieceColor.White && to.tileAnnotation == CastleHelper.WhiteQueenSideCastleTileAnnotation) ||
-                    (pieceColor == Color.PieceColor.Black && to.tileAnnotation == CastleHelper.BlackQueenSideCastleTileAnnotation))
-                { 
-                    return MovementType.CastleQueenSide; 
-                }
+                            if ((pieceColor == Color.PieceColor.White && to.tileAnnotation == CastleHelper.WhiteQueenSideCastleTileAnnotation) ||
+                                (pieceColor == Color.PieceColor.Black && to.tileAnnotation == CastleHelper.BlackQueenSideCastleTileAnnotation))
+                            {
+                                return MovementType.CastleQueenSide;
+                            }
+                        }
+                    }
+                    break;
+                case Pawn:
+                    { // Promotion
+                        var pieceColor = from.piece.color;
+                        if ((pieceColor == Color.PieceColor.White && to.rank == 8) ||
+                            (pieceColor == Color.PieceColor.Black && to.rank == 1 ))
+                        {
+                            return MovementType.Promotion;
+                        }
+                    }
+                    break;
             }
 
             // Horizontal
@@ -155,7 +171,7 @@ namespace ChessAPI.Helpers
                 return MovementType.Diagonal;
             }
 
-            // L-Shaped (Knights)
+            // L-Shaped
             if (MoveValidatorHelper.GetMovementRange(MovementType.LShaped).Contains(difference) &&
                 applicablePatterns.Contains(MovementType.LShaped))
             {
