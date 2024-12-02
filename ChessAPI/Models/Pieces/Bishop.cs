@@ -1,5 +1,6 @@
 ﻿using ChessAPI.Helpers;
 using ChessAPI.Interfaces;
+using ChessAPI.Models.Enums;
 using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Models.Pieces
@@ -19,7 +20,7 @@ namespace ChessAPI.Models.Pieces
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
             int[] bishopRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(bishopRange, from, to, board) : false;
+            return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(bishopRange, from, to, board, true) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
@@ -30,7 +31,7 @@ namespace ChessAPI.Models.Pieces
 
             int[] bishopRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
 
-            return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(bishopRange, from, to, board) : false;
+            return this.movePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(bishopRange, from, to, board, false) : false;
         }
     }
 }

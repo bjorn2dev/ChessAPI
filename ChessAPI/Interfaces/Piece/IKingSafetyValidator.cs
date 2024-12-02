@@ -1,4 +1,5 @@
 ﻿using ChessAPI.Models;
+using ChessAPI.Models.Enums;
 
 namespace ChessAPI.Interfaces.Piece
 {

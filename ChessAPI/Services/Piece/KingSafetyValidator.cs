@@ -4,6 +4,7 @@ using static ChessAPI.Models.Enums.Color;
 using ChessAPI.Helpers;
 using ChessAPI.Interfaces.Board;
 using ChessAPI.Interfaces.Piece;
+using ChessAPI.Models.Enums;
 
 namespace ChessAPI.Services.Piece
 {

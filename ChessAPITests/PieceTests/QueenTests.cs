@@ -14,7 +14,7 @@ public class QueenTests
     {
         yield return new object[] { _captureBoardSetup.GetTileByNotation("D4"), _captureBoardSetup.GetTileByNotation("C5") };
         yield return new object[] { _captureBoardSetup.GetTileByNotation("D4"), _captureBoardSetup.GetTileByNotation("E5") };
-        yield return new object[] { _captureBoardSetup.GetTileByNotation("D4"), _captureBoardSetup.GetTileByNotation("D6") };
+        yield return new object[] { _captureBoardSetup.GetTileByNotation("D4"), _captureBoardSetup.GetTileByNotation("D5") };
     }
 
     // MemberData for valid Queen moves within board limits
@@ -22,7 +22,7 @@ public class QueenTests
     {
         yield return new object[] { _standardBoardSetup.GetTileByNotation("D1"), _standardBoardSetup.GetTileByNotation("D3") };
         yield return new object[] { _standardBoardSetup.GetTileByNotation("D1"), _standardBoardSetup.GetTileByNotation("F3") };
-        yield return new object[] { _standardBoardSetup.GetTileByNotation("D1"), _standardBoardSetup.GetTileByNotation("D8") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("D1"), _standardBoardSetup.GetTileByNotation("D7") };
         yield return new object[] { _standardBoardSetup.GetTileByNotation("D1"), _standardBoardSetup.GetTileByNotation("A4") };
     }
 

@@ -1,9 +1,9 @@
 ﻿using ChessAPI.Models;
+using ChessAPI.Models.Enums;
 using ChessAPI.Models.Pieces;
 using System;
 using System.Linq;
 using System.Net;
-using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Helpers
 {
@@ -31,7 +31,7 @@ namespace ChessAPI.Helpers
             }
         }
 
-        public static bool CheckTileRange(int[] pieceRange, Tile from, Tile to, ChessBoard board)
+        public static bool CheckTileRange(int[] pieceRange, Tile from, Tile to, ChessBoard board, bool isCapture)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
@@ -45,7 +45,7 @@ namespace ChessAPI.Helpers
                 {
                     // check if the path from the starting index to the finishing index is clear or obstructed by other pieces
                     // if it is return false.
-                    if (!CheckPath(indexes.fromIndex, indexes.toIndex, step, board, movementType))
+                    if (!CheckPath(indexes.fromIndex, indexes.toIndex, step, board, movementType, isCapture))
                     {
                         return false;
                     }
@@ -55,7 +55,7 @@ namespace ChessAPI.Helpers
             return pieceRange.Any() ? true : false;
         }
 
-        public static bool CheckPath(int fromIndex, int toIndex, int step, ChessBoard board, MovementType movementType)
+        public static bool CheckPath(int fromIndex, int toIndex, int step, ChessBoard board, MovementType movementType, bool isCapture)
         {
             Tile from = board.playingFieldDictionary.GetValueAtIndex(fromIndex);
             Tile to = board.playingFieldDictionary.GetValueAtIndex(toIndex);
@@ -71,14 +71,14 @@ namespace ChessAPI.Helpers
                 var tileCheck = board.playingFieldDictionary.GetValueAtIndex(currentIndex);
 
                 // if we're on the tile we're going to move to and the movement type is capture we continue
-                if (movementType == MovementType.Capture && currentIndex == toIndex)
+                if (isCapture && currentIndex == toIndex)
                 {
                     continue;
                 }
 
                 // check if movement type is not capture and the tile we're checking has no occupying piece,
                 // also if the movement type is capture, but there we have not reached the destination tile, the path is blocked and we can return false.
-                if (movementType != MovementType.Capture && tileCheck.piece != null || (movementType == MovementType.Capture && tileCheck.piece != null && currentIndex != toIndex))
+                if (!isCapture && tileCheck.piece != null || (isCapture && tileCheck.piece != null && currentIndex != toIndex))
                 {
                     return false;
                 }
@@ -123,14 +123,14 @@ namespace ChessAPI.Helpers
             if (from.piece is King && from.rank == to.rank && to.piece == null)
             {
                 var pieceColor = from.piece.color;
-                if ((pieceColor == PieceColor.White && to.tileAnnotation == CastleHelper.WhiteKingSideCastleTileAnnotation) ||
-                    (pieceColor == PieceColor.Black && to.tileAnnotation == CastleHelper.BlackKingSideCastleTileAnnotation))
+                if ((pieceColor == Color.PieceColor.White && to.tileAnnotation == CastleHelper.WhiteKingSideCastleTileAnnotation) ||
+                    (pieceColor == Color.PieceColor.Black && to.tileAnnotation == CastleHelper.BlackKingSideCastleTileAnnotation))
                 { 
                     return MovementType.CastleKingSide;
                 }
 
-                if ((pieceColor == PieceColor.White && to.tileAnnotation == CastleHelper.WhiteQueenSideCastleTileAnnotation) ||
-                    (pieceColor == PieceColor.Black && to.tileAnnotation == CastleHelper.BlackQueenSideCastleTileAnnotation))
+                if ((pieceColor == Color.PieceColor.White && to.tileAnnotation == CastleHelper.WhiteQueenSideCastleTileAnnotation) ||
+                    (pieceColor == Color.PieceColor.Black && to.tileAnnotation == CastleHelper.BlackQueenSideCastleTileAnnotation))
                 { 
                     return MovementType.CastleQueenSide; 
                 }

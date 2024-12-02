@@ -1,5 +1,6 @@
 ﻿using ChessAPI.Helpers;
 using ChessAPI.Interfaces;
+using ChessAPI.Models.Enums;
 using System.Security.Cryptography.X509Certificates;
 using static ChessAPI.Models.Enums.Color;
 
@@ -20,7 +21,7 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.capturePattern.First());
-            return this.capturePattern.First() == movementType && pawnRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
+            return this.capturePattern.First() == movementType && pawnRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, true) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
@@ -29,7 +30,7 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            return this.movePattern.First() == movementType && difference == pawnRange.First() ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board) : false;
+            return this.movePattern.First() == movementType && difference == pawnRange.First() ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, false) : false;
 
         }
         
@@ -41,7 +42,7 @@ namespace ChessAPI.Models.Pieces
             
             if (!this.capturePattern.Contains(movementType)) return false;
             var step = MoveValidatorHelper.GetMovementRange(movementType).FirstOrDefault((rangeItem) => difference % rangeItem == 0);
-            return difference == step ? MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, step, board, MovementType.Capture) : false;
+            return difference == step ? MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, step, board, MovementType.Capture, true) : false;
         }
 
         public bool IsValidEnPassant(Tile from, Tile to, ChessBoard board)

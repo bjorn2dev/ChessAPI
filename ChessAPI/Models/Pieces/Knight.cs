@@ -1,4 +1,5 @@
 ﻿using ChessAPI.Helpers;
+using ChessAPI.Models.Enums;
 using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Models.Pieces
@@ -17,7 +18,7 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var knightRange = MoveValidatorHelper.GetMovementRange(this.capturePattern.First());
-            return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
+            return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board, true) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
@@ -26,7 +27,7 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var knightRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board) : false;
+            return this.movePattern.First() == movementType ? MoveValidatorHelper.CheckTileRange([difference], from, to, board, false) : false;
         }
 
         

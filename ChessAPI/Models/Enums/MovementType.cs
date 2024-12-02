@@ -1,4 +1,4 @@
-﻿namespace ChessAPI.Models
+﻿namespace ChessAPI.Models.Enums
 {
     public enum MovementType
     {

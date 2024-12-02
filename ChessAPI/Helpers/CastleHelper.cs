@@ -1,4 +1,4 @@
-﻿using ChessAPI.Models;
+﻿using ChessAPI.Models.Enums;
 using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Helpers

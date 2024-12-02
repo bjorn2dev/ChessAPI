@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChessAPI.Helpers;
-using ChessAPI.Models;
+using ChessAPI.Models.Enums;
 using ChessAPI.Models.Pieces;
 using ChessAPITests.BoardSetup;
 namespace ChessAPITests.HelperTests
@@ -119,7 +119,7 @@ namespace ChessAPITests.HelperTests
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board);
+            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board, false);
 
             // Assert that the path is clear
             Assert.True(pathClear);
@@ -139,7 +139,7 @@ namespace ChessAPITests.HelperTests
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board);
+            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board, false);
 
             // Assert that the path is not clear
             Assert.False(pathClear);
@@ -158,7 +158,7 @@ namespace ChessAPITests.HelperTests
             var indexes = MoveValidatorHelper.GetMovementIndexes(fromTile, toTile, boardSetup._boardStateService.Board);
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
-            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board);
+            var pathClear = MoveValidatorHelper.CheckTileRange(MoveValidatorHelper.GetMovementRange(MovementType.Vertical), fromTile, toTile, boardSetup._boardStateService.Board, true);
 
             // Assert that the path is not clear
             Assert.True(pathClear);
@@ -176,7 +176,7 @@ namespace ChessAPITests.HelperTests
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical);
+            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical, false);
 
             // Assert that the path is not clear
             Assert.True(pathClear);
@@ -195,7 +195,7 @@ namespace ChessAPITests.HelperTests
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical);
+            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Vertical, false);
 
             // Assert that the path is not clear
             Assert.False(pathClear);
@@ -214,7 +214,7 @@ namespace ChessAPITests.HelperTests
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
 
 
-            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Capture);
+            var pathClear = MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, difference, boardSetup._boardStateService.Board, MovementType.Capture, true);
 
             // Assert that the path is not clear
             Assert.True(pathClear);

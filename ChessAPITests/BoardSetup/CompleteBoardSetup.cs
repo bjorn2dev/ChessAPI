@@ -51,8 +51,10 @@ namespace ChessAPITests.BoardSetup
             services.AddSingleton<IBoardStateService>(_boardStateService);
             services.AddSingleton<IPieceFactory, PieceFactory>();
             services.AddSingleton<HtmlTileRenderer>(_tileHtmlRenderer);
-            services.AddSingleton<HtmlPieceRenderer>(_pieceHtmlRenderer);
-            services.AddTransient<King>(); // Ensure King can be instantiated with PieceFactory
+            services.AddSingleton<IPieceRenderer>(_pieceHtmlRenderer);
+            services.AddSingleton<IKingSafetyValidator, KingSafetyValidator>();
+            services.AddTransient<IBoardSimulationService, BoardSimulationService>();
+            services.AddTransient<King>();
 
             _serviceProvider = services.BuildServiceProvider();
 

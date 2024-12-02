@@ -14,12 +14,14 @@ namespace ChessAPITests.BoardTests
         private Mock<IPositionProvider> _startingPositionProviderMock;
         private Mock<ITileRenderer> _tileRendererMock;
         private Mock<IBoardStateService> _boardStateServiceMock;
+        private Mock<IPieceFactory> _pieceFactory;
 
         public BoardGeneratorTests()
         {
             _startingPositionProviderMock = new Mock<IPositionProvider>();
             _tileRendererMock = new Mock<ITileRenderer>();
             _boardStateServiceMock = new Mock<IBoardStateService>();
+            _pieceFactory = new Mock<IPieceFactory>();
         }
 
         [Fact]
@@ -29,7 +31,7 @@ namespace ChessAPITests.BoardTests
             var boardStateService = new BoardStateService();
             _boardStateServiceMock.Setup(bs => bs.Board).Returns(boardStateService.Board);
 
-            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object);
+            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object, _pieceFactory.Object);
 
             // Act
             boardGenerator.SetupBoard(_boardStateServiceMock.Object.Board);
@@ -45,7 +47,7 @@ namespace ChessAPITests.BoardTests
             var boardStateService = new BoardStateService();
             _boardStateServiceMock.Setup(bs => bs.Board).Returns(boardStateService.Board);
 
-            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object);
+            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object, _pieceFactory.Object);
 
             // Act & Assert: Expect an exception when trying to add pieces without setting up the board
             Assert.Throws<InvalidOperationException>(() => boardGenerator.AddInitialPieces(_boardStateServiceMock.Object.Board));
@@ -58,7 +60,7 @@ namespace ChessAPITests.BoardTests
             var boardStateService = new BoardStateService();
             _boardStateServiceMock.Setup(bs => bs.Board).Returns(boardStateService.Board);
 
-            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object);
+            var boardGenerator = new BoardGenerator(_startingPositionProviderMock.Object, _tileRendererMock.Object, _pieceFactory.Object);
 
             // Act: Set up the board and add pieces
             boardGenerator.SetupBoard(_boardStateServiceMock.Object.Board);

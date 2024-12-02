@@ -2,6 +2,7 @@
 using ChessAPI.Interfaces.Piece;
 using ChessAPI.Interfaces.Renderer;
 using ChessAPI.Models;
+using ChessAPI.Models.Enums;
 using ChessAPI.Models.Pieces;
 using Microsoft.AspNetCore.Http;
 using static ChessAPI.Models.Enums.Color;

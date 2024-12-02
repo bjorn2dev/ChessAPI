@@ -1,5 +1,4 @@
 ﻿using ChessAPI.Helpers;
-using ChessAPI.Models;
 using ChessAPI.Models.Enums;
 using System.Drawing;
 using static ChessAPI.Models.Enums.Color;
@@ -33,7 +32,7 @@ namespace ChessAPI.Models
             {
                 if (difference % step == 0)
                 {
-                    return MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, step, board, MovementType.Capture);
+                    return MoveValidatorHelper.CheckPath(indexes.fromIndex, indexes.toIndex, step, board, movementType, true);
                 }
             }
             return result;

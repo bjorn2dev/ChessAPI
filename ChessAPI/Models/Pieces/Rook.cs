@@ -1,4 +1,5 @@
 ﻿using ChessAPI.Helpers;
+using ChessAPI.Models.Enums;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System;
 using static ChessAPI.Models.Enums.Color;
@@ -27,7 +28,7 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
             var rookRange = MoveValidatorHelper.GetMovementRange(movementType);
-            return this.capturePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(rookRange, from, to, board) : false;
+            return this.capturePattern.Contains(movementType) ? MoveValidatorHelper.CheckTileRange(rookRange, from, to, board, true) : false;
         }
          
         public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
@@ -38,7 +39,7 @@ namespace ChessAPI.Models.Pieces
             var rookRange = MoveValidatorHelper.GetMovementRange(movementType);
             if (this.movePattern.Contains(movementType))
             {
-                if(MoveValidatorHelper.CheckTileRange(rookRange, from, to, board))
+                if(MoveValidatorHelper.CheckTileRange(rookRange, from, to, board, false))
                 {
                     return true;
                 }

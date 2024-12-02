@@ -22,8 +22,12 @@ public class RookTests
     {
         yield return new object[] { _standardBoardSetup.GetTileByNotation("A1"), _standardBoardSetup.GetTileByNotation("A4") };
         yield return new object[] { _standardBoardSetup.GetTileByNotation("H1"), _standardBoardSetup.GetTileByNotation("H4") };
-        yield return new object[] { _standardBoardSetup.GetTileByNotation("A1"), _standardBoardSetup.GetTileByNotation("A8") };
-        yield return new object[] { _standardBoardSetup.GetTileByNotation("H1"), _standardBoardSetup.GetTileByNotation("H8") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("A1"), _standardBoardSetup.GetTileByNotation("A7") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("H1"), _standardBoardSetup.GetTileByNotation("H7") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("A1"), _standardBoardSetup.GetTileByNotation("D1") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("H1"), _standardBoardSetup.GetTileByNotation("E1") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("A1"), _standardBoardSetup.GetTileByNotation("B1") };
+        yield return new object[] { _standardBoardSetup.GetTileByNotation("H1"), _standardBoardSetup.GetTileByNotation("G1") };
     }
 
     // MemberData for invalid moves

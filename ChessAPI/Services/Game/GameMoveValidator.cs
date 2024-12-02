@@ -4,6 +4,7 @@ using ChessAPI.Interfaces.Game;
 using ChessAPI.Interfaces.Piece;
 using ChessAPI.Interfaces.Player;
 using ChessAPI.Models;
+using ChessAPI.Models.Enums;
 using Microsoft.AspNetCore.Http;
 using System.Numerics;
 
