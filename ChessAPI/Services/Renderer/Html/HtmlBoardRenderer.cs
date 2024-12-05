@@ -10,11 +10,19 @@ namespace ChessAPI.Services.Renderer.Html
     /// </summary>
     public class HtmlBoardRenderer : IBoardRenderer
     {
+
+        const string _promotionBlock = @"<div id=""promotion-picker"" style=""display: none; text-align: center; margin-bottom: 10px;"">
+    <p>Select a piece for promotion:</p>
+    <button class=""promotion-option"" data-piece=""Queen"">Queen</button>
+    <button class=""promotion-option"" data-piece=""Rook"">Rook</button>
+    <button class=""promotion-option"" data-piece=""Bishop"">Bishop</button>
+    <button class=""promotion-option"" data-piece=""Knight"">Knight</button>
+</div>";
         const string _tableStart = "<table class=\"chessboard\">";
         const string _tableRowStart = "<tr>";
         const string _tableEnd = "</table>";
         const string _tableRowEnd = "</tr>";
-        const string _tableCss = @"    <style>
+        const string _pageCss = @"    <style>
         /* Ensure the body and html cover the full screen */
         html, body {
             height: 100%;
@@ -59,70 +67,132 @@ namespace ChessAPI.Services.Renderer.Html
             font-size: inherit; /* Inherit font size from td */
             line-height: 1;
         }
+
+#promotion-picker {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.promotion-option {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    background-color: #769656;
+    color: white;
+    cursor: pointer;
+}
+
+.promotion-option:hover {
+    background-color: #5a8f45;
+}
+
     </style>
                 ";
         const string _pageJs = @"<script>
 document.addEventListener(""DOMContentLoaded"", function() {
     localStorage.clear();
 
-    // Function to send the XHR request
-    function sendMoveRequest(from, to) {
-        var xhr = new XMLHttpRequest();
-        var gameId = location.pathname.split(""/"")[2];
-        var url = `/Game/${gameId}/move/${from}/${to}`;
-        xhr.open(""PUT"", url, true);
 
-        // Set request headers if necessary (e.g., Content-Type)
-        xhr.setRequestHeader(""Content-Type"", ""application/json"");
 
-        xhr.onload = function () {
-            localStorage.removeItem(""firstClick"");
-            if (xhr.status === 204) {
-                console.log(""Move was successful"");
-                location.reload(); 
-            } else {
-                console.log(""Move failed: "" + xhr.status);
-            }
-        };
+const promotionPicker = document.getElementById(""promotion-picker"");
 
-        xhr.onerror = function () {
-            console.log(""Request failed"");
-        };
+// Function to send the XHR request
+function sendMoveRequest(from, to, promotionType = null) {
+	const xhr = new XMLHttpRequest();
+	const gameId = location.pathname.split(""/"")[2];
+	let url = `/Game/${gameId}/move/${from}/${to}`;
+	if (promotionType) {
+		url += `?promotionType=${promotionType}`;
+	}
 
-        xhr.send(); // Send the request
-    }
+	xhr.open(""PUT"", url, true);
+	xhr.setRequestHeader(""Content-Type"", ""application/json"");
 
-    // Add event listeners for all <p> tags
-    Array.prototype.slice.call(document.getElementsByTagName(""p"")).forEach(function(element) {
-        element.addEventListener(""click"", function(event) {
-            event.stopPropagation();
-            var parent = event.target.closest(""td"");
-            var tileAnnotation = parent.dataset.tileAnnotation;
+	xhr.onload = function () {
+		    localStorage.clear();
+		promotionPicker.style.display = ""none""; // Hide the picker after the move
+		if (xhr.status === 204) {
+			console.log(""Move was successful"");
+			location.reload();
+		} else {
+			console.log(""Move failed: "" + xhr.status);
+		}
+	};
 
-            if (localStorage.getItem(""firstClick"") == null) {
-                // Set first click in localStorage
-                localStorage.setItem(""firstClick"", tileAnnotation);
-                console.log(""set first click"", tileAnnotation);
-            } else {
-                // Second click, send the move request
-                var from = localStorage.getItem(""firstClick"");
-                var to = tileAnnotation;
-                sendMoveRequest(from, to); // Trigger the move request
-            }
-        });
-    });
+	xhr.onerror = function () {
+		console.log(""Request failed"");
+	};
 
-    // Add event listeners for all <td> tags
+	xhr.send();
+}
+
+// Event listener for promotion options
+document.querySelectorAll("".promotion-option"").forEach((button) => {
+	button.addEventListener(""click"", function () {
+		const promotionType = this.dataset.piece;
+		const from = localStorage.getItem(""firstClick"");
+		const to = localStorage.getItem(""promotionTarget"");
+		if (from && to && promotionType) {
+			sendMoveRequest(from, to, promotionType);
+		}
+	});
+});
+
+function isPromotion(from, to) {
+	// Check if it's a promotion move
+
+            var pieceType = localStorage.getItem(""firstClickType"");
+			const isPromotion = pieceType != null && pieceType == ""pawn"" &&
+				((to.endsWith(""8"") && from.endsWith(""7"")) || // White pawn promotion
+				(to.endsWith(""1"") && from.endsWith(""2""))); // Black pawn promotion
+
+			if (isPromotion) {
+				promotionPicker.style.display = ""block""; // Show the picker
+				localStorage.setItem(""promotionTarget"", to);
+			} else {
+				sendMoveRequest(from, to);
+			}
+}
+
+// Add event listeners for all <p> tags
+Array.from(document.getElementsByTagName(""p"")).forEach(function (element) {
+	element.addEventListener(""click"", function (event) {
+		event.stopPropagation();
+		const parent = event.target.closest(""td"");
+		const tileAnnotation = parent.dataset.tileAnnotation;
+        const pieceType = element.querySelector(""img"").dataset.name;
+		if (localStorage.getItem(""firstClick"") == null) {
+			// Set first click in localStorage
+			localStorage.setItem(""firstClick"", tileAnnotation);
+			localStorage.setItem(""firstClickType"", pieceType);
+			console.log(""Set first click"", tileAnnotation);
+		} else {
+			// Second click, handle the move
+			const from = localStorage.getItem(""firstClick"");
+			const to = tileAnnotation;
+
+			isPromotion(from, to, pieceType);
+		}
+	});
+});
+
+// Add event listeners for all <td> tags
     Array.prototype.slice.call(document.getElementsByTagName(""td"")).forEach(function(element) {
         element.addEventListener(""click"", function(event) {
             var to = event.target.dataset.tileAnnotation;
 
             if (localStorage.getItem(""firstClick"") != null) {
                 var from = localStorage.getItem(""firstClick"");
-                sendMoveRequest(from, to); // Trigger the move request
+                isPromotion(from, to);
+                
             }
         });
     });
+
 });
 </script>
 ";
@@ -135,7 +205,8 @@ document.addEventListener(""DOMContentLoaded"", function() {
         {
             var boardStringBuilder = new StringBuilder();
             boardStringBuilder.AppendLine(_pageJs);
-            boardStringBuilder.AppendLine(_tableCss);
+            boardStringBuilder.AppendLine(_pageCss);
+            boardStringBuilder.AppendLine(_promotionBlock);
             boardStringBuilder.AppendLine(_tableStart);
 
 

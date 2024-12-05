@@ -18,31 +18,50 @@ namespace ChessAPI.Services.Piece
         }
 
         //TODO use caching instead of rendering tiles again
-        public void MovePiece(Tile fromTile, Tile toTile, MovementType movementType, ChessBoard board)
+        public void MovePiece(Tile fromTile, Tile toTile, MovementType movementType, ChessBoard board, ChessPiece promotionType = null)
         {
-            if (movementType == MovementType.CastleKingSide || movementType == MovementType.CastleQueenSide)
-            {
-                HandleCastling(fromTile, toTile, movementType, board);
-            }
-            else
-            {
-                // Normal move
-                toTile.piece = fromTile.piece;
-                fromTile.piece = null;
 
-                if (toTile.piece is King)
-                {
-                    ((King)toTile.piece).MarkAsMoved();
-                }
-                if (toTile.piece is Rook)
-                {
-                    ((Rook)toTile.piece).MarkAsMoved();
-                }
+            switch (movementType)
+            {
+                case MovementType.CastleKingSide:
+                case MovementType.CastleQueenSide:
+                    this.HandleCastling(fromTile, toTile, movementType, board);
+                    break;
+                case MovementType.Promotion:
+                    {
 
-                // Update HTML content
-                toTile.html = _tileRenderer.Render(toTile);
-                fromTile.html = _tileRenderer.Render(fromTile);
+                        toTile.piece = promotionType;
+                        toTile.piece.color = fromTile.piece.color;
+                        fromTile.piece = null;
+
+                        // Update HTML content
+                        toTile.html = _tileRenderer.Render(toTile);
+                        fromTile.html = _tileRenderer.Render(fromTile);
+                    }
+                    break;
+                default:
+                    {
+                        // Normal move
+                        toTile.piece = fromTile.piece;
+                        fromTile.piece = null;
+
+                        if (toTile.piece is King)
+                        {
+                            ((King)toTile.piece).MarkAsMoved();
+                        }
+                        if (toTile.piece is Rook)
+                        {
+                            ((Rook)toTile.piece).MarkAsMoved();
+                        }
+
+                        // Update HTML content
+                        toTile.html = _tileRenderer.Render(toTile);
+                        fromTile.html = _tileRenderer.Render(fromTile);
+
+                    }
+                    break;
             }
+
         }
 
         private void HandleCastling(Tile kingTile, Tile kingDestination, MovementType castleDirection, ChessBoard board)

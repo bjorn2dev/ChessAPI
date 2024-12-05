@@ -17,10 +17,11 @@ namespace ChessAPI.Services.Piece
             _boardSimulationService = boardSimulationService;
         }
 
-        public bool ValidateKingSafety(Tile kingTile, Tile to, MovementType movementType, ChessBoard originalBoard)
+        public bool ValidateKingSafety(Tile from, Tile to, MovementType movementType, ChessBoard originalBoard)
         {
+            var kingTile = from.piece is King ? from : originalBoard.GetKingTile(from.piece.color);
             // Check if king ends up in check after the move
-            var simulatedBoard = _boardSimulationService.SimulateMove(kingTile, to, originalBoard);
+            var simulatedBoard = _boardSimulationService.SimulateMove(from, to, originalBoard);
             var kingChecked = ((King)kingTile.piece).IsInCheck(simulatedBoard);
 
             // If it's castling, perform additional checks

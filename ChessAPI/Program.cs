@@ -60,6 +60,7 @@ namespace ChessAPI
             builder.Services.AddTransient<ITileRenderer, HtmlTileRenderer>();
             builder.Services.AddTransient<IPieceRenderer, HtmlPieceRenderer>();
             builder.Services.AddTransient<King>();
+            builder.Services.AddTransient<Pawn>();
 
             builder.Services.AddControllersWithViews();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

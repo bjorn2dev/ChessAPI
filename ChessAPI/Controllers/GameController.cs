@@ -5,6 +5,8 @@ using ChessAPI.Models;
 using Microsoft.Extensions.Options;
 using ChessAPI.Services;
 using ChessAPI.Interfaces.Game;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using ChessAPI.Models.Pieces;
 
 namespace ChessAPI.Controllers
 {
@@ -46,20 +48,51 @@ namespace ChessAPI.Controllers
         }
 
         [HttpPut("{gameId}/move/{from}/{to}")]
-        public IActionResult MakeMove(Guid gameId, string from, string to)
+        public IActionResult MakeMove(Guid gameId, string from, string to, [FromQuery] string promotionType = "")
         {
             var gameService = _gameManagerService.GetGameById(gameId);
             if (gameService == null)
             {
                 return NotFound("Game not found");
             }
+
+            ChessPiece promotionPiece = null;
+            if (!string.IsNullOrEmpty(promotionType))
+            {
+                // Manually create the `ChessPiece` based on the promotion string
+                promotionPiece = this.CreatePromotionPiece(promotionType);
+                if (promotionPiece == null)
+                {
+                    return BadRequest("Invalid promotion piece type");
+                }
+            }
+
             var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
-            gameService.MovePiece(from, to, userAgent, userIpAddress);
+            gameService.MovePiece(from, to, userAgent, userIpAddress, promotionPiece);
             return NoContent();
         }
 
-        [HttpPut("{gameId}/ChooseColor/{color}")]
+        private ChessPiece CreatePromotionPiece(string promotion)
+        {
+            // You can customize this logic based on your class hierarchy
+            switch (promotion.ToLower())
+            {
+                case "queen":
+                    return new Queen();
+                case "rook":
+                    return new Rook();
+                case "bishop":
+                    return new Bishop();
+                case "knight":
+                    return new Knight();
+                default:
+                    return null; // Invalid type
+            }
+        }
+
+
+        [HttpPut("{gameId}/choosecolor/{color}")]
         public IActionResult ChooseColor(Guid gameId, string color)
         {
 

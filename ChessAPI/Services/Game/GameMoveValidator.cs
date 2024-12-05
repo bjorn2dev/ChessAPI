@@ -28,7 +28,7 @@ namespace ChessAPI.Services.Game
             _pieceMoveValidator = pieceMoveValidator;
         }
 
-        public void Move(string from, string to, User player)
+        public void Move(string from, string to, User player, ChessPiece promoteTo = null)
         {
             var turn = _playerTurnService.CheckWhoseTurn();
             var fromTile = _boardStateService.Board.GetTileByAnnotation(from);
@@ -40,15 +40,15 @@ namespace ChessAPI.Services.Game
                 throw new InvalidOperationException("It's not this player's turn");
 
             // Check if the move is legal and get the movement type
-            var movementType = _pieceMoveValidator.ValidateMove(fromTile, toTile, _boardStateService.Board);
+            var movementType = _pieceMoveValidator.ValidateMove(fromTile, toTile, _boardStateService.Board, promoteTo);
             if (movementType == MovementType.Invalid)
-                throw new InvalidOperationException("Invalid move")
-
-            // record turn
-            var playerTurn = _playerTurnService.ConfigureTurn(fromTile, toTile, player);
+                throw new InvalidOperationException("Invalid move");
 
             // Handle the move
-            _pieceMovingService.MovePiece(fromTile, toTile, movementType, _boardStateService.Board);
+            _pieceMovingService.MovePiece(fromTile, toTile, movementType, _boardStateService.Board, promoteTo);
+
+            // setup turn
+            var playerTurn = _playerTurnService.ConfigureTurn(fromTile, toTile, player);
 
             // Record turn in turn history
             _playerTurnService.RecordTurn(playerTurn);

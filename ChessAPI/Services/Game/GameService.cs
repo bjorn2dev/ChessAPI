@@ -26,10 +26,10 @@ namespace ChessAPI.Services.Game
             _gameMoveValidator = gameMoveValidator;
         }
 
-        public void MovePiece(string from, string to, string userAgent, string userIpAddress)
+        public void MovePiece(string from, string to, string userAgent, string userIpAddress, ChessPiece promoteTo = null)
         {
             var player = _playerManagementService.GetPlayerByInfo(userAgent, userIpAddress);
-            _gameMoveValidator.Move(from, to, player);
+            _gameMoveValidator.Move(from, to, player, promoteTo);
         }
 
         public void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp)

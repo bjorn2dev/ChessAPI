@@ -1,4 +1,5 @@
-﻿using ChessAPI.Models.Enums;
+﻿using ChessAPI.Models;
+using ChessAPI.Models.Enums;
 
 namespace ChessAPI.Interfaces.Game
 {
@@ -6,7 +7,7 @@ namespace ChessAPI.Interfaces.Game
     {
         string StartGame();
 
-        void MovePiece(string from, string to, string userAgent, string userIpAddress);
+        void MovePiece(string from, string to, string userAgent, string userIpAddress, ChessPiece promoteTo = null);
         void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp);
     }
 }

@@ -21,6 +21,12 @@ namespace ChessAPI.Factories
                 king.color = color;
                 return king;
             }
+            else if (pieceType == typeof(Pawn))
+            {
+                var king = _serviceProvider.GetRequiredService<Pawn>();
+                king.color = color;
+                return king;
+            }
 
             var piece = (ChessPiece)Activator.CreateInstance(pieceType);
             piece.color = color;

@@ -15,9 +15,9 @@ namespace ChessAPI.Models.Pieces
         public Pawn(IPawnPromotionValidator promotionValidator)
         {
             this._promotionValidator = promotionValidator;
-            this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Chess_plt45.svg/1280px-Chess_plt45.svg.png\" width=\"100\" height=\"100\">";
-            this.movePattern = [MovementType.Vertical];
-            this.capturePattern = [MovementType.Diagonal];
+            this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Chess_plt45.svg/1280px-Chess_plt45.svg.png\" width=\"100\" height=\"100\" data-name=\"pawn\">";
+            this.movePattern = [MovementType.Vertical, MovementType.Promotion];
+            this.capturePattern = [MovementType.Diagonal, MovementType.Promotion];
         }
 
         public override bool IsValidCapture(Tile from, Tile to, ChessBoard board)
@@ -26,13 +26,8 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
-            if (movementType == MovementType.Promotion)
-            {
-                return this.CanPromote(from, to, board);
-            }
-
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.capturePattern.First());
-            return this.capturePattern.First() == movementType && pawnRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, true) : false;
+            return this.movePattern.Contains(movementType) && pawnRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, true) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
@@ -41,13 +36,8 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
-            if (movementType == MovementType.Promotion)
-            {
-                return this.CanPromote(from, to, board, promoteTo);
-            }
-
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            return this.movePattern.First() == movementType && difference == pawnRange.First() ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, false) : false;
+            return this.movePattern.Contains(movementType) && difference == pawnRange.First() ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, false) : false;
 
         }
         
@@ -69,7 +59,10 @@ namespace ChessAPI.Models.Pieces
 
         public bool CanPromote(Tile from, Tile to, ChessBoard board, ChessPiece promoteTo)
         {
-            return _promotionValidator.CheckPawnPromotion(from, to, board, promoteTo);
+            var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
+            return !this._promotionValidator.PawnPromotionChecksKing(from, to, board, promoteTo) && movementType != MovementType.Capture
+              ? from.piece.IsValidMovement(from, to, board)
+              : from.piece.IsValidCapture(from, to, board);
         }
     }
 }

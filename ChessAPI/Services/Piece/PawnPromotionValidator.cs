@@ -1,6 +1,7 @@
 ﻿using ChessAPI.Interfaces.Board;
 using ChessAPI.Interfaces.Piece;
 using ChessAPI.Models;
+using ChessAPI.Models.Pieces;
 
 namespace ChessAPI.Services.Piece
 {
@@ -12,13 +13,14 @@ namespace ChessAPI.Services.Piece
             _boardSimulationService = boardSimulationService;
         }
 
-        public bool CheckPawnPromotion(Tile from, Tile to, ChessBoard board, ChessPiece promotionType)
+        public bool PawnPromotionChecksKing(Tile from, Tile to, ChessBoard board, ChessPiece promotionType)
         {
             var simulatedBoard = _boardSimulationService.SimulateMove(from, to ,board);
             var promotionTile = simulatedBoard.GetTileByAnnotation(to.tileAnnotation);
             promotionTile.piece = promotionType;
             promotionTile.piece.color = from.piece.color;
-            return promotionTile.piece.IsCheckingKing(promotionTile, simulatedBoard.GetKingTile(promotionTile.piece.color), simulatedBoard);
+            var kingTile = simulatedBoard.GetKingTile(promotionTile.piece.color);
+            return ((King)kingTile.piece).IsInCheck(simulatedBoard);
         }
     }
 }

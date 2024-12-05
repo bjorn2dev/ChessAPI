@@ -12,7 +12,7 @@ namespace ChessAPI.Models.Pieces
         public override bool AllowsCastling => !this._hasMoved;
         public Rook()
         {
-            this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Chess_rlt45.svg/1280px-Chess_rlt45.svg.png\" width=\"100\" height=\"100\">";
+            this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Chess_rlt45.svg/1280px-Chess_rlt45.svg.png\" width=\"100\" height=\"100\" data-name=\"rook\">";
             this.movePattern = [MovementType.Vertical, MovementType.Horizontal];
             this.capturePattern = this.movePattern;
         }
