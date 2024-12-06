@@ -31,16 +31,13 @@ public class PlayerManagementService : IPlayerManagementService
     {
         if (!this.ArePlayersRegistered()) return null;
 
-        if(this._playerService.SameDevice)
-        {
-            userAgent = $"{userAgent}_{playerColor}";
-            userIp = $"{userIp}_{playerColor}";
-        }
-   
-        return  String.Equals(userAgent, this._playerService.WhitePlayer.userAgent, StringComparison.OrdinalIgnoreCase) &&
-                String.Equals(userIp, this._playerService.WhitePlayer.userIp, StringComparison.OrdinalIgnoreCase) ?
-            this._playerService.WhitePlayer :
-            this._playerService.BlackPlayer;
+        if (String.Equals($"{userAgent}_{playerColor}", this._playerService.WhitePlayer.userAgent, StringComparison.OrdinalIgnoreCase) &&
+            String.Equals($"{userIp}_{playerColor}", this._playerService.WhitePlayer.userIp, StringComparison.OrdinalIgnoreCase)) return this._playerService.WhitePlayer;
+
+        if (String.Equals($"{userAgent}_{playerColor}", this._playerService.BlackPlayer.userAgent, StringComparison.OrdinalIgnoreCase) &&
+           String.Equals($"{userIp}_{playerColor}", this._playerService.BlackPlayer.userIp, StringComparison.OrdinalIgnoreCase)) return this._playerService.BlackPlayer;
+
+        return null;
     }    
 
     public List<Color.PlayerColor> GetUnregisteredPlayers()
@@ -50,6 +47,4 @@ public class PlayerManagementService : IPlayerManagementService
         if (this._playerService.BlackPlayer == null) unregisteredPlayers.Add(Color.PlayerColor.Black);
         return unregisteredPlayers;
     }
-
-    
 }
