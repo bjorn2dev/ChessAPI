@@ -26,9 +26,9 @@ namespace ChessAPI.Services.Game
             _gameMoveValidator = gameMoveValidator;
         }
 
-        public void MovePiece(string from, string to, string userAgent, string userIpAddress, ChessPiece promoteTo = null)
+        public void MovePiece(string from, string to, Color.PlayerColor playerColor, string userAgent, string userIpAddress, ChessPiece promoteTo = null)
         {
-            var player = _playerManagementService.GetPlayerByInfo(userAgent, userIpAddress);
+            var player = _playerManagementService.GetPlayerByInfo(userAgent, userIpAddress, playerColor);
             _gameMoveValidator.Move(from, to, player, promoteTo);
         }
 

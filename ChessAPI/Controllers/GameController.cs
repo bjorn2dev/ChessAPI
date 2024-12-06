@@ -7,6 +7,7 @@ using ChessAPI.Services;
 using ChessAPI.Interfaces.Game;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using ChessAPI.Models.Pieces;
+using static ChessAPI.Models.Enums.Color;
 
 namespace ChessAPI.Controllers
 {
@@ -47,8 +48,8 @@ namespace ChessAPI.Controllers
             return Content(boardHtml, "text/html");
         }
 
-        [HttpPut("{gameId}/move/{from}/{to}")]
-        public IActionResult MakeMove(Guid gameId, string from, string to, [FromQuery] string promotionType = "")
+        [HttpPut("{gameId}/{playerColor}/move/{from}/{to}")]
+        public IActionResult MakeMove(Guid gameId, string playerColor, string from, string to, [FromQuery] string promotionType = "")
         {
             var gameService = _gameManagerService.GetGameById(gameId);
             if (gameService == null)
@@ -66,10 +67,11 @@ namespace ChessAPI.Controllers
                     return BadRequest("Invalid promotion piece type");
                 }
             }
+            Enum.TryParse(playerColor, out PlayerColor parsedPlayerColor);
 
             var userIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
             var userAgent = HttpContext.Request.Headers["User-Agent"].ToString();
-            gameService.MovePiece(from, to, userAgent, userIpAddress, promotionPiece);
+            gameService.MovePiece(from, to, parsedPlayerColor, userAgent, userIpAddress, promotionPiece);
             return NoContent();
         }
 

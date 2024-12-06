@@ -32,10 +32,19 @@ namespace ChessAPI.Services.Player
             {
                 if (WhitePlayer.userIp == BlackPlayer.userIp && WhitePlayer.userAgent == BlackPlayer.userAgent)
                 {
-                    SameDevice = true;
+                    AdjustSameDevicePlayers();
                 }
                 PlayersInitialized = true;
             }
+        }
+
+        private void AdjustSameDevicePlayers()
+        {
+            SameDevice = true;
+            WhitePlayer.userAgent = $"{WhitePlayer.userAgent}_white";
+            WhitePlayer.userIp = $"{WhitePlayer.userIp}_white";
+            BlackPlayer.userAgent = $"{BlackPlayer.userAgent}_black";
+            BlackPlayer.userIp = $"{BlackPlayer.userIp}_black";
         }
 
     }

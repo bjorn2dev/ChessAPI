@@ -8,7 +8,7 @@ namespace ChessAPI.Services.Renderer.Html
     {
         public string RenderHtml(ChessPiece piece)
         {
-            return $"<p style=\"background-color:{(piece.color == PieceColor.White ? "white" : "black")};color:{(piece.color == PieceColor.White ? "black" : "white")};padding:20px;\">{piece.name}</p>";
+            return $"<p data-piece-color=\"{piece.color}\" style=\"background-color:{(piece.color == PieceColor.White ? "white" : "black")};color:{(piece.color == PieceColor.White ? "black" : "white")};padding:20px;\">{piece.name}</p>";
         }
     }
 }

@@ -7,7 +7,7 @@ namespace ChessAPI.Interfaces.Game
     {
         string StartGame();
 
-        void MovePiece(string from, string to, string userAgent, string userIpAddress, ChessPiece promoteTo = null);
+        void MovePiece(string from, string to, Color.PlayerColor playerColor, string userAgent, string userIpAddress, ChessPiece? promoteTo = null);
         void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp);
     }
 }

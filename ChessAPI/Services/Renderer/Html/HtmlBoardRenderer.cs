@@ -101,10 +101,10 @@ document.addEventListener(""DOMContentLoaded"", function() {
 const promotionPicker = document.getElementById(""promotion-picker"");
 
 // Function to send the XHR request
-function sendMoveRequest(from, to, promotionType = null) {
+function sendMoveRequest(from, to, color, promotionType = null) {
 	const xhr = new XMLHttpRequest();
 	const gameId = location.pathname.split(""/"")[2];
-	let url = `/Game/${gameId}/move/${from}/${to}`;
+	let url = `/Game/${gameId}/${color}/move/${from}/${to}`;
 	if (promotionType) {
 		url += `?promotionType=${promotionType}`;
 	}
@@ -136,8 +136,9 @@ document.querySelectorAll("".promotion-option"").forEach((button) => {
 		const promotionType = this.dataset.piece;
 		const from = localStorage.getItem(""firstClick"");
 		const to = localStorage.getItem(""promotionTarget"");
+        const color = localStorage.getItem(""firstClickColor"");
 		if (from && to && promotionType) {
-			sendMoveRequest(from, to, promotionType);
+			sendMoveRequest(from, to, color, promotionType);
 		}
 	});
 });
@@ -145,7 +146,8 @@ document.querySelectorAll("".promotion-option"").forEach((button) => {
 function isPromotion(from, to) {
 	// Check if it's a promotion move
 
-            var pieceType = localStorage.getItem(""firstClickType"");
+            const pieceType = localStorage.getItem(""firstClickType"");
+            const color = localStorage.getItem(""firstClickColor"");
 			const isPromotion = pieceType != null && pieceType == ""pawn"" &&
 				((to.endsWith(""8"") && from.endsWith(""7"")) || // White pawn promotion
 				(to.endsWith(""1"") && from.endsWith(""2""))); // Black pawn promotion
@@ -154,7 +156,7 @@ function isPromotion(from, to) {
 				promotionPicker.style.display = ""block""; // Show the picker
 				localStorage.setItem(""promotionTarget"", to);
 			} else {
-				sendMoveRequest(from, to);
+				sendMoveRequest(from, to, color);
 			}
 }
 
@@ -163,13 +165,15 @@ Array.from(document.getElementsByTagName(""p"")).forEach(function (element) {
 	element.addEventListener(""click"", function (event) {
 		event.stopPropagation();
 		const parent = event.target.closest(""td"");
+        const pieceData = event.target.dataset;
 		const tileAnnotation = parent.dataset.tileAnnotation;
         const pieceType = element.querySelector(""img"").dataset.name;
 		if (localStorage.getItem(""firstClick"") == null) {
 			// Set first click in localStorage
 			localStorage.setItem(""firstClick"", tileAnnotation);
 			localStorage.setItem(""firstClickType"", pieceType);
-			console.log(""Set first click"", tileAnnotation);
+			localStorage.setItem(""firstClickColor"", pieceData.pieceColor);
+			console.log(""Set first click"", tileAnnotation, pieceType, pieceData.pieceColor);
 		} else {
 			// Second click, handle the move
 			const from = localStorage.getItem(""firstClick"");

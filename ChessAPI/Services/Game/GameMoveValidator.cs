@@ -30,7 +30,6 @@ namespace ChessAPI.Services.Game
 
         public void Move(string from, string to, User player, ChessPiece promoteTo = null)
         {
-            var turn = _playerTurnService.CheckWhoseTurn();
             var fromTile = _boardStateService.Board.GetTileByAnnotation(from);
             var toTile = _boardStateService.Board.GetTileByAnnotation(to);
             if (fromTile == null || toTile == null || fromTile.piece == null)
@@ -47,7 +46,7 @@ namespace ChessAPI.Services.Game
             // Handle the move
             _pieceMovingService.MovePiece(fromTile, toTile, movementType, _boardStateService.Board, promoteTo);
 
-            // setup turn
+            // Setup turn
             var playerTurn = _playerTurnService.ConfigureTurn(fromTile, toTile, player);
 
             // Record turn in turn history

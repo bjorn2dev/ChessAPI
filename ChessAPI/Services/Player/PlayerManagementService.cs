@@ -1,15 +1,18 @@
 ﻿using ChessAPI.Interfaces.Player;
 using ChessAPI.Models;
 using ChessAPI.Models.Enums;
+using ChessAPI.Models.Pieces;
 using System.Collections.Generic;
 
 public class PlayerManagementService : IPlayerManagementService
 {
     private readonly IPlayerService _playerService;
+    private readonly IPlayerTurnService _playerTurnService;
 
-    public PlayerManagementService(IPlayerService playerService)
+    public PlayerManagementService(IPlayerService playerService, IPlayerTurnService playerTurnService)
     {
         _playerService = playerService;
+        _playerTurnService = playerTurnService;
     }
 
     public bool ArePlayersRegistered()
@@ -24,14 +27,21 @@ public class PlayerManagementService : IPlayerManagementService
         this._playerService.SetPlayer(player);
     }
 
-    public User GetPlayerByInfo(string userAgent, string userIp)
+    public User? GetPlayerByInfo(string userAgent, string userIp, Color.PlayerColor playerColor)
     {
-        if (this._playerService.SameDevice)
+        if (!this.ArePlayersRegistered()) return null;
+
+        if(this._playerService.SameDevice)
         {
-            //return this.PlayerTurns.Any() && this.PlayerTurns.Last().user == this.BlackPlayer || !this.PlayerTurns.Any() ? this.WhitePlayer : this.BlackPlayer;
+            userAgent = $"{userAgent}_{playerColor}";
+            userIp = $"{userIp}_{playerColor}";
         }
-        return userAgent == this._playerService.WhitePlayer.userAgent && userIp == this._playerService.WhitePlayer.userIp ? this._playerService.WhitePlayer : this._playerService.BlackPlayer;
-    }
+   
+        return  String.Equals(userAgent, this._playerService.WhitePlayer.userAgent, StringComparison.OrdinalIgnoreCase) &&
+                String.Equals(userIp, this._playerService.WhitePlayer.userIp, StringComparison.OrdinalIgnoreCase) ?
+            this._playerService.WhitePlayer :
+            this._playerService.BlackPlayer;
+    }    
 
     public List<Color.PlayerColor> GetUnregisteredPlayers()
     {
@@ -40,4 +50,6 @@ public class PlayerManagementService : IPlayerManagementService
         if (this._playerService.BlackPlayer == null) unregisteredPlayers.Add(Color.PlayerColor.Black);
         return unregisteredPlayers;
     }
+
+    
 }

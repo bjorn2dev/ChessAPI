@@ -7,7 +7,7 @@ namespace ChessAPI.Interfaces.Player
     {
         void RegisterPlayerColor(Color.PlayerColor playerColor, string userAgent, string userIp);
         bool ArePlayersRegistered();
-        User GetPlayerByInfo(string userAgent, string userIp);
+        User? GetPlayerByInfo(string userAgent, string userIp, Color.PlayerColor playerColor);
         List<Color.PlayerColor> GetUnregisteredPlayers();
     }
 }
