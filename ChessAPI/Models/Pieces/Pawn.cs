@@ -10,6 +10,8 @@ namespace ChessAPI.Models.Pieces
     public class Pawn : ChessPiece
     {
 
+        private bool _hasMoved = false;
+        public  bool FirstMoveDoubleAdvance => !this._hasMoved;
         private readonly IPawnPromotionValidator _promotionValidator;
 
         public Pawn(IPawnPromotionValidator promotionValidator)
@@ -18,6 +20,11 @@ namespace ChessAPI.Models.Pieces
             this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Chess_plt45.svg/1280px-Chess_plt45.svg.png\" width=\"100\" height=\"100\" data-name=\"pawn\">";
             this.movePattern = [MovementType.Vertical, MovementType.Promotion];
             this.capturePattern = [MovementType.Diagonal, MovementType.Promotion];
+        }
+
+        public void MarkAsMoved()
+        {
+            this._hasMoved = true;
         }
 
         public override bool IsValidCapture(Tile from, Tile to, ChessBoard board)
@@ -37,7 +44,7 @@ namespace ChessAPI.Models.Pieces
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            return this.movePattern.Contains(movementType) && difference == pawnRange.First() ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, false) : false;
+            return this.movePattern.Contains(movementType) && (difference == pawnRange.First()) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, false) : false;
 
         }
         

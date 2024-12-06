@@ -53,6 +53,10 @@ namespace ChessAPI.Services.Piece
                         {
                             ((Rook)toTile.piece).MarkAsMoved();
                         }
+                        if (toTile.piece is Pawn)
+                        {
+                            ((Pawn)toTile.piece).MarkAsMoved();
+                        }
 
                         // Update HTML content
                         toTile.html = _tileRenderer.Render(toTile);

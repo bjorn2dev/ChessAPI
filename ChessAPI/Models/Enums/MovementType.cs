@@ -10,6 +10,7 @@
         Capture,
         CastleKingSide,
         CastleQueenSide,
-        Promotion
+        Promotion,
+        EnPassant
     }
 }
