@@ -11,7 +11,7 @@ namespace ChessAPI.Models.Pieces
     {
 
         private bool _hasMoved = false;
-        public  bool FirstMoveDoubleAdvance => !this._hasMoved;
+        public bool AllowMoveDoubleAdvance => !this._hasMoved;
         private readonly IPawnPromotionValidator _promotionValidator;
 
         public Pawn(IPawnPromotionValidator promotionValidator)
@@ -34,7 +34,7 @@ namespace ChessAPI.Models.Pieces
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
             var pawnRange = MoveValidatorHelper.GetMovementRange(this.capturePattern.First());
-            return this.movePattern.Contains(movementType) && pawnRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, true) : false;
+            return this.capturePattern.Contains(movementType) && pawnRange.Contains(difference) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, true) : false;
         }
 
         public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
@@ -43,9 +43,12 @@ namespace ChessAPI.Models.Pieces
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
-            var pawnRange = MoveValidatorHelper.GetMovementRange(this.movePattern.First());
-            return this.movePattern.Contains(movementType) && (difference == pawnRange.First()) ? MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, false) : false;
-
+            // Pawns may only move forward vertically without capturing, 
+            var pawnRange = MoveValidatorHelper.GetMovementRange(MovementType.Vertical);
+     
+            return this.movePattern.Contains(movementType) && (difference == pawnRange.First() || this.AllowMoveDoubleAdvance && (pawnRange.First() * 2) == difference) ?
+                MoveValidatorHelper.CheckTileRange(pawnRange, from, to, board, false) :
+                false;
         }
         
         public override bool IsCheckingKing(Tile from, Tile kingTile, ChessBoard board)
