@@ -20,7 +20,8 @@ namespace ChessAPITests.RendererTests
         [Fact]
         public void Test_PieceHtmlRender_Expect_RenderedPiece()
         {
-            var pawn = new Pawn() { color = ChessAPI.Models.Enums.Color.PieceColor.White };
+
+            var pawn = new Knight() { color = ChessAPI.Models.Enums.Color.PieceColor.White };
             var pieceHtml = _pieceHtmlRenderer.RenderHtml(pawn);
 
             Assert.NotNull(pieceHtml);

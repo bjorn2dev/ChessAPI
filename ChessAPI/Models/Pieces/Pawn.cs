@@ -30,6 +30,11 @@ namespace ChessAPI.Models.Pieces
         public override bool IsValidCapture(Tile from, Tile to, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
+
+            // Pawns only go one way on the board
+            if ((this.color == PieceColor.White && indexes.fromIndex > indexes.toIndex) ||
+                (this.color == PieceColor.Black && indexes.toIndex > indexes.fromIndex)) return false;
+
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 
@@ -40,6 +45,11 @@ namespace ChessAPI.Models.Pieces
         public override bool IsValidMovement(Tile from, Tile to, ChessBoard board)
         {
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
+
+            // Pawns only go one way on the board
+            if ((this.color == PieceColor.White && indexes.fromIndex > indexes.toIndex) ||
+                (this.color == PieceColor.Black && indexes.toIndex > indexes.fromIndex)) return false;
+
             var difference = MoveValidatorHelper.GetMovementDifference(indexes.fromIndex, indexes.toIndex);
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
 

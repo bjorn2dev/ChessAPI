@@ -34,31 +34,33 @@ namespace ChessAPI
 
             // Scoped services, specific to each game instance
             builder.Services.AddScoped<IGameService, GameService>();
-            builder.Services.AddScoped<IBoardService, BoardService>();
-            builder.Services.AddScoped<IPlayerService, PlayerService>();
             builder.Services.AddScoped<IGameGenerator, GameGenerator>();
-            builder.Services.AddScoped<IBoardStateService, BoardStateService>();
-            builder.Services.AddScoped<IPlayerTurnService, PlayerTurnService>();
             builder.Services.AddScoped<IGameInitializationService, GameInitializationService>();
-            builder.Services.AddScoped<IPlayerManagementService, PlayerManagementService>();
             builder.Services.AddScoped<IGameRenderingService, GameRenderingService>();
             builder.Services.AddScoped<IGameMoveValidator, GameMoveValidator>();
 
+            builder.Services.AddScoped<IPlayerService, PlayerService>();
+            builder.Services.AddScoped<IPlayerTurnService, PlayerTurnService>();
+
+            builder.Services.AddScoped<IPlayerManagementService, PlayerManagementService>();
+            builder.Services.AddScoped<IBoardStateService, BoardStateService>();
+            builder.Services.AddScoped<IBoardService, BoardService>();
+
             // Singleton services for stateless rendering
             builder.Services.AddSingleton<IPieceMoveValidator, PieceMoveValidator>();
-            builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
             builder.Services.AddSingleton<IBoardRenderer, HtmlBoardRenderer>();
-            builder.Services.AddSingleton<IKingSafetyValidator, KingSafetyValidator>();
+            builder.Services.AddSingleton<IBoardGenerator, BoardGenerator>();
 
             // Transient for services used briefly and independently per operation
+            builder.Services.AddTransient<IKingSafetyValidator, KingSafetyValidator>();
+            builder.Services.AddTransient<IBoardSimulationService, BoardSimulationService>();
+            builder.Services.AddTransient<IColorSideSelector, HtmlColorSideSelector>();
+            builder.Services.AddTransient<ITileRenderer, HtmlTileRenderer>();
+            builder.Services.AddTransient<IPieceRenderer, HtmlPieceRenderer>();
+            builder.Services.AddTransient<IPositionProvider, PositionProvider>();
             builder.Services.AddTransient<IPawnPromotionValidator, PawnPromotionValidator>();
             builder.Services.AddTransient<IPieceFactory, PieceFactory>();
             builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
-            builder.Services.AddTransient<IBoardSimulationService, BoardSimulationService>();
-            builder.Services.AddTransient<IColorSideSelector, HtmlColorSideSelector>();
-            builder.Services.AddTransient<IPositionProvider, PositionProvider>();
-            builder.Services.AddTransient<ITileRenderer, HtmlTileRenderer>();
-            builder.Services.AddTransient<IPieceRenderer, HtmlPieceRenderer>();
             builder.Services.AddTransient<King>();
             builder.Services.AddTransient<Pawn>();
 

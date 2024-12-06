@@ -38,7 +38,7 @@ namespace ChessAPITests.RendererTests
         public void Test_TileHtmlGeneratorWithPiece_ExpectFilledTile()
         {
             _pieceHtmlRendererMock.Setup(r => r.RenderHtml(It.IsAny<ChessPiece>())).Returns("<p>P</p>");
-            Tile tile = new Tile() { color = true, fileNumber = 1, rank = 1, piece = new Pawn() { color = Color.PieceColor.White } };
+            Tile tile = new Tile() { color = true, fileNumber = 1, rank = 1, piece = new Knight() { color = Color.PieceColor.White } };
             var result = _tileHtmlRenderer.Render(tile);
 
             Assert.NotNull(result);

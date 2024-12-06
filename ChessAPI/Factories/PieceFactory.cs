@@ -23,9 +23,9 @@ namespace ChessAPI.Factories
             }
             else if (pieceType == typeof(Pawn))
             {
-                var king = _serviceProvider.GetRequiredService<Pawn>();
-                king.color = color;
-                return king;
+                var pawn = _serviceProvider.GetRequiredService<Pawn>();
+                pawn.color = color;
+                return pawn;
             }
 
             var piece = (ChessPiece)Activator.CreateInstance(pieceType);

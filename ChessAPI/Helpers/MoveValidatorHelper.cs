@@ -90,10 +90,10 @@ namespace ChessAPI.Helpers
 
         public static (int fromIndex, int toIndex) GetMovementIndexes(Tile from, Tile to, ChessBoard board)
         {
-            var fromLocation = board.playingFieldDictionary.FirstOrDefault((s) => s.Value == from);
+            var fromLocation = board.playingFieldDictionary.FirstOrDefault((s) => s.Value.tileAnnotation == from.tileAnnotation);
             var fromIndex = board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
 
-            var toLocation = board.playingFieldDictionary.FirstOrDefault(s => s.Value == to);
+            var toLocation = board.playingFieldDictionary.FirstOrDefault(s => s.Value.tileAnnotation == to.tileAnnotation);
             var toIndex = board.playingFieldDictionary.IndexOfKey(toLocation.Key);
 
             return (fromIndex, toIndex);
