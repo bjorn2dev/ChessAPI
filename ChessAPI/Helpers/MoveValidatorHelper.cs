@@ -104,7 +104,7 @@ namespace ChessAPI.Helpers
             return fromIndex > toIndex ? fromIndex - toIndex : toIndex - fromIndex;
         }
 
-        public static MovementType DetermineMovementType(Tile from, Tile to, ChessBoard board)
+        public static MovementType DetermineMovementType(Tile from, Tile to, ChessBoard board, List<PlayerTurn> playerTurns = null)
         {
             // Get basic indexes and differences
             var indexes = MoveValidatorHelper.GetMovementIndexes(from, to, board);
@@ -122,7 +122,8 @@ namespace ChessAPI.Helpers
             switch (from.piece)
             {
                 case King:
-                    {  // Castle
+                    {  
+                        // Castle
                         if (from.rank == to.rank && to.piece == null)
                         {
                             var pieceColor = from.piece.color;
@@ -141,8 +142,26 @@ namespace ChessAPI.Helpers
                     }
                     break;
                 case Pawn:
-                    { // Promotion
+                    {
+                        // En Passant
                         var pieceColor = from.piece.color;
+                        if (playerTurns != null && playerTurns.Any() && to.piece == null)
+                        {
+                            var lastTurn = playerTurns.Last();
+                            var lastTurnIndexes = MoveValidatorHelper.GetMovementIndexes(lastTurn.fromTile, lastTurn.toTile, board);
+                            var lastTurnDifference = MoveValidatorHelper.GetMovementDifference(lastTurnIndexes.fromIndex, lastTurnIndexes.toIndex);
+                            var adjacentTiles = MoveValidatorHelper.GetAdjacentTiles(lastTurn.toTile.tileAnnotation, board, [MovementType.Horizontal]);
+              
+                            if(lastTurn.fromTile.piece is Pawn &&
+                                lastTurnDifference == 16 && 
+                                (lastTurn.fromTile.rank == 2 || lastTurn.fromTile.rank == 7) &&
+                                adjacentTiles.Any(x=> x.tileAnnotation == from.tileAnnotation))
+                            {
+                                return MovementType.EnPassant;
+                            }
+                        }
+
+                        // Promotion
                         if ((pieceColor == Color.PieceColor.White && to.rank == 8) ||
                             (pieceColor == Color.PieceColor.Black && to.rank == 1 ))
                         {
@@ -182,6 +201,41 @@ namespace ChessAPI.Helpers
             return MovementType.Invalid;
         }
 
+
+        public static List<Tile> GetAdjacentTiles(string tileAnnotation, ChessBoard board, MovementType[] movementTypes = null)
+        {
+            var adjacentTiles = new List<Tile>();
+            if (movementTypes == null)
+            {
+                movementTypes = [MovementType.Diagonal, MovementType.Horizontal, MovementType.Vertical];
+            }
+            var fromLocation = board.playingFieldDictionary.FirstOrDefault((s) => s.Value.tileAnnotation == tileAnnotation);
+            var currentTileIndex = board.playingFieldDictionary.IndexOfKey(fromLocation.Key);
+
+            foreach (var movementType in movementTypes)
+            {
+                var ranges = MoveValidatorHelper.GetMovementRange(movementType);
+                foreach(var range in ranges)
+                {
+                    var rangeTile = board.playingFieldDictionary.GetValueAtIndex(currentTileIndex + range);
+                    if(rangeTile != null)
+                    {
+                        adjacentTiles.Add(rangeTile);
+                    }
+                    
+                    
+                   var rangeTile2 = board.playingFieldDictionary.GetValueAtIndex(currentTileIndex - range);
+                    if (rangeTile2 != null)
+                    {
+                        adjacentTiles.Add(rangeTile2);
+                    }
+                  
+                }
+            }
+
+            return adjacentTiles;
+
+        }
 
     }
 }

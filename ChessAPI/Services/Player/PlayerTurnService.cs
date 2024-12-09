@@ -35,8 +35,25 @@ namespace ChessAPI.Services.Player
         {
             var playerTurn = new PlayerTurn();
             playerTurn.user = player;
-            playerTurn.fromTile = fromTile;
-            playerTurn.toTile = toTile;
+
+            playerTurn.fromTile = new Tile
+            {
+                piece = fromTile.piece?.Clone(),
+                html = fromTile.html,
+                color = fromTile.color,
+                fileNumber = fromTile.fileNumber,
+                rank = fromTile.rank
+            };
+
+            playerTurn.toTile = new Tile
+            {
+                piece = toTile.piece?.Clone(),
+                html = toTile.html,
+                color = toTile.color,
+                fileNumber = toTile.fileNumber,
+                rank = toTile.rank
+            };
+
             return playerTurn;
         }
     }

@@ -58,7 +58,7 @@ namespace ChessAPI
             builder.Services.AddTransient<ITileRenderer, HtmlTileRenderer>();
             builder.Services.AddTransient<IPieceRenderer, HtmlPieceRenderer>();
             builder.Services.AddTransient<IPositionProvider, PositionProvider>();
-            builder.Services.AddTransient<IPawnPromotionValidator, PawnPromotionValidator>();
+            builder.Services.AddTransient<IPawnValidator, PawnValidator>();
             builder.Services.AddTransient<IPieceFactory, PieceFactory>();
             builder.Services.AddTransient<IPieceMovingService, PieceMovingService>();
             builder.Services.AddTransient<King>();

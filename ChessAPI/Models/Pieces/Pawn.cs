@@ -12,11 +12,11 @@ namespace ChessAPI.Models.Pieces
 
         private bool _hasMoved = false;
         public bool AllowMoveDoubleAdvance => !this._hasMoved;
-        private readonly IPawnPromotionValidator _promotionValidator;
+        private readonly IPawnValidator _pawnValidator;
 
-        public Pawn(IPawnPromotionValidator promotionValidator)
+        public Pawn(IPawnValidator pawnValidator)
         {
-            this._promotionValidator = promotionValidator;
+            this._pawnValidator = pawnValidator;
             this.name = "<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Chess_plt45.svg/1280px-Chess_plt45.svg.png\" width=\"100\" height=\"100\" data-name=\"pawn\">";
             this.movePattern = [MovementType.Vertical, MovementType.Promotion];
             this.capturePattern = [MovementType.Diagonal, MovementType.Promotion];
@@ -74,13 +74,13 @@ namespace ChessAPI.Models.Pieces
 
         public bool IsValidEnPassant(Tile from, Tile to, ChessBoard board)
         {
-            return false;
+            return !this._pawnValidator.EnPassantChecksKing(from, to, board);
         }
 
         public bool CanPromote(Tile from, Tile to, ChessBoard board, ChessPiece promoteTo)
         {
             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
-            return !this._promotionValidator.PawnPromotionChecksKing(from, to, board, promoteTo) && movementType != MovementType.Capture
+            return !this._pawnValidator.PromotionChecksKing(from, to, board, promoteTo) && movementType != MovementType.Capture
               ? from.piece.IsValidMovement(from, to, board)
               : from.piece.IsValidCapture(from, to, board);
         }

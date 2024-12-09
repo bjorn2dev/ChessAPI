@@ -16,9 +16,9 @@ namespace ChessAPI.Services.Piece
             _kingSafetyValidator = kingSafetyValidator;
         }
 
-        public MovementType ValidateMove(Tile from, Tile to, ChessBoard board, ChessPiece promoteTo = null)
+        public MovementType ValidateMove(Tile from, Tile to, ChessBoard board, List<PlayerTurn> playerTurns, ChessPiece promoteTo = null)
         {
-             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board);
+             var movementType = MoveValidatorHelper.DetermineMovementType(from, to, board, playerTurns);
 
             // Basic validation
             if (movementType == MovementType.Invalid ||
@@ -47,6 +47,11 @@ namespace ChessAPI.Services.Piece
             if(movementType == MovementType.Promotion)
             {
                 return ((Pawn)from.piece).CanPromote(from, to ,board, promoteTo);
+            }
+
+            if (movementType == MovementType.EnPassant)
+            {
+                return ((Pawn)from.piece).IsValidEnPassant(from, to, board);
             }
 
             // Ensure king is safe

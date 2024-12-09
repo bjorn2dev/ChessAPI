@@ -5,6 +5,6 @@ namespace ChessAPI.Interfaces.Piece
 {
     public interface IPieceMoveValidator
     {
-        MovementType ValidateMove(Tile from, Tile to, ChessBoard board, ChessPiece promoteTo = null);
+        MovementType ValidateMove(Tile from, Tile to, ChessBoard board, List<PlayerTurn> playerTurns, ChessPiece promoteTo = null);
     }
 }

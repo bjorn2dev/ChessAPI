@@ -54,7 +54,7 @@ namespace ChessAPITests.BoardSetup
             services.AddSingleton<IPieceRenderer>(_pieceHtmlRenderer);
             services.AddSingleton<IKingSafetyValidator, KingSafetyValidator>();
             services.AddTransient<IBoardSimulationService, BoardSimulationService>();
-            services.AddTransient<IPawnPromotionValidator, PawnPromotionValidator>();
+            services.AddTransient<IPawnValidator, PawnValidator>();
             services.AddTransient<King>();
             services.AddTransient<Pawn>();
 

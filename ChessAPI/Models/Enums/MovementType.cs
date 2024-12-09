@@ -1,5 +1,7 @@
 ﻿namespace ChessAPI.Models.Enums
 {
+
+    // todo change capture etc to movementaction?
     public enum MovementType
     {
         Invalid,

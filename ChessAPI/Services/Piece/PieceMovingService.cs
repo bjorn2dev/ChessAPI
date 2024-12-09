@@ -23,6 +23,10 @@ namespace ChessAPI.Services.Piece
 
             switch (movementType)
             {
+                case MovementType.EnPassant:
+                    {
+
+                    }
                 case MovementType.CastleKingSide:
                 case MovementType.CastleQueenSide:
                     this.HandleCastling(fromTile, toTile, movementType, board);
