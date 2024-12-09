@@ -20,13 +20,17 @@ namespace ChessAPI.Services.Piece
         //TODO use caching instead of rendering tiles again
         public void MovePiece(Tile fromTile, Tile toTile, MovementType movementType, ChessBoard board, ChessPiece promotionType = null)
         {
-
             switch (movementType)
             {
                 case MovementType.EnPassant:
                     {
+                        toTile.piece = fromTile.piece;
+                        fromTile.piece = null;
+                        ((Pawn)toTile.piece).MarkAsMoved();
 
+                        
                     }
+                    break;
                 case MovementType.CastleKingSide:
                 case MovementType.CastleQueenSide:
                     this.HandleCastling(fromTile, toTile, movementType, board);
