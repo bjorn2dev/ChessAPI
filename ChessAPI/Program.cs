@@ -34,7 +34,6 @@ namespace ChessAPI
 
             // Scoped services, specific to each game instance
             builder.Services.AddScoped<IGameService, GameService>();
-            builder.Services.AddScoped<IGameGenerator, GameGenerator>();
             builder.Services.AddScoped<IGameInitializationService, GameInitializationService>();
             builder.Services.AddScoped<IGameRenderingService, GameRenderingService>();
             builder.Services.AddScoped<IGameMoveValidator, GameMoveValidator>();

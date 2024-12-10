@@ -14,15 +14,13 @@ namespace ChessAPI.Controllers
     {
         private readonly ILogger<BoardController> _logger;
         private readonly IPieceMovingService _pieceMovingService;
-        private readonly IGameGenerator _gameGenerator;
         private readonly GameSettings _gameSettings;
 
-        public BoardController(ILogger<BoardController> logger, IPieceMovingService pieceMovingService, IGameGenerator gameGenerator, IOptions<GameSettings> gameSettings)
+        public BoardController(ILogger<BoardController> logger, IPieceMovingService pieceMovingService, IOptions<GameSettings> gameSettings)
         {
             this._gameSettings = gameSettings.Value;
             this._pieceMovingService = pieceMovingService;
             this._logger = logger;
-            this._gameGenerator = gameGenerator;
         }
 
         //[HttpGet]
